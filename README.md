@@ -1,50 +1,91 @@
-# Welcome to your Expo app 👋
+# Coloc App - Roommate Management Platform
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A monorepo project for managing shared households, built with **Expo**, **React Native**, **Hono**, and **Nx**.
 
-## Get started
+## Architecture
 
-1. Install dependencies
+This project uses a monorepo structure managed by **Nx** and **pnpm workspaces**:
 
-   ```bash
-   pnpm install
-   ```
-
-2. Start the app
-
-   ```bash
-   pnpm expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-pnpm reset-project
+```
+colocapp/
+├── packages/
+│   ├── ui/          # @colocapp/ui - Expo React Native app
+│   └── api/         # @colocapp/api - Hono backend server
+├── nx.json          # Nx configuration
+├── pnpm-workspace.yaml
+└── package.json
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Prerequisites
 
-## Learn more
+- **Node.js** >= 20.0.0
+- **pnpm** >= 9.0.0
 
-To learn more about developing your project with Expo, look at the following resources:
+## Getting Started
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 1. Install dependencies
 
-## Join the community
+```bash
+pnpm install
+```
 
-Join our community of developers creating universal apps.
+### 2. Start all services
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+pnpm start
+```
+
+This will start both the **UI** (Expo app) and **API** (Hono server) simultaneously with streaming logs from both processes. You'll see prefixed output like:
+
+```
+[@colocapp/api:start] Server running on port 3000
+[@colocapp/ui:start] Expo server started
+```
+
+### 3. Start individual services
+
+If you prefer to run services separately:
+
+```bash
+# Start API only
+nx run @colocapp/api:dev
+
+# Start UI only
+nx run @colocapp/ui:start
+```
+
+## Available Commands
+
+| Command       | Description                            |
+| ------------- | -------------------------------------- |
+| `pnpm start`  | Start all packages with streaming logs |
+| `pnpm build`  | Build all packages                     |
+| `pnpm lint`   | Lint all packages                      |
+| `pnpm format` | Format all packages                    |
+
+## Development Features
+
+- **Streaming Logs**: Nx is configured to show interleaved output from all running services
+- **Parallel Execution**: Tasks run in parallel by default
+- **Nx Cache**: Build artifacts are cached for faster rebuilds
+
+## Learn More
+
+### Expo
+
+- [Expo documentation](https://docs.expo.dev/)
+- [Expo Router](https://docs.expo.dev/router/introduction) - File-based routing
+
+### Nx
+
+- [Nx documentation](https://nx.dev/)
+- [Nx run-many](https://nx.dev/nx-api/nx/documents/run-many)
+
+### Backend Stack
+
+- [Hono](https://hono.dev/) - Lightweight web framework
+- [Prisma](https://www.prisma.io/) - Database ORM
+
+---
+
+Built with ❤️ for better roommate collaboration.
