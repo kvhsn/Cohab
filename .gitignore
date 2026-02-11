@@ -1,3 +1,12 @@
 .omc
 .env
 node_modules
+
+# expo
+.expo
+expo-env.d.ts
+
+# pnpm
+.pnpm-store/
+pm-debug.log*
+.pnpm-debug.log*
