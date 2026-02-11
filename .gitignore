@@ -1,9 +1,16 @@
+# AI
 .omc
+.sisyphus
+
 .env
 node_modules
+dist
+
+# NativeWind
+nativewind.d.ts
 
 # expo
-.expo
+.expo/
 expo-env.d.ts
 
 # pnpm
