@@ -15,7 +15,7 @@ type Section = {
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-black">
+    <SafeAreaView className="flex-1 bg-light-background dark:bg-dark-background">
       <View className="flex-1 p-6">
         <Header />
         <SectionList<ComponentProps<typeof Card>, Section>
@@ -26,7 +26,7 @@ export default function HomeScreen() {
               data: [{ title: 'Solde actuel', description: '+120,50€', footer: 'On te doit' }],
             },
             {
-              icon: 'home',
+              icon: 'shopping-cart',
               title: 'Liste de courses',
               data: [],
               expandeable: true,
@@ -37,11 +37,13 @@ export default function HomeScreen() {
             <View className="mb-3 flex-row items-center gap-2">
               {section.icon && <FontAwesome size={28} name={section.icon} color={accentColor} />}
               <View className="flex-1 flex-row items-center justify-between">
-                <Text className="text-xl font-bold text-black dark:text-white">
+                <Text className="text-xl font-bold text-light-text dark:text-dark-text">
                   {section.title}
                 </Text>
                 {section.expandeable && (
-                  <Text className="text-sm text-gray-500 dark:text-gray-400">Voir tout</Text>
+                  <Text className="text-sm text-light-textSecondary dark:text-dark-textSecondary">
+                    Voir tout
+                  </Text>
                 )}
               </View>
             </View>

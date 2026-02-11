@@ -7,18 +7,24 @@ module.exports = {
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
-      accentColor: accentColor,
       colors: {
+        accent: accentColor,
         light: {
-          text: colors.light.text,
           background: colors.light.background,
-          tint: colors.light.tint,
+          surface: colors.light.surface,
+          text: colors.light.text,
+          textSecondary: colors.light.textSecondary,
+          textMuted: colors.light.textMuted,
+          border: colors.light.border,
           icon: colors.light.icon,
         },
         dark: {
-          text: colors.dark.text,
           background: colors.dark.background,
-          tint: colors.dark.tint,
+          surface: colors.dark.surface,
+          text: colors.dark.text,
+          textSecondary: colors.dark.textSecondary,
+          textMuted: colors.dark.textMuted,
+          border: colors.dark.border,
           icon: colors.dark.icon,
         },
       },
