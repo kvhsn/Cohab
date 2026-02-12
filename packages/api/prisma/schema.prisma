@@ -8,17 +8,21 @@ datasource db {
 }
 
 model User {
-    id    Int     @id @default(autoincrement())
-    email String  @unique
-    name  String?
-    posts Post[]
+    id          String   @id @default(cuid())
+    email       String   @unique
+    password    String
+    name        String
+    houseHoldId String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    houseHold HouseHold? @relation(fields: [houseHoldId], references: [id])
 }
 
-model Post {
-    id        Int     @id @default(autoincrement())
-    title     String
-    content   String?
-    published Boolean @default(false)
-    authorId  Int
-    author    User    @relation(fields: [authorId], references: [id])
+model HouseHold {
+    id        String   @id @default(cuid())
+    name      String
+    users     User[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
