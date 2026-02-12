@@ -1,13 +1,26 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import type { PrismaClient } from './generated/prisma/client.js';
+import withPrisma from './libs/prisma.js';
 
-const app = new Hono();
+type ContextWithPrisma = {
+  Variables: {
+    prisma: PrismaClient;
+  };
+};
+
+const app = new Hono<ContextWithPrisma>();
 
 app.use('/*', cors());
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!');
+app.get('/', withPrisma, async (c) => {
+  const prisma = c.get('prisma');
+  const users = await prisma.user.findMany({
+    include: { posts: true },
+  });
+
+  return c.json({ users });
 });
 
 app.get('/health', (c) => {

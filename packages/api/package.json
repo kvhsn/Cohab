@@ -2,22 +2,32 @@
   "name": "@colocapp/api",
   "version": "1.0.0",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "start": "node dist/index.js",
+    "start": "tsx watch --env-file=.env src/index.ts",
     "build": "tsc",
     "lint": "eslint src",
-    "format": "prettier --write src"
+    "format": "prettier --write src",
+    "prisma": "prisma",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio",
+    "prisma:db:seed": "prisma db seed"
   },
   "dependencies": {
+    "@colocapp/shared": "workspace:*",
     "@hono/node-server": "^1.13.7",
-    "hono": "^4.6.14"
+    "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
+    "dotenv": "^17.2.4",
+    "hono": "^4.6.14",
+    "pg": "^8.18.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/node": "^20.11.17",
+    "@types/pg": "^8.16.0",
     "eslint": "^9.25.0",
     "prettier": "^3.8.1",
-    "tsx": "^4.7.1",
+    "prisma": "^7.4.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.55.0"
   }
