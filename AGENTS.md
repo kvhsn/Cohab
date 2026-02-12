@@ -8,8 +8,9 @@ This document defines the specialized roles, technical constraints, and mandator
 - **Stack:**
   - **Monorepo:** Nx + pnpm workspaces
   - **Frontend:** Expo (SDK 54) + React Native + Expo Router + NativeWind
-  - **Backend:** Hono + Node.js + TypeScript
+  - **Backend:** Hono + Node.js + TypeScript (with tsx for development)
   - **Database:** PostgreSQL + Prisma
+  - **Shared:** Zod (for validation schemas)
   - **Design:** Figma via Stitch
 - **Core Logic:** Invitation-based household joining, multi-user task assignment, and monthly debt equalization.
 
@@ -25,7 +26,8 @@ The project uses **Nx** with **pnpm workspaces** for scalable monorepo managemen
 colocapp/
 ├── packages/
 │   ├── ui/          # @colocapp/ui - Expo React Native app
-│   └── api/         # @colocapp/api - Hono backend server
+│   ├── api/         # @colocapp/api - Hono backend server
+│   └── shared/      # @colocapp/shared - Shared types, schemas, and utilities
 ├── nx.json          # Nx configuration & caching
 ├── pnpm-workspace.yaml
 └── package.json     # Root orchestration
@@ -87,6 +89,7 @@ Every agent must utilize these tools for any technical documentation or implemen
 - Implement the **Debt Settlement Algorithm** in the Hono backend.
 - Handle real-time synchronization for Chat and Notifications using Hono's middleware and WebSocket support.
 - Manage Prisma migrations and ensure relational integrity between Users and Households.
+- Implement API endpoints with Hono, using Zod for validation and `node:crypto` for secure password hashing (e.g., `scrypt`).
 
 ## 📱 3. Mobile Frontend Developer
 
