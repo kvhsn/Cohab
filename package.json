@@ -15,6 +15,9 @@
   ],
   "scripts": {
     "start": "nx run-many --target=start",
+    "dev": "nx run-many --target=start --projects=@colocapp/shared,@colocapp/api,@colocapp/ui --parallel=10",
+    "dev:api": "nx run-many --target=start --projects=@colocapp/shared,@colocapp/api --parallel=10",
+    "dev:ui": "nx run-many --target=start --projects=@colocapp/shared,@colocapp/ui --parallel=10",
     "build": "nx run-many --target=build",
     "lint": "nx run-many --target=lint",
     "format": "nx run-many --target=format",

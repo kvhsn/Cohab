@@ -2,7 +2,7 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
-    "module": "ES2022",
+    "module": "nodenext",
     "outDir": "dist",
     "declaration": true
   },
