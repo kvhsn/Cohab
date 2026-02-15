@@ -8,6 +8,7 @@
     "format": "prettier --write src"
   },
   "dependencies": {
+    "eslint-config-prettier": "^10.1.8",
     "zod": "^4.3.6"
   },
   "devDependencies": {
