@@ -1,5 +1,6 @@
 import { Context, Next } from 'hono';
 import { jwt, sign } from 'hono/jwt';
+import { JwtToken } from '../types/Auth';
 
 export const generateToken = async (userId: string) => {
   if (!process.env.JWT_SECRET) {
@@ -12,7 +13,7 @@ export const generateToken = async (userId: string) => {
       sub: userId,
       iat: now,
       exp: now + 3 * 24 * 3600, // 3 days
-    },
+    } as JwtToken,
     process.env.JWT_SECRET,
   );
 };

@@ -2,12 +2,14 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import auth from './auth';
+import household from './household';
 
 const app = new Hono().basePath('/api');
 
 app.use('/*', cors());
 
 app.route('/', auth);
+app.route('/', household);
 
 app.get('/health', (c) => {
   return c.json({ status: 'ok' });

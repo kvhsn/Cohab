@@ -11,7 +11,14 @@ const adapter = new PrismaPg({
   connectionString: databaseUrl,
 });
 
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  adapter,
+  omit: {
+    user: {
+      password: true,
+    },
+  },
+});
 
 function withPrisma(c: Context, next: Next) {
   if (!c.get('prisma')) {

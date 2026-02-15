@@ -3,7 +3,7 @@ import withPrisma from '../libs/prisma';
 import { zValidator } from '@hono/zod-validator';
 import { LoginSchema, RegisterSchema } from '@colocapp/shared';
 import { hashPassword, verifyPassword } from '../libs/password';
-import { ContextWithPrisma } from '../types/App';
+import { ContextWithPrisma } from '../types/Contexts';
 import withAuth, { generateToken } from '../libs/auth';
 
 export default new Hono<ContextWithPrisma>()
@@ -12,8 +12,8 @@ export default new Hono<ContextWithPrisma>()
     const data = c.req.valid('json');
 
     const hashedPassword = await hashPassword(data.password);
-
-    await c.get('prisma').user.create({
+    const prisma = c.get('prisma');
+    await prisma.user.create({
       data: {
         ...data,
         password: hashedPassword,
@@ -24,8 +24,8 @@ export default new Hono<ContextWithPrisma>()
   })
   .post('/login', withPrisma, zValidator('json', LoginSchema), async (c) => {
     const data = c.req.valid('json');
-
-    const user = await c.get('prisma').user.findUnique({
+    const prisma = c.get('prisma');
+    const user = await prisma.user.findUnique({
       where: {
         email: data.email,
       },
