@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { API_URL } from '../../constants/Config';
+import { API_URL } from '@/constants/Config';
 
 export default function Register() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/register`, {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

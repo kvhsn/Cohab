@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { API_URL } from '../../constants/Config';
+import { API_URL } from '@/constants/Config';
 import { saveSecureStorage } from '@/libs/secureStorage';
 
 export default function Login() {
@@ -13,7 +13,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${API_URL}/login`, {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export default function Login() {
       } else {
         Alert.alert('Error', data.error || 'Login failed');
       }
-    } catch (error) {
+    } catch (_error) {
       Alert.alert('Error', 'Could not connect to server');
     }
   };
