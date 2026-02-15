@@ -31,4 +31,14 @@ model HouseHold {
     adminId String @unique
     members User[] @relation("HouseHold_members")
     admin   User   @relation("HouseHold_admin", fields: [adminId], references: [id])
+
+    invitation Invitation? @relation("HouseHold_invitation")
+}
+
+model Invitation {
+    id          String    @id @default(cuid())
+    householdId String    @unique
+    createdAt   DateTime  @default(now())
+    code        String
+    household   HouseHold @relation("HouseHold_invitation", fields: [householdId], references: [id])
 }

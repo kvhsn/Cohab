@@ -7,4 +7,7 @@ module.exports = defineConfig([
   baseConfig,
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  {
+    ignores: ['src/generated/**'],
+  },
 ]);
