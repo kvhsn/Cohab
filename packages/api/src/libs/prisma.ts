@@ -11,7 +11,7 @@ const adapter = new PrismaPg({
   connectionString: databaseUrl,
 });
 
-const prisma = new PrismaClient({
+export const prisma = new PrismaClient({
   adapter,
   omit: {
     user: {
