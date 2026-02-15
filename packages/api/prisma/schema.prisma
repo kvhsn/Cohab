@@ -1,5 +1,5 @@
 generator client {
-    provider = "prisma-client"
+    provider = "prisma-client-js"
     output   = "../src/generated/prisma"
 }
 
@@ -8,21 +8,27 @@ datasource db {
 }
 
 model User {
-    id          String   @id @default(cuid())
-    email       String   @unique
-    password    String
-    name        String
-    houseHoldId String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id        String   @id @default(cuid())
+    email     String   @unique
+    password  String
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-    houseHold HouseHold? @relation(fields: [houseHoldId], references: [id])
+    houseHoldId           String?
+    houseHold             HouseHold? @relation("HouseHold_members", fields: [houseHoldId], references: [id])
+    administeredHouseHold HouseHold? @relation("HouseHold_admin")
+
+    @@unique([id, houseHoldId]) // Prevent a user from being in multiple households
 }
 
 model HouseHold {
     id        String   @id @default(cuid())
     name      String
-    users     User[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    adminId String @unique
+    members User[] @relation("HouseHold_members")
+    admin   User   @relation("HouseHold_admin", fields: [adminId], references: [id])
 }
