@@ -6,6 +6,7 @@ import { ContextWithAuth, ContextWithPrisma } from '../types/Contexts';
 import { Hono } from 'hono';
 import crypto from 'node:crypto';
 import { isOutdatedInvitation } from './utils/invitation';
+import { JoinHouseHoldSchema } from '@colocapp/shared/src/household';
 
 export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .basePath('/households')
@@ -49,6 +50,46 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
         },
         500,
       );
+    }
+  })
+  .post('/join', withAuth, withPrisma, zValidator('json', JoinHouseHoldSchema), async (c) => {
+    try {
+      const { sub: userId } = c.get('jwtPayload');
+      const prisma = c.get('prisma');
+      const { code } = c.req.valid('json');
+
+      const user = await prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { houseHoldId: true },
+      });
+      if (user.houseHoldId) {
+        throw new Error('You are already in a household');
+      }
+
+      const invitation = await prisma.invitation.findUnique({
+        where: {
+          code: String(code),
+        },
+        select: { householdId: true },
+      });
+      if (!invitation) {
+        throw new Error('Invitation not found');
+      }
+      await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          houseHoldId: invitation.householdId,
+        },
+      });
+      return c.json(
+        { status: 'ok', message: `Successfully joined household ${invitation.householdId}` },
+        200,
+      );
+    } catch (error) {
+      console.error(error);
+      return c.json({ status: 'error', message: 'Internal error' }, 500);
     }
   })
   .basePath('/:householdId')
