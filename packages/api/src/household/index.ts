@@ -68,7 +68,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
 
       const invitation = await prisma.invitation.findUnique({
         where: {
-          code: String(code),
+          code,
         },
         select: { householdId: true },
       });

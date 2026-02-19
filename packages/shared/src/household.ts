@@ -7,7 +7,10 @@ export const CreateHouseHoldSchema = z.object({
 export type CreateHouseHoldSchema = z.infer<typeof CreateHouseHoldSchema>;
 
 export const JoinHouseHoldSchema = z.object({
-  code: z.number().gte(99999),
+  code: z
+    .string()
+    .length(6)
+    .regex(/^[0-9]+$/),
 });
 
 export type JoinHouseHoldSchema = z.infer<typeof JoinHouseHoldSchema>;

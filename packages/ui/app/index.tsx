@@ -13,7 +13,10 @@ export default function HomeScreen() {
         <Text>Coloc App</Text>
         <Text>Simplify your shared living experience.</Text>
         {isLogged ? (
-          <Button title="Logout" onPress={logout} />
+          <>
+            <Link href="/households">Household</Link>
+            <Button title="Logout" onPress={logout} />
+          </>
         ) : (
           <>
             <Link href="/login">Login</Link>
