@@ -20,6 +20,8 @@ export const prisma = new PrismaClient({
   },
 });
 
+export type ExtendedPrismaClient = typeof prisma;
+
 function withPrisma(c: Context, next: Next) {
   if (!c.get('prisma')) {
     c.set('prisma', prisma);

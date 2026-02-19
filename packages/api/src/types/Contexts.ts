@@ -1,5 +1,5 @@
 import { JwtVariables } from 'hono/jwt';
-import { PrismaClient } from '../generated/prisma/client';
+import { ExtendedPrismaClient } from '../libs/prisma';
 import { JwtToken } from './Auth';
 
 type RequestIdVariables = {
@@ -8,7 +8,7 @@ type RequestIdVariables = {
 
 export type ContextWithPrisma = {
   Variables: {
-    prisma: PrismaClient;
+    prisma: ExtendedPrismaClient;
   };
 } & RequestIdVariables;
 
