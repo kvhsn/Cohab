@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function HouseHold() {
+export default function Household() {
   return (
     <SafeAreaView>
       <View>

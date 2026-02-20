@@ -16,15 +16,15 @@ model User {
     updatedAt DateTime @updatedAt
 
     houseHoldId           String?
-    houseHold             HouseHold? @relation("HouseHold_members", fields: [houseHoldId], references: [id])
-    administeredHouseHold HouseHold? @relation("HouseHold_admin")
+    household             Household? @relation("HouseHold_members", fields: [houseHoldId], references: [id])
+    administeredHouseHold Household? @relation("HouseHold_admin")
 
     expenses Expense[] @relation("Member_expense")
 
     @@unique([id, houseHoldId]) // Prevent a user from being in multiple households
 }
 
-model HouseHold {
+model Household {
     id        String   @id @default(cuid())
     name      String
     createdAt DateTime @default(now())
@@ -43,15 +43,15 @@ model Invitation {
     householdId String    @unique
     createdAt   DateTime  @default(now())
     code        String    @unique
-    household   HouseHold @relation("HouseHold_invitation", fields: [householdId], references: [id])
+    household   Household @relation("HouseHold_invitation", fields: [householdId], references: [id])
 }
 
 model Expense {
     id          String    @id @default(cuid())
     name        String
     amount      Float
-    houseHoldId String
-    household   HouseHold @relation("HouseHold_expense", fields: [houseHoldId], references: [id])
+    householdId String
+    household   Household @relation("HouseHold_expense", fields: [householdId], references: [id])
     memberId    String
     member      User      @relation("Member_expense", fields: [memberId], references: [id])
 

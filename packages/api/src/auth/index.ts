@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import withPrisma from '../libs/prisma';
 import { zValidator } from '@hono/zod-validator';
-import { LoginSchema, RegisterSchema } from '@colocapp/shared';
+import { LoginSchema, RegisterSchema } from '@colocapp/shared/src/auth';
 import { hashPassword, verifyPassword } from '../libs/password';
 import { ContextWithPrisma } from '../types/Contexts';
 import withAuth, { generateToken } from '../libs/auth';

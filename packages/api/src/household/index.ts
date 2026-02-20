@@ -1,12 +1,12 @@
 import withPrisma from '../libs/prisma';
 import { zValidator } from '@hono/zod-validator';
-import { CreateHouseHoldSchema } from '@colocapp/shared';
 import withAuth from '../libs/auth';
 import { ContextWithAuth, ContextWithPrisma } from '../types/Contexts';
 import { Hono } from 'hono';
 import crypto from 'node:crypto';
 import { isOutdatedInvitation } from './utils/invitation';
-import { JoinHouseHoldSchema } from '@colocapp/shared/src/household';
+import { CreateHouseHoldSchema, JoinHouseHoldSchema } from '@colocapp/shared/src/household';
+import expenses from './expenses';
 
 export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .basePath('/households')
@@ -92,8 +92,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
       return c.json({ status: 'error', message: 'Internal error' }, 500);
     }
   })
-  .basePath('/:householdId')
-  .post('/invite', withAuth, withPrisma, async (c) => {
+  .post('/:householdId/invite', withAuth, withPrisma, async (c) => {
     const householdId = c.req.param('householdId');
     const { sub: userId } = c.get('jwtPayload');
     const prisma = c.get('prisma');
@@ -132,4 +131,5 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
       console.error(error);
       return c.json({ status: 'error', message: 'Internal error' }, 500);
     }
-  });
+  })
+  .route('/', expenses);
