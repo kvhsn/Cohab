@@ -5,7 +5,8 @@
   "types": "src/index.ts",
   "scripts": {
     "lint": "eslint src",
-    "format": "prettier --write src"
+    "format": "prettier --write src",
+    "test": "exit 0"
   },
   "dependencies": {
     "eslint-config-prettier": "^10.1.8",

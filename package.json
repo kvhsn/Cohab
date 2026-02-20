@@ -18,6 +18,7 @@
     "build": "nx run-many --target=build",
     "lint": "nx run-many --target=lint",
     "format": "nx run-many --target=format",
+    "test": "nx run-many --target=test",
     "prepare": "husky"
   },
   "devDependencies": {
