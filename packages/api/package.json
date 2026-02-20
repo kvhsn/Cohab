@@ -2,7 +2,7 @@
   "name": "@colocapp/api",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsx watch --env-file=.env src/index.ts",
+    "start": "tsx watch --include src --include ../shared/src --env-file=.env src/index.ts",
     "build": "tsc",
     "lint": "eslint src && pnpm run prisma:validate",
     "format": "prettier --write src",
@@ -10,7 +10,8 @@
     "prisma:studio": "prisma studio",
     "prisma:db:seed": "prisma db seed",
     "prisma:validate": "prisma validate",
-    "prisma:db:push": "prisma db push"
+    "prisma:db:push": "prisma db push",
+    "prisma:db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@colocapp/shared": "workspace:*",
