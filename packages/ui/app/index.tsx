@@ -14,7 +14,7 @@ export default function HomeScreen() {
         <Text>Simplify your shared living experience.</Text>
         {isLogged ? (
           <>
-            <Link href="/households">Household</Link>
+            <Link href="/households">Households</Link>
             <Button title="Logout" onPress={logout} />
           </>
         ) : (

@@ -27,7 +27,6 @@ export default function JoinHousehold() {
         router.push('/households');
       } else {
         const data = await response.json();
-        console.log({ data });
         Alert.alert('Error', data.message || 'Join household failed');
       }
     } catch (error) {

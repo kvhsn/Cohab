@@ -5,7 +5,11 @@ import { ContextWithAuth, ContextWithPrisma } from '../types/Contexts';
 import { Hono } from 'hono';
 import crypto from 'node:crypto';
 import { isOutdatedInvitation } from './utils/invitation';
-import { CreateHouseHoldSchema, JoinHouseHoldSchema } from '@colocapp/shared/src/household';
+import {
+  CreateHouseHoldSchema,
+  GetHouseholdDetails,
+  JoinHouseHoldSchema,
+} from '@colocapp/shared/src/household';
 import expenses from './expenses';
 
 export default new Hono<ContextWithPrisma & ContextWithAuth>()
@@ -25,7 +29,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
           `Please leave current household ${user.houseHoldId} before creating a new one`,
         );
       } else {
-        const createdHousehold = await prisma.houseHold.create({
+        const createdHousehold = await prisma.household.create({
           data: {
             name,
             adminId: userId,
@@ -50,6 +54,22 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
         },
         500,
       );
+    }
+  })
+  .get('/', withAuth, withPrisma, async (c) => {
+    const { sub: userId } = c.get('jwtPayload');
+    const prisma = c.get('prisma');
+    try {
+      const { household } = await prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { household: { select: { id: true } } },
+      });
+      return c.json({
+        id: household?.id,
+      } as GetHouseholdDetails);
+    } catch (error) {
+      console.error(error);
+      return c.json({ status: 'error', message: 'Internal error' }, 500);
     }
   })
   .post('/join', withAuth, withPrisma, zValidator('json', JoinHouseHoldSchema), async (c) => {

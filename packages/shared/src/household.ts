@@ -14,3 +14,9 @@ export const JoinHouseHoldSchema = z.object({
 });
 
 export type JoinHouseHoldSchema = z.infer<typeof JoinHouseHoldSchema>;
+
+export const GetHouseholdDetailsSchema = z.object({
+  id: z.string().optional(),
+});
+
+export type GetHouseholdDetails = z.infer<typeof GetHouseholdDetailsSchema>;

@@ -3,11 +3,11 @@ import { ContextWithAuth, ContextWithPrisma } from '../../types/Contexts';
 import { zValidator } from '@hono/zod-validator';
 import withPrisma from '../../libs/prisma';
 import withAuth from '../../libs/auth';
-import { CreateHouseholdExpenseSchema } from '@colocapp/shared/src/expense';
+import { CreateExpenseSchema, GetExpenses } from '@colocapp/shared/src/expense';
 
 export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .basePath('/:householdId/expenses')
-  .post('/', withAuth, withPrisma, zValidator('json', CreateHouseholdExpenseSchema), async (c) => {
+  .post('/', withAuth, withPrisma, zValidator('json', CreateExpenseSchema), async (c) => {
     const { name, amount } = c.req.valid('json');
     const householdId = c.req.param('householdId');
     const { sub: userId } = c.get('jwtPayload');
@@ -57,7 +57,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
           householdId,
         },
       });
-      return c.json(expenses, 200);
+      return c.json({ expenses } as GetExpenses, 200);
     } catch (error) {
       console.error(error);
       return c.json({ status: 'error', message: 'Internal error' }, 500);
