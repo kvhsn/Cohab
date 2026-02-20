@@ -56,8 +56,27 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
         where: {
           householdId,
         },
+        select: {
+          createdAt: true,
+          id: true,
+          name: true,
+          amount: true,
+          member: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
-      return c.json({ expenses } as GetExpenses, 200);
+      return c.json(
+        {
+          expenses: expenses.map((expense) => ({
+            ...expense,
+            createdAt: expense.createdAt.toISOString(),
+          })),
+        } as GetExpenses,
+        200,
+      );
     } catch (error) {
       console.error(error);
       return c.json({ status: 'error', message: 'Internal error' }, 500);

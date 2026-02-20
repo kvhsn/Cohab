@@ -28,11 +28,15 @@ function ExpenseList({ dataLoader }: { dataLoader: Promise<GetExpenses> }) {
   return (
     <FlatList
       data={expenses}
+      ListEmptyComponent={<Text>No expenses found</Text>}
+      keyExtractor={(item) => item.id}
       renderItem={({ item }) => {
         return (
           <View>
             <Text>Name: {item.name}</Text>
             <Text>Amount: {item.amount}</Text>
+            <Text>Created At: {item.createdAt}</Text>
+            <Text>Member: {item.member.name}</Text>
           </View>
         );
       }}

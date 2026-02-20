@@ -10,6 +10,11 @@ export type CreateExpense = z.infer<typeof CreateExpenseSchema>;
 export const GetExpenseSchema = z.object({
   name: z.string(),
   amount: z.number().positive(),
+  createdAt: z.string(),
+  id: z.string(),
+  member: z.object({
+    name: z.string(),
+  }),
 });
 
 export type GetExpense = z.infer<typeof GetExpenseSchema>;
