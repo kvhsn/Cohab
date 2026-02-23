@@ -16,7 +16,7 @@ const dataLoader = async (householdId: string): Promise<GetExpenses> => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch household details');
+    throw new Error('Failed to fetch household expenses');
   }
   const body = await response.json();
   return GetExpensesSchema.parse(body);

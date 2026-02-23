@@ -32,10 +32,10 @@ function HouseholdDashboard({ householdId }: { householdId: string }) {
       <View>
         <Link
           href={{
-            pathname: '/households/[householdId]/expenses',
+            pathname: '/households/[householdId]',
             params: { householdId },
           }}>
-          Expenses
+          Show details
         </Link>
       </View>
     </View>
@@ -61,6 +61,7 @@ function HouseholdMembershipView({ dataLoader }: { dataLoader: Promise<GetHouseh
 export default function Households() {
   return (
     <SafeAreaView>
+      <Text>Households</Text>
       <Suspense fallback={<Text>Loading household info...</Text>}>
         <HouseholdMembershipView dataLoader={dataLoader()} />
       </Suspense>

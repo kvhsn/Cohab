@@ -11,6 +11,7 @@ import {
   JoinHouseHoldSchema,
 } from '@colocapp/shared/src/household';
 import expenses from './expenses';
+import refunds from './refunds';
 
 export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .basePath('/households')
@@ -152,4 +153,5 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
       return c.json({ status: 'error', message: 'Internal error' }, 500);
     }
   })
-  .route('/', expenses);
+  .route('/', expenses)
+  .route('/', refunds);

@@ -20,7 +20,13 @@ export default function HouseholdDetails() {
             Show expenses
           </Link>
         </View>
-
+        <Link
+          href={{
+            pathname: '/households/[householdId]/balance',
+            params: { householdId },
+          }}>
+          Show balance
+        </Link>
         <View>
           <Link href="/households">Back to Households</Link>
         </View>

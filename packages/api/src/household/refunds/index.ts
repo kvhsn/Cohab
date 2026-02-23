@@ -1,26 +1,61 @@
-import { Refund } from './types';
-import { Balance } from '../expenses/types';
+import { Hono } from 'hono';
+import withAuth from '../../libs/auth';
+import { ContextWithAuth, ContextWithPrisma } from '../../types/Contexts';
+import withPrisma from '../../libs/prisma';
+import { createBalance } from '../expenses/helpers';
+import { createRefunds } from './helpers';
 
-export const createRefunds = (balance: Balance): Refund[] => {
-  const refunds: Refund[] = [];
+export default new Hono<ContextWithPrisma & ContextWithAuth>()
+  .basePath('/:householdId')
+  .get('/refunds', withAuth, withPrisma, async (c) => {
+    const { sub: userId } = c.get('jwtPayload');
+    const prisma = c.get('prisma');
+    const householdId = c.req.param('householdId');
+    try {
+      const user = await prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { houseHoldId: true },
+      });
 
-  const positiveBalance = Object.entries(balance.shares).filter(([, amount]) => amount > 0);
-  const negativeBalance = Object.entries(balance.shares).filter(([, amount]) => amount < 0);
-
-  for (const [user] of positiveBalance) {
-    let currentAmount = balance.shares[user];
-    for (const [otherUser] of negativeBalance) {
-      const otherAmount = balance.shares[otherUser];
-      if (currentAmount > 0 && otherAmount < 0) {
-        const refundAmount = Math.min(currentAmount, -otherAmount);
-        refunds.push({ fromMemberId: user, toMemberId: otherUser, amount: refundAmount });
-
-        balance.shares[user] -= refundAmount;
-        balance.shares[otherUser] += refundAmount;
-
-        currentAmount -= refundAmount;
+      if (user.houseHoldId !== householdId) {
+        return c.json({ status: 'error', message: 'You do not belong to this household' }, 403);
       }
+
+      const { members: householdMembers } = await prisma.household.findFirstOrThrow({
+        where: {
+          id: householdId,
+        },
+        select: {
+          members: true,
+        },
+      });
+
+      const householdMemberIds = householdMembers.map(({ id }) => id);
+
+      const expenses = await prisma.expense.findMany({
+        where: {
+          householdId,
+        },
+        select: {
+          amount: true,
+          memberId: true,
+        },
+      });
+
+      const refunds = await prisma.refund.findMany({
+        where: {
+          householdId,
+        },
+        select: {
+          amount: true,
+          fromMemberId: true,
+          toMemberId: true,
+        },
+      });
+      const balance = createBalance(expenses, refunds, householdMemberIds);
+      return c.json({ refunds: createRefunds(balance) }, 200);
+    } catch (error) {
+      console.error(error);
+      return c.json({ status: 'error', message: 'Internal error' }, 500);
     }
-  }
-  return refunds;
-};
+  });
