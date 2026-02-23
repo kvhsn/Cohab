@@ -19,7 +19,9 @@ model User {
     household             Household? @relation("HouseHold_members", fields: [houseHoldId], references: [id])
     administeredHouseHold Household? @relation("HouseHold_admin")
 
-    expenses Expense[] @relation("Member_expense")
+    expenses    Expense[] @relation("Member_expense")
+    refundsFrom Refund[]  @relation("Member_from_refund")
+    refundsTo   Refund[]  @relation("Member_to_refund")
 
     @@unique([id, houseHoldId]) // Prevent a user from being in multiple households
 }
@@ -36,6 +38,7 @@ model Household {
 
     invitation Invitation? @relation("HouseHold_invitation")
     Expenses   Expense[]   @relation("HouseHold_expense")
+    Refunds    Refund[]    @relation("HouseHold_refund")
 }
 
 model Invitation {
@@ -54,6 +57,21 @@ model Expense {
     household   Household @relation("HouseHold_expense", fields: [householdId], references: [id])
     memberId    String
     member      User      @relation("Member_expense", fields: [memberId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Refund {
+    id           String    @id @default(cuid())
+    name         String?
+    amount       Float
+    householdId  String
+    household    Household @relation("HouseHold_refund", fields: [householdId], references: [id])
+    fromMemberId String
+    fromMember   User      @relation("Member_from_refund", fields: [fromMemberId], references: [id])
+    toMemberId   String
+    toMember     User      @relation("Member_to_refund", fields: [toMemberId], references: [id])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

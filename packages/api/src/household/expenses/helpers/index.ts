@@ -1,32 +1,47 @@
-type Balance = Map<string, number>;
+import { Expense, Balance } from '../types';
+import { Refund } from '../../refunds/types';
 
-export type Expense = { userId: string; amount: number };
+export const createBalance = (
+  expenses: Expense[],
+  refunds: Refund[],
+  members: string[],
+): Balance => {
+  const balance: Balance = {
+    total: 0,
+    shares: members.reduce<Record<string, number>>((acc, user) => {
+      acc[user] = 0;
+      return acc;
+    }, {}),
+  };
 
-export const createBalance = (expenses: Expense[], members: string[]): Balance => {
-  const balance = members.reduce((acc, user) => {
-    acc.set(user, 0);
-    return acc;
-  }, new Map<string, number>());
-  if (expenses.length === 0) return balance;
+  if (members.length === 0) return balance;
 
   for (const expense of expenses) {
-    const memberBalance = balance.get(expense.userId);
+    const memberBalance = balance.shares[expense.memberId];
     if (memberBalance === undefined) {
-      balance.set(expense.userId, expense.amount);
+      // Case where an expense member is no longer in the household
+      balance.shares[expense.memberId] = expense.amount;
     } else {
-      balance.set(expense.userId, memberBalance + expense.amount);
+      balance.shares[expense.memberId] = memberBalance + expense.amount;
     }
+    balance.total += expense.amount;
   }
-  const total = [...balance.values()].reduce((acc, total) => acc + total, 0);
 
-  const part = Math.floor(total / members.length);
-  const remainder = total % members.length;
+  const part = Math.floor(balance.total / members.length);
+  const remainder = balance.total % members.length;
 
   for (const user of members) {
-    const userTotal = balance.get(user) || 0;
-    balance.set(user, userTotal - part);
+    const userTotal = balance.shares[user] || 0;
+    balance.shares[user] = userTotal - part;
   }
   // affect the remainder to the first member
-  balance.set(members[0], balance.get(members[0])! + remainder);
+  balance.shares[members[0]] += remainder;
+
+  for (const refund of refunds) {
+    const originUserExpanse = balance.shares[refund.fromMemberId] ?? 0;
+    const destinationUserExpanse = balance.shares[refund.toMemberId] ?? 0;
+    balance.shares[refund.fromMemberId] = originUserExpanse - refund.amount;
+    balance.shares[refund.toMemberId] = destinationUserExpanse + refund.amount;
+  }
   return balance;
 };

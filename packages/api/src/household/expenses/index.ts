@@ -4,9 +4,66 @@ import { zValidator } from '@hono/zod-validator';
 import withPrisma from '../../libs/prisma';
 import withAuth from '../../libs/auth';
 import { CreateExpenseSchema, GetExpenses } from '@colocapp/shared/src/expense';
+import { createBalance } from './helpers';
 
 export default new Hono<ContextWithPrisma & ContextWithAuth>()
-  .basePath('/:householdId/expenses')
+  .basePath('/:householdId')
+  .get('/balance', withAuth, withPrisma, async (c) => {
+    const householdId = c.req.param('householdId');
+    const { sub: userId } = c.get('jwtPayload');
+    const prisma = c.get('prisma');
+
+    try {
+      const user = await prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { houseHoldId: true },
+      });
+
+      if (user.houseHoldId !== householdId) {
+        return c.json({ status: 'error', message: 'You do not belong to this household' }, 403);
+      }
+
+      const { members: householdMembers } = await prisma.household.findFirstOrThrow({
+        where: {
+          id: householdId,
+        },
+        select: {
+          members: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+      const householdMemberIds = householdMembers.map(({ id }) => id);
+
+      const expenses = await prisma.expense.findMany({
+        where: {
+          householdId,
+        },
+        select: {
+          amount: true,
+          memberId: true,
+        },
+      });
+      const refunds = await prisma.refund.findMany({
+        where: {
+          householdId,
+        },
+        select: {
+          amount: true,
+          fromMemberId: true,
+          toMemberId: true,
+        },
+      });
+      const balance = createBalance(expenses, refunds, householdMemberIds);
+      return c.json(balance, 200);
+    } catch (error) {
+      console.error(error);
+      return c.json({ status: 'error', message: 'Internal error' }, 500);
+    }
+  })
+  .basePath('/expenses')
   .post('/', withAuth, withPrisma, zValidator('json', CreateExpenseSchema), async (c) => {
     const { name, amount } = c.req.valid('json');
     const householdId = c.req.param('householdId');

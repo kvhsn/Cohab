@@ -1,5 +1,5 @@
 import { Link, useLocalSearchParams } from 'expo-router';
-import { FlatList, SafeAreaView, SafeAreaViewBase, Text, View } from 'react-native';
+import { FlatList, SafeAreaView, Text, View } from 'react-native';
 import { GetExpenses, GetExpensesSchema } from '@colocapp/shared/src/expense';
 import { Suspense, use } from 'react';
 import { getValueForSecureStorage } from '@/libs/secureStorage';
