@@ -1,29 +1,12 @@
-import { API_URL } from '@/constants/Config';
-import { getValueForSecureStorage } from '@/libs/secureStorage';
-import { Balance, BalanceSchema } from '@colocapp/shared/src/balance';
 import { useLocalSearchParams } from 'expo-router';
-import { Suspense, use } from 'react';
+import { Suspense } from 'react';
 import { Text, View } from 'react-native';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import queries from '@/libs/queries';
 
-const dataLoader = async (householdId: string): Promise<Balance> => {
-  const token = await getValueForSecureStorage('token');
-  const response = await fetch(`${API_URL}/api/households/${householdId}/balance`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch household balance');
-  }
-  const body = await response.json();
-  return BalanceSchema.parse(body);
-};
-
-function BalanceContent({ dataLoader }: { dataLoader: Promise<Balance> }) {
-  const { total, shares } = use(dataLoader);
+function BalanceContent({ householdId }: { householdId: string }) {
+  const { data } = useSuspenseQuery(queries.households.getHouseholdBalanceQuery(householdId));
+  const { total, shares } = data;
   return (
     <View>
       <Text>Total: {total}</Text>
@@ -38,9 +21,12 @@ function BalanceContent({ dataLoader }: { dataLoader: Promise<Balance> }) {
 
 export default function BalanceRoot() {
   const { householdId } = useLocalSearchParams<{ householdId: string }>();
+
+  if (!householdId) return null;
+
   return (
-    <Suspense fallback={'Loading balance...'}>
-      <BalanceContent dataLoader={dataLoader(householdId)} />
+    <Suspense fallback={<Text>Loading balance...</Text>}>
+      <BalanceContent householdId={householdId} />
     </Suspense>
   );
 }

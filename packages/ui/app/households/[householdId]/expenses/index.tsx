@@ -1,33 +1,15 @@
 import { Link, useLocalSearchParams } from 'expo-router';
 import { FlatList, SafeAreaView, Text, View } from 'react-native';
-import { GetExpenses, GetExpensesSchema } from '@colocapp/shared/src/expense';
-import { Suspense, use } from 'react';
-import { getValueForSecureStorage } from '@/libs/secureStorage';
-import { API_URL } from '@/constants/Config';
+import { Suspense } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import queries from '@/libs/queries';
 
-const dataLoader = async (householdId: string): Promise<GetExpenses> => {
-  const token = await getValueForSecureStorage('token');
-  const response = await fetch(`${API_URL}/api/households/${householdId}/expenses`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch household expenses');
-  }
-  const body = await response.json();
-  return GetExpensesSchema.parse(body);
-};
-
-function ExpenseList({ dataLoader }: { dataLoader: Promise<GetExpenses> }) {
-  const { expenses } = use(dataLoader);
+function ExpenseList({ householdId }: { householdId: string }) {
+  const { data } = useSuspenseQuery(queries.expenses.getExpensesQuery(householdId));
 
   return (
     <FlatList
-      data={expenses}
+      data={data.expenses}
       ListEmptyComponent={<Text>No expenses found</Text>}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => {
@@ -46,12 +28,15 @@ function ExpenseList({ dataLoader }: { dataLoader: Promise<GetExpenses> }) {
 
 export default function Expenses() {
   const { householdId } = useLocalSearchParams<{ householdId: string }>();
+
+  if (!householdId) return null;
+
   return (
     <SafeAreaView>
       <View>
         <Text>Expenses</Text>
-        <Suspense fallback="Loading expenses...">
-          <ExpenseList dataLoader={dataLoader(householdId)} />
+        <Suspense fallback={<Text>Loading expenses...</Text>}>
+          <ExpenseList householdId={householdId} />
         </Suspense>
         <Link
           href={{

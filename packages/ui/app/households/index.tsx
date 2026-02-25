@@ -1,30 +1,9 @@
-import { API_URL } from '@/constants/Config';
-import { getValueForSecureStorage } from '@/libs/secureStorage';
 import { Link } from 'expo-router';
-import React, { Suspense, use } from 'react';
+import React, { Suspense } from 'react';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  GetHouseholdDetailsSchema,
-  type GetHouseholdDetails,
-} from '@colocapp/shared/src/household';
-
-const dataLoader = async (): Promise<GetHouseholdDetails> => {
-  const token = await getValueForSecureStorage('token');
-  const response = await fetch(`${API_URL}/api/households`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch household details');
-  }
-  const body = await response.json();
-  return GetHouseholdDetailsSchema.parse(body);
-};
+import { useSuspenseQuery } from '@tanstack/react-query';
+import queries from '@/libs/queries';
 
 function HouseholdDashboard({ householdId }: { householdId: string }) {
   return (
@@ -42,8 +21,9 @@ function HouseholdDashboard({ householdId }: { householdId: string }) {
   );
 }
 
-function HouseholdMembershipView({ dataLoader }: { dataLoader: Promise<GetHouseholdDetails> }) {
-  const { id: householdId } = use(dataLoader);
+function HouseholdMembershipView() {
+  const { data } = useSuspenseQuery(queries.households.getHouseholdsQuery());
+  const { id: householdId } = data;
 
   if (householdId) {
     return <HouseholdDashboard householdId={householdId} />;
@@ -63,7 +43,7 @@ export default function Households() {
     <SafeAreaView>
       <Text>Households</Text>
       <Suspense fallback={<Text>Loading household info...</Text>}>
-        <HouseholdMembershipView dataLoader={dataLoader()} />
+        <HouseholdMembershipView />
       </Suspense>
     </SafeAreaView>
   );

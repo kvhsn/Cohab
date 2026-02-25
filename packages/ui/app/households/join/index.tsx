@@ -1,39 +1,25 @@
-import { API_URL } from '@/constants/Config';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Button, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getValueForSecureStorage } from '@/libs/secureStorage';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import mutations from '@/libs/mutations';
 
 export default function JoinHousehold() {
   const [code, setCode] = useState('');
+  const queryClient = useQueryClient();
 
-  const handleJoin = async () => {
-    try {
-      const token = await getValueForSecureStorage('token');
-      const response = await fetch(`${API_URL}/api/households/join`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          code,
-        }),
-      });
-
-      if (response.ok) {
-        Alert.alert('Success', 'Household joined!');
-        router.push('/households');
-      } else {
-        const data = await response.json();
-        Alert.alert('Error', data.message || 'Join household failed');
-      }
-    } catch (error) {
-      console.log({ error });
-      Alert.alert('Error', 'Could not connect to server');
-    }
-  };
+  const { mutate, isPending } = useMutation({
+    ...mutations.households.joinHouseholdMutation(code),
+    onSuccess: () => {
+      Alert.alert('Success', 'Household joined!');
+      queryClient.invalidateQueries({ queryKey: ['households'] });
+      router.push('/households');
+    },
+    onError: (error) => {
+      Alert.alert('Error', error.message || 'Join household failed');
+    },
+  });
 
   return (
     <SafeAreaView>
@@ -46,7 +32,7 @@ export default function JoinHousehold() {
           keyboardType="numeric"
           onChangeText={(text) => setCode(text)}
         />
-        <Button title="Submit" onPress={handleJoin} />
+        <Button title="Submit" onPress={() => mutate()} disabled={isPending || !code} />
       </View>
     </SafeAreaView>
   );

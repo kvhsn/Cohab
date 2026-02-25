@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { API_URL } from '@/constants/Config';
 import { saveSecureStorage } from '@/libs/secureStorage';
+import { useMutation } from '@tanstack/react-query';
+import mutations from '@/libs/mutations';
 
 export default function Login() {
   const router = useRouter();
@@ -11,30 +12,17 @@ export default function Login() {
     password: '',
   });
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        Alert.alert('Success', 'Logged in!');
-        console.log('Token:', data.token);
-        await saveSecureStorage('token', data.token);
-        router.replace('/');
-      } else {
-        Alert.alert('Error', data.error || 'Login failed');
-      }
-    } catch (_error) {
-      Alert.alert('Error', 'Could not connect to server');
-    }
-  };
+  const { mutate, isPending } = useMutation({
+    ...mutations.auth.loginMutation(form),
+    onSuccess: async (data) => {
+      Alert.alert('Success', 'Logged in!');
+      await saveSecureStorage('token', data.token);
+      router.replace('/');
+    },
+    onError: (error) => {
+      Alert.alert('Error', error.message || 'Login failed');
+    },
+  });
 
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center' }}>
@@ -56,7 +44,7 @@ export default function Login() {
         onChangeText={(text) => setForm({ ...form, password: text })}
       />
 
-      <Button title="Login" onPress={handleLogin} />
+      <Button title="Login" onPress={() => mutate()} disabled={isPending} />
     </View>
   );
 }

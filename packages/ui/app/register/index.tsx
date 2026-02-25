@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import { API_URL } from '@/constants/Config';
 
 export default function Register() {
-  const router = useRouter();
   const [form, setForm] = useState({
     email: '',
     name: '',
@@ -16,30 +13,6 @@ export default function Register() {
     if (form.password !== form.confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: form.email,
-          name: form.name,
-          password: form.password,
-        }),
-      });
-
-      if (response.ok) {
-        Alert.alert('Success', 'Account created!');
-        router.push('/login');
-      } else {
-        const data = await response.json();
-        Alert.alert('Error', data.message || 'Registration failed');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Could not connect to server');
     }
   };
 

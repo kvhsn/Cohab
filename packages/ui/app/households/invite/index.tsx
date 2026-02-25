@@ -1,38 +1,26 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Alert, Button, TextInput, View, Text } from 'react-native';
-import { getValueForSecureStorage } from '@/libs/secureStorage';
-import { API_URL } from '@/constants/Config';
 import { router } from 'expo-router';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import mutations from '@/libs/mutations';
 
 export default function InviteHousehold() {
   const [householdId, setHouseholdId] = useState('');
-  const handleCreateInviteCode = async () => {
-    try {
-      const token = await getValueForSecureStorage('token');
-      const response = await fetch(`${API_URL}/api/households/${householdId}/invite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
 
-      if (response.ok) {
-        const data = await response.json();
-        Alert.alert(
-          'Success',
-          `Household Invitation created for ${householdId} with code ${data.code}`,
-        );
-        router.push('/households');
-      } else {
-        const data = await response.json();
-        Alert.alert('Error', data.message || 'Invite household failed');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Could not connect to server');
-    }
-  };
+  const { mutate, isPending } = useMutation({
+    ...mutations.households.createInviteCodeMutation(householdId),
+    onSuccess: (data) => {
+      Alert.alert(
+        'Success',
+        `Household Invitation created for ${householdId} with code ${data.code}`,
+      );
+      router.push('/households');
+    },
+    onError: (error) => {
+      Alert.alert('Error', error.message || 'Invite household failed');
+    },
+  });
 
   return (
     <SafeAreaView>
@@ -44,7 +32,10 @@ export default function InviteHousehold() {
           value={householdId}
           onChangeText={(text) => setHouseholdId(text)}
         />
-        <Button title="Create code" onPress={handleCreateInviteCode}></Button>
+        <Button
+          title="Create code"
+          onPress={() => mutate()}
+          disabled={isPending || !householdId}></Button>
       </View>
     </SafeAreaView>
   );

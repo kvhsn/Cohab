@@ -1,9 +1,9 @@
-import { API_URL } from '@/constants/Config';
-import { getValueForSecureStorage } from '@/libs/secureStorage';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Button, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import mutations from '@/libs/mutations';
 
 type Form = {
   name: string;
@@ -16,42 +16,23 @@ export default function CreateExpense() {
     name: '',
     amount: undefined,
   });
+  const queryClient = useQueryClient();
 
-  const handleOnCreateExpense = async () => {
-    if (!form.name || !form.amount) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
-
-    try {
-      const token = await getValueForSecureStorage('token');
-      const response = await fetch(`${API_URL}/api/households/${householdId}/expenses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: form.name,
-          amount: Number(form.amount),
-        }),
-      });
-
-      if (response.ok) {
-        Alert.alert('Success', 'Expense created!');
-        router.push({
-          pathname: '/households/[householdId]',
-          params: { householdId },
-        });
-      } else {
-        const data = await response.json();
-        Alert.alert('Error', data.message || 'Expense creation failed');
-      }
-    } catch (error) {
-      console.log({ error });
-      Alert.alert('Error', 'Could not connect to server');
-    }
-  };
+  const { mutate, isPending } = useMutation({
+    ...mutations.expenses.createExpenseMutation(householdId!, {
+      name: form.name,
+      amount: form.amount || 0,
+    }),
+    onSuccess: () => {
+      Alert.alert('Success', 'Expense created!');
+      queryClient.invalidateQueries({ queryKey: ['households', householdId, 'expenses'] });
+      queryClient.invalidateQueries({ queryKey: ['households', householdId, 'balance'] });
+      router.back();
+    },
+    onError: (error) => {
+      Alert.alert('Error', error.message || 'Create expense failed');
+    },
+  });
 
   return (
     <SafeAreaView>
@@ -70,7 +51,11 @@ export default function CreateExpense() {
             setForm({ ...form, amount: amount ? Number(amount) : undefined })
           }
         />
-        <Button title="Submit Expense" onPress={handleOnCreateExpense} />
+        <Button
+          title="Submit Expense"
+          onPress={() => mutate()}
+          disabled={isPending || !form.name || !form.amount}
+        />
       </View>
     </SafeAreaView>
   );
