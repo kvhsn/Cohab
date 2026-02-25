@@ -32,7 +32,6 @@ function HouseholdMembershipView() {
   return (
     <>
       <Link href="/households/create">Create</Link>
-      <Link href="/households/invite">Invite</Link>
       <Link href="/households/join">Join</Link>
     </>
   );

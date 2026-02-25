@@ -1,11 +1,9 @@
 import { mutationOptions } from '@tanstack/react-query';
 import { createExpense } from './api';
+import { CreateExpense } from '@colocapp/shared/src/expense';
 
-export const createExpenseMutation = (
-  householdId: string,
-  form: { name: string; amount: number },
-) =>
+export const createExpenseMutation = (householdId: string) =>
   mutationOptions({
     mutationKey: ['households', householdId, 'expenses'],
-    mutationFn: () => createExpense(householdId, form),
+    mutationFn: (form: CreateExpense) => createExpense(householdId, form),
   });

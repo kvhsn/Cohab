@@ -4,7 +4,7 @@ export const CreateHouseHoldSchema = z.object({
   name: z.string(),
 });
 
-export type CreateHouseHoldSchema = z.infer<typeof CreateHouseHoldSchema>;
+export type CreateHouseHold = z.infer<typeof CreateHouseHoldSchema>;
 
 export const JoinHouseHoldSchema = z.object({
   code: z
@@ -13,7 +13,7 @@ export const JoinHouseHoldSchema = z.object({
     .regex(/^[0-9]+$/),
 });
 
-export type JoinHouseHoldSchema = z.infer<typeof JoinHouseHoldSchema>;
+export type JoinHouseHold = z.infer<typeof JoinHouseHoldSchema>;
 
 export const GetHouseholdDetailsSchema = z.object({
   id: z.string().optional(),

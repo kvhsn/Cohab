@@ -1,20 +1,21 @@
 import { mutationOptions } from '@tanstack/react-query';
 import { createHousehold, createInviteCode, joinHousehold } from './api';
+import { CreateHouseHold, JoinHouseHold } from '@colocapp/shared/src/household';
 
-export const createHouseholdMutation = (name: string) =>
+export const createHouseholdMutation = () =>
   mutationOptions({
     mutationKey: ['households', 'create'],
-    mutationFn: () => createHousehold(name),
+    mutationFn: (data: CreateHouseHold) => createHousehold(data),
   });
 
-export const createInviteCodeMutation = (householdId: string) =>
+export const createInviteCodeMutation = () =>
   mutationOptions({
-    mutationKey: ['households', householdId, 'invite'],
-    mutationFn: () => createInviteCode(householdId),
+    mutationKey: ['households', 'invite'],
+    mutationFn: ({ householdId }: { householdId: string }) => createInviteCode(householdId),
   });
 
-export const joinHouseholdMutation = (code: string) =>
+export const joinHouseholdMutation = () =>
   mutationOptions({
     mutationKey: ['households', 'join'],
-    mutationFn: () => joinHousehold(code),
+    mutationFn: (data: JoinHouseHold) => joinHousehold(data),
   });

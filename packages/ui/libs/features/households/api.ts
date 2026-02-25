@@ -1,5 +1,10 @@
 import { API_URL } from '@/constants/Config';
-import { GetHouseholdDetails, GetHouseholdDetailsSchema } from '@colocapp/shared/src/household';
+import {
+  CreateHouseHold,
+  GetHouseholdDetails,
+  GetHouseholdDetailsSchema,
+  JoinHouseHold,
+} from '@colocapp/shared/src/household';
 import { getAuthHeaders } from '@/libs/secureStorage';
 import { Balance, BalanceSchema } from '@colocapp/shared/src/balance';
 import { RefundsSchema } from '@colocapp/shared/src/refund';
@@ -46,14 +51,12 @@ export const getRefunds = async (householdId: string) => {
   return RefundsSchema.parse(body).refunds;
 };
 
-export const createHousehold = async (name: string) => {
+export const createHousehold = async (data: CreateHouseHold) => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({
-      name,
-    }),
+    body: JSON.stringify(data),
   });
 
   if (!response.ok) {
@@ -78,14 +81,12 @@ export const createInviteCode = async (householdId: string) => {
   return response.json();
 };
 
-export const joinHousehold = async (code: string) => {
+export const joinHousehold = async (data: JoinHouseHold) => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households/join`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({
-      code,
-    }),
+    body: JSON.stringify(data),
   });
 
   if (!response.ok) {

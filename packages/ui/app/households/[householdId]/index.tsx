@@ -34,9 +34,13 @@ export default function HouseholdDetails() {
           }}>
           Show refunds
         </Link>
-        <View>
-          <Link href="/households">Back to Households</Link>
-        </View>
+        <Link
+          href={{
+            pathname: '/households/[householdId]/invite',
+            params: { householdId },
+          }}>
+          Invite
+        </Link>
       </View>
     </SafeAreaView>
   );

@@ -144,7 +144,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
         where: { householdId },
         update: { code: generatedCode, createdAt: new Date() },
         create: { householdId, code: generatedCode },
-        select: { code: true, householdId: true },
+        select: { code: true },
       });
 
       return c.json(invitation, 200);
