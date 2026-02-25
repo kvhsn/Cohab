@@ -1,32 +1,43 @@
 import { Context, Next } from 'hono';
-import { jwt, sign } from 'hono/jwt';
-import { JwtToken } from '../types/Auth';
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { prisma } from './prisma';
+import { expo } from '@better-auth/expo';
 
-export const generateToken = async (userId: string) => {
-  if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is not set');
-  }
-  const now = Math.floor(Date.now() / 1000); // Current time in SECONDS
+const trustedOrigins = [
+  'colocapp://',
+  // Development mode - Expo's exp:// scheme with local IP ranges
+  ...(process.env.NODE_ENV === 'development'
+    ? [
+        'exp://', // Trust all Expo URLs (prefix matching)
+        'exp://**', // Trust all Expo URLs (wildcard matching)
+        'exp://192.168.*.*:*/**', // Trust 192.168.x.x IP range with any port and path
+      ]
+    : []),
+];
 
-  return await sign(
-    {
-      sub: userId,
-      iat: now,
-      exp: now + 3 * 24 * 3600, // 3 days
-    } as JwtToken,
-    process.env.JWT_SECRET,
-  );
-};
+export const auth = betterAuth({
+  plugins: [expo()],
+  emailAndPassword: {
+    enabled: true,
+  },
+  database: prismaAdapter(prisma, {
+    provider: 'postgresql',
+  }),
+  trustedOrigins,
+});
 
-function withAuth(c: Context, next: Next) {
-  if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is not set');
-  }
-  const jwtMiddleware = jwt({
-    secret: process.env.JWT_SECRET,
-    alg: 'HS256',
+export async function withAuth(c: Context, next: Next) {
+  const session = await auth.api.getSession({
+    headers: c.req.raw.headers,
   });
-  return jwtMiddleware(c, next);
-}
 
-export default withAuth;
+  if (!session) {
+    return c.json({ status: 'error', message: 'Unauthorized' }, 401);
+  }
+
+  c.set('session', session.session);
+  c.set('user', session.user);
+
+  return next();
+}

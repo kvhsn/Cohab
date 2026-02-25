@@ -12,13 +12,15 @@ export async function deleteValueForSecureStorage(key: string) {
   return await SecureStore.deleteItemAsync(key);
 }
 
+import { authClient } from './auth';
+
 export async function getAuthHeaders(
   additionalHeaders: Record<string, string> = { 'Content-Type': 'application/json' },
 ) {
-  const token = await getValueForSecureStorage('token');
   const headers: Record<string, string> = { ...additionalHeaders };
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  const cookies = authClient.getCookie();
+  if (cookies) {
+    headers['Cookie'] = cookies;
   }
   return headers;
 }

@@ -1,46 +1,37 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import auth from './auth';
 import household from './household';
 import { requestId } from 'hono/request-id';
-import { prisma } from './libs/prisma';
+import { auth } from './libs/auth';
+import { showRoutes } from 'hono/dev';
 
 const app = new Hono().basePath('/api');
 
 app.use('/*', cors());
 app.use('*', requestId());
 
-app.route('/', auth);
+app.on(['POST', 'GET'], '/auth/*', (c) => auth.handler(c.req.raw));
 app.route('/', household);
 
 app.get('/health', (c) => {
   return c.json({ status: 'ok' });
 });
 
-const port = 3000;
-
-const server = serve(
+serve(
   {
     fetch: app.fetch,
-    port,
+    port: 3000,
     hostname: '0.0.0.0',
   },
   (info) => {
-    console.log(`Server is running on port ${info.port}`);
+    console.log(`Server is running on ${info.address}:${info.port} in ${process.env.NODE_ENV}`);
+    if (process.env.NODE_ENV === 'development') {
+      showRoutes(app, {
+        verbose: true,
+      });
+    }
   },
 );
-
-const shutdown = async () => {
-  console.log('Shutting down server...');
-  await prisma.$disconnect();
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
-};
-
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
 
 export default app;

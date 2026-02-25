@@ -1,6 +1,5 @@
-import { JwtVariables } from 'hono/jwt';
+import { auth } from '../libs/auth';
 import { ExtendedPrismaClient } from '../libs/prisma';
-import { JwtToken } from './Auth';
 
 type RequestIdVariables = {
   requestId: RequestIdVariables;
@@ -13,5 +12,8 @@ export type ContextWithPrisma = {
 } & RequestIdVariables;
 
 export type ContextWithAuth = {
-  Variables: JwtVariables<JwtToken>;
+  Variables: {
+    user: typeof auth.$Infer.Session.user;
+    session: typeof auth.$Infer.Session.session;
+  };
 } & RequestIdVariables;

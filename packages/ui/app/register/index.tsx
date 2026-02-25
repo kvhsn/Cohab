@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useMutation } from '@tanstack/react-query';
+import mutations from '@/libs/mutations';
 
 export default function Register() {
+  const router = useRouter();
   const [form, setForm] = useState({
     email: '',
     name: '',
@@ -9,11 +13,29 @@ export default function Register() {
     confirmPassword: '',
   });
 
-  const handleRegister = async () => {
+  const { mutate, isPending } = useMutation({
+    ...mutations.auth.registerMutation(),
+    onSuccess: () => {
+      Alert.alert('Success', 'Registered! Please login.');
+      router.replace('/login');
+    },
+    onError: (error) => {
+      console.log({ error });
+      Alert.alert('Error', error.message || 'Registration failed');
+    },
+  });
+
+  const handleRegister = () => {
     if (form.password !== form.confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return;
     }
+
+    mutate({
+      email: form.email,
+      password: form.password,
+      name: form.name,
+    });
   };
 
   return (
@@ -50,7 +72,7 @@ export default function Register() {
         onChangeText={(text) => setForm({ ...form, confirmPassword: text })}
       />
 
-      <Button title="Register" onPress={handleRegister} />
+      <Button title="Register" onPress={handleRegister} disabled={isPending} />
     </View>
   );
 }

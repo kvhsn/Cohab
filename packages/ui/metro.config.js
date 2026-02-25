@@ -10,4 +10,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(__dirname, '../../node_modules'),
 ];
 
+// Required for better-auth
+config.resolver.unstable_enablePackageExports = true;
+
 module.exports = config;

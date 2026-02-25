@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import withAuth from '../../libs/auth';
+import { withAuth } from '../../libs/auth';
 import { ContextWithAuth, ContextWithPrisma } from '../../types/Contexts';
 import withPrisma from '../../libs/prisma';
 import { createBalance } from '../expenses/helpers';
@@ -8,7 +8,7 @@ import { createRefunds } from './helpers';
 export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .basePath('/:householdId')
   .get('/refunds', withAuth, withPrisma, async (c) => {
-    const { sub: userId } = c.get('jwtPayload');
+    const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
     const householdId = c.req.param('householdId');
     try {

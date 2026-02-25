@@ -1,6 +1,6 @@
 import withPrisma from '../libs/prisma';
 import { zValidator } from '@hono/zod-validator';
-import withAuth from '../libs/auth';
+import { withAuth } from '../libs/auth';
 import { ContextWithAuth, ContextWithPrisma } from '../types/Contexts';
 import { Hono } from 'hono';
 import crypto from 'node:crypto';
@@ -17,7 +17,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .basePath('/households')
   .post('/', withAuth, withPrisma, zValidator('json', CreateHouseHoldSchema), async (c) => {
     const { name } = c.req.valid('json');
-    const { sub: userId } = c.get('jwtPayload');
+    const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
     try {
       const user = await prisma.user.findUniqueOrThrow({
@@ -58,7 +58,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
     }
   })
   .get('/', withAuth, withPrisma, async (c) => {
-    const { sub: userId } = c.get('jwtPayload');
+    const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
     try {
       const { household } = await prisma.user.findUniqueOrThrow({
@@ -75,7 +75,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
   })
   .post('/join', withAuth, withPrisma, zValidator('json', JoinHouseHoldSchema), async (c) => {
     try {
-      const { sub: userId } = c.get('jwtPayload');
+      const { id: userId } = c.get('user');
       const prisma = c.get('prisma');
       const { code } = c.req.valid('json');
 
@@ -115,7 +115,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
   })
   .post('/:householdId/invite', withAuth, withPrisma, async (c) => {
     const householdId = c.req.param('householdId');
-    const { sub: userId } = c.get('jwtPayload');
+    const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
     try {
       const user = await prisma.user.findUniqueOrThrow({

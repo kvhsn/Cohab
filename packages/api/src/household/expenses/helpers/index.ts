@@ -1,5 +1,5 @@
 import { Expense } from '../types';
-import { Refund } from '../../refunds/types';
+import { Refund } from '@colocapp/shared/src/refund';
 import { Balance } from '@colocapp/shared/src/balance';
 
 export const createBalance = (

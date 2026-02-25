@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import { saveSecureStorage } from '@/libs/secureStorage';
+import { useRouter, Link } from 'expo-router';
 import { useMutation } from '@tanstack/react-query';
 import mutations from '@/libs/mutations';
 
@@ -13,16 +12,19 @@ export default function Login() {
   });
 
   const { mutate, isPending } = useMutation({
-    ...mutations.auth.loginMutation(form),
-    onSuccess: async (data) => {
+    ...mutations.auth.loginMutation(),
+    onSuccess: () => {
       Alert.alert('Success', 'Logged in!');
-      await saveSecureStorage('token', data.token);
       router.replace('/');
     },
     onError: (error) => {
       Alert.alert('Error', error.message || 'Login failed');
     },
   });
+
+  const handleLogin = () => {
+    mutate({ email: form.email, password: form.password });
+  };
 
   return (
     <View style={{ flex: 1, padding: 20, justifyContent: 'center' }}>
@@ -44,7 +46,12 @@ export default function Login() {
         onChangeText={(text) => setForm({ ...form, password: text })}
       />
 
-      <Button title="Login" onPress={() => mutate()} disabled={isPending} />
+      <Button title="Login" onPress={handleLogin} disabled={isPending} />
+
+      <View>
+        <Text>Don't have an account?</Text>
+        <Link href="/register">Register here</Link>
+      </View>
     </View>
   );
 }

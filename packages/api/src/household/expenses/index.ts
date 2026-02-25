@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { ContextWithAuth, ContextWithPrisma } from '../../types/Contexts';
 import { zValidator } from '@hono/zod-validator';
 import withPrisma from '../../libs/prisma';
-import withAuth from '../../libs/auth';
+import { withAuth } from '../../libs/auth';
 import { CreateExpenseSchema, GetExpenses } from '@colocapp/shared/src/expense';
 import { createBalance } from './helpers';
 
@@ -10,7 +10,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .basePath('/:householdId')
   .get('/balance', withAuth, withPrisma, async (c) => {
     const householdId = c.req.param('householdId');
-    const { sub: userId } = c.get('jwtPayload');
+    const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
 
     try {
@@ -67,7 +67,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .post('/', withAuth, withPrisma, zValidator('json', CreateExpenseSchema), async (c) => {
     const { name, amount } = c.req.valid('json');
     const householdId = c.req.param('householdId');
-    const { sub: userId } = c.get('jwtPayload');
+    const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
 
     try {
@@ -96,7 +96,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
     }
   })
   .get('/', withAuth, withPrisma, async (c) => {
-    const { sub: userId } = c.get('jwtPayload');
+    const { id: userId } = c.get('user');
     const householdId = c.req.param('householdId');
     const prisma = c.get('prisma');
     try {
@@ -140,7 +140,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
     }
   })
   .delete('/:expenseId', withAuth, withPrisma, async (c) => {
-    const { sub: userId } = c.get('jwtPayload');
+    const { id: userId } = c.get('user');
     const householdId = c.req.param('householdId');
     const expenseId = c.req.param('expenseId');
     const prisma = c.get('prisma');

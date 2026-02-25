@@ -13,11 +13,6 @@ const adapter = new PrismaPg({
 
 export const prisma = new PrismaClient({
   adapter,
-  omit: {
-    user: {
-      password: true,
-    },
-  },
 });
 
 export type ExtendedPrismaClient = typeof prisma;

@@ -1,27 +1,24 @@
-import { deleteValueForSecureStorage, getValueForSecureStorage } from '@/libs/secureStorage';
-import { useEffect, useState } from 'react';
+import { authClient } from '@/libs/auth';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
 
 export const useAuth = () => {
-  const [isLogged, setIsLogged] = useState<boolean | null>(null);
-
-  const checkAuth = async () => {
-    try {
-      const token = await getValueForSecureStorage('token');
-      setIsLogged(!!token);
-    } catch (error) {
-      console.error('Failed to check auth status:', error);
-      setIsLogged(false);
-    }
-  };
-
-  const logout = async () => {
-    await deleteValueForSecureStorage('token');
-    setIsLogged(false);
-  };
+  const { data, isPending } = authClient.useSession();
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    if (!isPending && !data) {
+      router.replace('/login');
+    }
+  }, [data, isPending]);
 
-  return { isLogged, logout };
+  const logout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.replace('/login');
+        },
+      },
+    });
+  };
+  return { data, isPending, logout };
 };

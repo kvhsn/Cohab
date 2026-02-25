@@ -1,78 +1,132 @@
 generator client {
-    provider = "prisma-client-js"
-    output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-    provider = "postgresql"
+  provider = "postgresql"
 }
 
 model User {
-    id        String   @id @default(cuid())
-    email     String   @unique
-    password  String
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    houseHoldId           String?
-    household             Household? @relation("HouseHold_members", fields: [houseHoldId], references: [id])
-    administeredHouseHold Household? @relation("HouseHold_admin")
+  houseHoldId           String?
+  household             Household? @relation("HouseHold_members", fields: [houseHoldId], references: [id])
+  administeredHouseHold Household? @relation("HouseHold_admin")
 
-    expenses    Expense[] @relation("Member_expense")
-    refundsFrom Refund[]  @relation("Member_from_refund")
-    refundsTo   Refund[]  @relation("Member_to_refund")
+  expenses    Expense[] @relation("Member_expense")
+  refundsFrom Refund[]  @relation("Member_from_refund")
+  refundsTo   Refund[]  @relation("Member_to_refund")
 
-    @@unique([id, houseHoldId]) // Prevent a user from being in multiple households
+  // Prevent a user from being in multiple households
+  emailVerified Boolean   @default(false)
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([id, houseHoldId])
+  @@map("user")
 }
 
 model Household {
-    id        String   @id @default(cuid())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    adminId String @unique
-    members User[] @relation("HouseHold_members")
-    admin   User   @relation("HouseHold_admin", fields: [adminId], references: [id])
+  adminId String @unique
+  members User[] @relation("HouseHold_members")
+  admin   User   @relation("HouseHold_admin", fields: [adminId], references: [id])
 
-    invitation Invitation? @relation("HouseHold_invitation")
-    Expenses   Expense[]   @relation("HouseHold_expense")
-    Refunds    Refund[]    @relation("HouseHold_refund")
+  invitation Invitation? @relation("HouseHold_invitation")
+  Expenses   Expense[]   @relation("HouseHold_expense")
+  Refunds    Refund[]    @relation("HouseHold_refund")
 }
 
 model Invitation {
-    id          String    @id @default(cuid())
-    householdId String    @unique
-    createdAt   DateTime  @default(now())
-    code        String    @unique
-    household   Household @relation("HouseHold_invitation", fields: [householdId], references: [id])
+  id          String    @id @default(cuid())
+  householdId String    @unique
+  createdAt   DateTime  @default(now())
+  code        String    @unique
+  household   Household @relation("HouseHold_invitation", fields: [householdId], references: [id])
 }
 
 model Expense {
-    id          String    @id @default(cuid())
-    name        String
-    amount      Float
-    householdId String
-    household   Household @relation("HouseHold_expense", fields: [householdId], references: [id])
-    memberId    String
-    member      User      @relation("Member_expense", fields: [memberId], references: [id])
+  id          String    @id @default(cuid())
+  name        String
+  amount      Float
+  householdId String
+  household   Household @relation("HouseHold_expense", fields: [householdId], references: [id])
+  memberId    String
+  member      User      @relation("Member_expense", fields: [memberId], references: [id])
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Refund {
-    id           String    @id @default(cuid())
-    name         String?
-    amount       Float
-    householdId  String
-    household    Household @relation("HouseHold_refund", fields: [householdId], references: [id])
-    fromMemberId String
-    fromMember   User      @relation("Member_from_refund", fields: [fromMemberId], references: [id])
-    toMemberId   String
-    toMember     User      @relation("Member_to_refund", fields: [toMemberId], references: [id])
+  id           String    @id @default(cuid())
+  name         String?
+  amount       Float
+  householdId  String
+  household    Household @relation("HouseHold_refund", fields: [householdId], references: [id])
+  fromMemberId String
+  fromMember   User      @relation("Member_from_refund", fields: [fromMemberId], references: [id])
+  toMemberId   String
+  toMember     User      @relation("Member_to_refund", fields: [toMemberId], references: [id])
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
