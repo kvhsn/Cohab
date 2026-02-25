@@ -100,6 +100,7 @@ Every agent must utilize these tools for any technical documentation or implemen
 - Implement a seamless **Onboarding flow** using Expo Router.
 - Build the interactive expense logger and shared grocery list with NativeWind for styling.
 - Ensure offline-first support and smooth navigation.
+- **Architecture Standard (Data Fetching):** Strictly follow Vertical Feature Slicing (`libs/features/[featureName]/{api,mutations,queries}.ts`). Use named exports for TanStack Query v5 definitions, and centralize them in `libs/queries.ts` and `libs/mutations.ts` for UI consumption. Never use raw `fetch` calls or manual loading states in React component files; always use `useMutation` and `useSuspenseQuery`.
 
 ## 📋 4. Product Owner / UX Specialist
 
