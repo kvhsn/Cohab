@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "colocapp",
-    "slug": "colocapp",
+    "name": "Cohab",
+    "slug": "cohab",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "colocapp",
+    "scheme": "cohab",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
@@ -35,7 +35,7 @@
         "expo-secure-store",
         {
           "configureAndroidBackup": true,
-          "faceIDPermission": "Allow ColocApp to access your Face ID biometric data."
+          "faceIDPermission": "Allow Cohab to access your Face ID biometric data."
         }
       ],
       [

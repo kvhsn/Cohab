@@ -5,7 +5,7 @@ import { prisma } from './prisma';
 import { expo } from '@better-auth/expo';
 
 const trustedOrigins = [
-  'colocapp://',
+  'cohab://',
   // Development mode - Expo's exp:// scheme with local IP ranges
   ...(process.env.NODE_ENV === 'development'
     ? [

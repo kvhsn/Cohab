@@ -1,6 +1,6 @@
 import { Expense } from '../types';
-import { Refund } from '@colocapp/shared/src/refund';
-import { Balance } from '@colocapp/shared/src/balance';
+import { Refund } from '@cohab/shared/src/refund';
+import { Balance } from '@cohab/shared/src/balance';
 
 export const createBalance = (
   expenses: Expense[],

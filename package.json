@@ -1,7 +1,7 @@
 {
-  "name": "colocapp-monorepo",
+  "name": "cohab-monorepo",
   "version": "1.0.0",
-  "description": "Coloc App - Roommate management platform",
+  "description": "Cohab - Roommate management platform",
   "author": "Kevin Hassan",
   "license": "MIT",
   "private": true,

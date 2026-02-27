@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { createBalance } from '.';
 import { Expense } from '../types';
-import { Refund } from '@colocapp/shared/src/refund';
+import { Refund } from '@cohab/shared/src/refund';
 
 describe('createBalance', () => {
   test('should handle no expense', () => {

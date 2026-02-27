@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import mutations from '@/libs/mutations';
 import { router } from 'expo-router';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { CreateHouseHoldSchema } from '@colocapp/shared/src/household';
+import { CreateHouseHoldSchema } from '@cohab/shared/src/household';
 
 export default function CreateHousehold() {
   const queryClient = useQueryClient();

@@ -10,7 +10,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView>
       <View>
-        <Text>Coloc App</Text>
+        <Text>Cohab</Text>
         <Text>Simplify your shared living experience.</Text>
         <Link href="/households">Households</Link>
         <Button title="Logout" onPress={logout} />

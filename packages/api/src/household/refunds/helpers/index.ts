@@ -1,5 +1,5 @@
-import { Balance } from '@colocapp/shared/src/balance';
-import { Refund } from '@colocapp/shared/src/refund';
+import { Balance } from '@cohab/shared/src/balance';
+import { Refund } from '@cohab/shared/src/refund';
 
 export const createRefunds = (balance: Balance): Refund[] => {
   const refunds: Refund[] = [];

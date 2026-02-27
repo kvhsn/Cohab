@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useMutation } from '@tanstack/react-query';
 import mutations from '@/libs/mutations';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { RegisterSchema } from '@colocapp/shared/src/auth';
+import { RegisterSchema } from '@cohab/shared/src/auth';
 
 export default function Register() {
   const router = useRouter();

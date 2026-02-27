@@ -9,7 +9,7 @@ import {
   CreateHouseHoldSchema,
   GetHouseholdDetails,
   JoinHouseHoldSchema,
-} from '@colocapp/shared/src/household';
+} from '@cohab/shared/src/household';
 import expenses from './expenses';
 import refunds from './refunds';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@colocapp/api",
+  "name": "@cohab/api",
   "version": "1.0.0",
   "scripts": {
     "start": "tsx watch --include src --include ../shared/src --env-file=.env src/index.ts",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@better-auth/expo": "^1.4.19",
-    "@colocapp/shared": "workspace:*",
+    "@cohab/shared": "workspace:*",
     "@hono/node-server": "^1.13.7",
     "@hono/zod-validator": "^0.7.6",
     "@prisma/adapter-pg": "^7.4.0",

@@ -3,7 +3,7 @@ import { ContextWithAuth, ContextWithPrisma } from '../../types/Contexts';
 import { zValidator } from '@hono/zod-validator';
 import withPrisma from '../../libs/prisma';
 import { withAuth } from '../../libs/auth';
-import { CreateExpenseSchema, GetExpenses } from '@colocapp/shared/src/expense';
+import { CreateExpenseSchema, GetExpenses } from '@cohab/shared/src/expense';
 import { createBalance } from './helpers';
 
 export default new Hono<ContextWithPrisma & ContextWithAuth>()

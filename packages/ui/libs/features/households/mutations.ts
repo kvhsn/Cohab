@@ -1,6 +1,6 @@
 import { mutationOptions } from '@tanstack/react-query';
 import { createHousehold, createInviteCode, joinHousehold } from './api';
-import { CreateHouseHold, JoinHouseHold } from '@colocapp/shared/src/household';
+import { CreateHouseHold, JoinHouseHold } from '@cohab/shared/src/household';
 
 export const createHouseholdMutation = () =>
   mutationOptions({

@@ -1,6 +1,6 @@
 import { API_URL } from '@/constants/Config';
 import { getAuthHeaders } from '@/libs/secureStorage';
-import { GetExpenses, GetExpensesSchema } from '@colocapp/shared/src/expense';
+import { GetExpenses, GetExpensesSchema } from '@cohab/shared/src/expense';
 
 export const getExpenses = async (householdId: string): Promise<GetExpenses> => {
   const headers = await getAuthHeaders();

@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import mutations from '@/libs/mutations';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { JoinHouseHoldSchema } from '@colocapp/shared/src/household';
+import { JoinHouseHoldSchema } from '@cohab/shared/src/household';
 
 export default function JoinHousehold() {
   const queryClient = useQueryClient();

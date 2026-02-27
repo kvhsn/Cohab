@@ -4,7 +4,7 @@ import { useRouter, Link } from 'expo-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import mutations from '@/libs/mutations';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { LoginSchema } from '@colocapp/shared/src/auth';
+import { LoginSchema } from '@cohab/shared/src/auth';
 
 export default function Login() {
   const router = useRouter();

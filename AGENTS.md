@@ -1,6 +1,6 @@
-# 🤖 Agents.md - Coloc App Project
+# 🤖 Agents.md - Cohab Project
 
-This document defines the specialized roles, technical constraints, and mandatory tools for the development of **Coloc App**, a roommate management platform.
+This document defines the specialized roles, technical constraints, and mandatory tools for the development of **Cohab**, a roommate management platform.
 
 ## 📌 Project Overview
 
@@ -23,11 +23,11 @@ The project uses **Nx** with **pnpm workspaces** for scalable monorepo managemen
 ### Workspace Structure
 
 ```
-colocapp/
+cohab/
 ├── packages/
-│   ├── ui/          # @colocapp/ui - Expo React Native app
-│   ├── api/         # @colocapp/api - Hono backend server
-│   └── shared/      # @colocapp/shared - Shared types, schemas, and utilities
+│   ├── ui/          # @cohab/ui - Expo React Native app
+│   ├── api/         # @cohab/api - Hono backend server
+│   └── shared/      # @cohab/shared - Shared types, schemas, and utilities
 ├── nx.json          # Nx configuration & caching
 ├── pnpm-workspace.yaml
 └── package.json     # Root orchestration
@@ -44,8 +44,8 @@ Root-level commands run across all workspaces via Nx:
 
 Workspace-specific commands:
 
-- `nx run @colocapp/ui:start` - Start UI only
-- `nx run @colocapp/api:dev` - Start API dev server
+- `nx run @cohab/ui:start` - Start UI only
+- `nx run @cohab/api:dev` - Start API dev server
 
 ---
 
@@ -79,7 +79,7 @@ Every agent must utilize these tools for any technical documentation or implemen
 - Design and maintain the **PostgreSQL schema** via Prisma (Users, Households, Tasks, Expenses, Splits).
 - Enforce authentication flows and role-based access (Admin vs. Member).
 - Use `mcp context7` to validate library choices against the 2026 tech landscape.
-- Oversee the integration between `@colocapp/api` and `@colocapp/ui`.
+- Oversee the integration between `@cohab/api` and `@cohab/ui`.
 
 ## 🚀 2. Backend Developer & DBA
 
@@ -122,8 +122,8 @@ Every agent must utilize these tools for any technical documentation or implemen
 - `pnpm build` - Build all packages via Nx
 - `pnpm lint` - Lint all packages
 - `pnpm format` - Format all packages
-- `nx run @colocapp/ui:start` - Start the Expo app
-- `nx run @colocapp/api:dev` - Start the Hono API in dev mode
+- `nx run @cohab/ui:start` - Start the Expo app
+- `nx run @cohab/api:dev` - Start the Hono API in dev mode
 
 ### Commit Convention
 
@@ -135,6 +135,6 @@ Use atomic commits with clear descriptions. Reference issues if applicable.
 
 When starting a new session with an AI assistant, use the following header:
 
-> "I am working on **Coloc App**. Act as the **[Insert Agent Name]**.
+> "I am working on **Cohab**. Act as the **[Insert Agent Name]**.
 > Reference the `agents.md` for project context.
 > Use

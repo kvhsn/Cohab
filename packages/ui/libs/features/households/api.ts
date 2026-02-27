@@ -4,10 +4,10 @@ import {
   GetHouseholdDetails,
   GetHouseholdDetailsSchema,
   JoinHouseHold,
-} from '@colocapp/shared/src/household';
+} from '@cohab/shared/src/household';
 import { getAuthHeaders } from '@/libs/secureStorage';
-import { Balance, BalanceSchema } from '@colocapp/shared/src/balance';
-import { RefundsSchema } from '@colocapp/shared/src/refund';
+import { Balance, BalanceSchema } from '@cohab/shared/src/balance';
+import { RefundsSchema } from '@cohab/shared/src/refund';
 
 export const getHouseholds = async (): Promise<GetHouseholdDetails> => {
   const headers = await getAuthHeaders();
