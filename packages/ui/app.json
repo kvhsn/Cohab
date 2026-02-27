@@ -37,6 +37,13 @@
           "configureAndroidBackup": true,
           "faceIDPermission": "Allow ColocApp to access your Face ID biometric data."
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "buildReactNativeFromSource": true,
+          "useHermesV1": true
+        }
       ]
     ],
     "experiments": {
