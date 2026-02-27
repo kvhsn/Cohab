@@ -42,9 +42,8 @@ export default function CreateHousehold() {
       <View>
         <Text>Create Household</Text>
         <View>
-          <form.AppField
-            name="name"
-            children={(field) => (
+          <form.AppField name="name">
+            {(field) => (
               <field.TextInput
                 placeholder="Household name"
                 autoCapitalize="none"
@@ -53,7 +52,7 @@ export default function CreateHousehold() {
                 onBlur={field.handleBlur}
               />
             )}
-          />
+          </form.AppField>
           <form.Button title="Submit" disabled={isPending} onPress={() => form.handleSubmit()} />
         </View>
       </View>

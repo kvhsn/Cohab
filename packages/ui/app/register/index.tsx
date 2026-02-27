@@ -61,9 +61,8 @@ export default function Register() {
     <View style={{ flex: 1, padding: 20, justifyContent: 'center' }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Register</Text>
       <View>
-        <form.AppField
-          name="name"
-          children={(field) => (
+        <form.AppField name="name">
+          {(field) => (
             <field.TextInput
               placeholder="Name"
               autoCapitalize="none"
@@ -72,10 +71,9 @@ export default function Register() {
               onBlur={field.handleBlur}
             />
           )}
-        />
-        <form.AppField
-          name="email"
-          children={(field) => (
+        </form.AppField>
+        <form.AppField name="email">
+          {(field) => (
             <field.TextInput
               placeholder="Email"
               autoCapitalize="none"
@@ -84,10 +82,9 @@ export default function Register() {
               onBlur={field.handleBlur}
             />
           )}
-        />
-        <form.AppField
-          name="password"
-          children={(field) => (
+        </form.AppField>
+        <form.AppField name="password">
+          {(field) => (
             <field.TextInput
               placeholder="Password"
               autoCapitalize="none"
@@ -97,10 +94,9 @@ export default function Register() {
               onBlur={field.handleBlur}
             />
           )}
-        />
-        <form.AppField
-          name="confirmPassword"
-          children={(field) => (
+        </form.AppField>
+        <form.AppField name="confirmPassword">
+          {(field) => (
             <field.TextInput
               placeholder="Confirm Password"
               autoCapitalize="none"
@@ -110,7 +106,7 @@ export default function Register() {
               onBlur={field.handleBlur}
             />
           )}
-        />
+        </form.AppField>
         <form.Button title="Register" disabled={isPending} onPress={() => form.handleSubmit()} />
       </View>
     </View>

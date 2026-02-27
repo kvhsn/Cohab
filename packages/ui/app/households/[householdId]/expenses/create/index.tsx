@@ -53,9 +53,8 @@ export default function CreateExpense() {
       <View>
         <Text>Create Expense</Text>
         <View>
-          <form.AppField
-            name="name"
-            children={(field) => (
+          <form.AppField name="name">
+            {(field) => (
               <field.TextInput
                 placeholder="Name (e.g., Groceries)"
                 value={field.state.value}
@@ -64,10 +63,9 @@ export default function CreateExpense() {
                 keyboardType="default"
               />
             )}
-          />
-          <form.AppField
-            name="amount"
-            children={(field) => (
+          </form.AppField>
+          <form.AppField name="amount">
+            {(field) => (
               <field.TextInput
                 placeholder="Amount"
                 value={field.state.value.toString()}
@@ -75,7 +73,7 @@ export default function CreateExpense() {
                 onBlur={field.handleBlur}
               />
             )}
-          />
+          </form.AppField>
           <form.Button
             title="Submit Expense"
             disabled={isPending}

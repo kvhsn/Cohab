@@ -52,9 +52,8 @@ export default function Login() {
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Login</Text>
 
       <View>
-        <form.AppField
-          name="email"
-          children={(field) => (
+        <form.AppField name="email">
+          {(field) => (
             <field.TextInput
               placeholder="Email"
               keyboardType="email-address"
@@ -64,11 +63,10 @@ export default function Login() {
               onBlur={field.handleBlur}
             />
           )}
-        />
+        </form.AppField>
 
-        <form.AppField
-          name="password"
-          children={(field) => (
+        <form.AppField name="password">
+          {(field) => (
             <field.TextInput
               placeholder="Password"
               autoCapitalize="none"
@@ -78,13 +76,13 @@ export default function Login() {
               onBlur={field.handleBlur}
             />
           )}
-        />
+        </form.AppField>
 
         <form.Button title="Login" disabled={isPending} onPress={() => form.handleSubmit()} />
       </View>
 
       <View style={{ marginTop: 20 }}>
-        <Text>Don't have an account?</Text>
+        <Text>Don&apos;t have an account?</Text>
         <Link href="/register">Register here</Link>
       </View>
     </View>

@@ -46,9 +46,8 @@ export default function JoinHousehold() {
       <View>
         <Text>Join Household</Text>
         <View>
-          <form.AppField
-            name="code"
-            children={(field) => (
+          <form.AppField name="code">
+            {(field) => (
               <field.TextInput
                 placeholder="join code"
                 autoCapitalize="none"
@@ -58,7 +57,7 @@ export default function JoinHousehold() {
                 onBlur={field.handleBlur}
               />
             )}
-          />
+          </form.AppField>
           <form.Button title="Submit" disabled={isPending} onPress={() => form.handleSubmit()} />
         </View>
       </View>
