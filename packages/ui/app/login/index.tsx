@@ -48,9 +48,8 @@ export default function Login() {
   });
 
   return (
-    <View style={{ flex: 1, padding: 20, justifyContent: 'center' }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Login</Text>
-
+    <View>
+      <Text>Login</Text>
       <View>
         <form.AppField name="email">
           {(field) => (
@@ -81,7 +80,7 @@ export default function Login() {
         <form.Button title="Login" disabled={isPending} onPress={() => form.handleSubmit()} />
       </View>
 
-      <View style={{ marginTop: 20 }}>
+      <View>
         <Text>Don&apos;t have an account?</Text>
         <Link href="/register">Register here</Link>
       </View>

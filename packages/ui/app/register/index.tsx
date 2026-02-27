@@ -58,8 +58,8 @@ export default function Register() {
   });
 
   return (
-    <View style={{ flex: 1, padding: 20, justifyContent: 'center' }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Register</Text>
+    <View>
+      <Text>Register</Text>
       <View>
         <form.AppField name="name">
           {(field) => (

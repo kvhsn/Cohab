@@ -97,6 +97,7 @@ Every agent must utilize these tools for any technical documentation or implemen
 **Directives:**
 
 - **Mandatory:** Apply `skill /react-native-best-practices:react-native-best-practices` to all components.
+- **Styling Standard:** Always use **NativeWind (Tailwind CSS)** via the `className` attribute for styling. **Strictly avoid using the `style` attribute** or `StyleSheet.create` unless absolutely necessary for dynamic values that cannot be expressed via Tailwind (e.g., calculated pixel coordinates from an animation).
 - Implement a seamless **Onboarding flow** using Expo Router.
 - Build the interactive expense logger and shared grocery list with NativeWind for styling.
 - Ensure offline-first support and smooth navigation.
