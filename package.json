@@ -28,5 +28,12 @@
     "prettier": "^3.8.1",
     "eslint": "^9.25.0",
     "typescript": "~5.9.2"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowAny": [
+        "expo-network"
+      ]
+    }
   }
 }
