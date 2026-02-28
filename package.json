@@ -24,15 +24,27 @@
   "devDependencies": {
     "@expo/cli": "~54.0.16",
     "@nx/expo": "22.5.0",
+    "@nx/js": "22.5.0",
     "@nx/node": "22.5.0",
+    "@nx/vite": "22.5.0",
+    "@nx/vitest": "22.5.0",
+    "@swc-node/register": "~1.11.1",
+    "@swc/core": "~1.15.5",
+    "@swc/helpers": "~0.5.18",
+    "@types/node": "20.19.9",
+    "@vitest/coverage-v8": "^4.0.0",
     "eslint": "^9.25.0",
     "husky": "^9.1.7",
+    "jsdom": "^27.1.0",
     "lint-staged": "^16.2.7",
     "metro-config": "~0.83.0",
     "metro-resolver": "~0.83.0",
     "nx": "latest",
     "prettier": "^3.8.1",
-    "typescript": "~5.9.2"
+    "tslib": "^2.3.0",
+    "typescript": "~5.9.2",
+    "vite": "^7.0.0",
+    "vitest": "^4.0.8"
   },
   "pnpm": {
     "peerDependencyRules": {

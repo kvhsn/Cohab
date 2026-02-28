@@ -7,7 +7,8 @@
       "!{projectRoot}/**/*.spec.[jt]s",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/.eslintrc.json",
-      "!{projectRoot}/eslint.config.js"
+      "!{projectRoot}/eslint.config.js",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)"
     ],
     "sharedGlobals": ["{workspaceRoot}/.prettierrc"]
   },
@@ -45,6 +46,10 @@
       "options": {
         "outputStyle": "stream"
       }
+    },
+    "@nx/vitest:test": {
+      "cache": true,
+      "inputs": ["default", "^production"]
     }
   },
   "affected": {
