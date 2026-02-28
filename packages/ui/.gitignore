@@ -8,3 +8,5 @@ expo-env.d.ts
 
 # env
 .env*
+*storybook.log
+storybook-static

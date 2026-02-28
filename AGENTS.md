@@ -97,6 +97,7 @@ Every agent must utilize these tools for any technical documentation or implemen
 **Directives:**
 
 - **Mandatory:** Apply `skill /react-native-best-practices:react-native-best-practices` to all components.
+- **Component-Driven Development:** Build and test all UI components in isolation using Storybook. Run `pnpm run storybook:ios` (or `:android`) within the UI package to start the Storybook environment. Apply `skill /writing-react-native-storybook-stories:writing-react-native-storybook-stories` when creating or editing `.stories.tsx` files.
 - **Styling Standard:** Always use **NativeWind (Tailwind CSS)** via the `className` attribute for styling. **Strictly avoid using the `style` attribute** or `StyleSheet.create` unless absolutely necessary for dynamic values that cannot be expressed via Tailwind (e.g., calculated pixel coordinates from an animation).
 - Implement a seamless **Onboarding flow** using Expo Router.
 - Build the interactive expense logger and shared grocery list with NativeWind for styling.
@@ -137,4 +138,4 @@ When starting a new session with an AI assistant, use the following header:
 
 > "I am working on **Cohab**. Act as the **[Insert Agent Name]**.
 > Reference the `agents.md` for project context.
-> Use
+> Use the provided tools and skills to solve my request."
