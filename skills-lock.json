@@ -36,10 +36,25 @@
       "sourceType": "github",
       "computedHash": "6c14e4efb34a9c4759e8b959f82dec328f87dd89a022957c6737086984b9b106"
     },
+    "react-native-best-practices": {
+      "source": "storybookjs/react-native",
+      "sourceType": "github",
+      "computedHash": "0ef25dd154d5ae697a772a127e606cf8c0996d8c77c4101efc41453eab09f241"
+    },
+    "setup-react-native-storybook": {
+      "source": "storybookjs/react-native",
+      "sourceType": "github",
+      "computedHash": "5a57f8d57423e9ea60d3527413e943a7e01dde167fc37123391fc0a61c3924f3"
+    },
     "upgrading-expo": {
       "source": "expo/skills",
       "sourceType": "github",
       "computedHash": "b10c092308d8d7401e2fc75fd773a79762ba4dad4ec1c7f5f5551efb0ba2cfdc"
+    },
+    "writing-react-native-storybook-stories": {
+      "source": "storybookjs/react-native",
+      "sourceType": "github",
+      "computedHash": "4f2edf5fe64c133d9ae677ff926fedee4e4ee1ec2608032e2f57f67ebed7c1d7"
     }
   }
 }
