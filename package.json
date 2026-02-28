@@ -22,11 +22,16 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "nx": "latest",
+    "@expo/cli": "~54.0.16",
+    "@nx/expo": "22.5.0",
+    "@nx/node": "22.5.0",
+    "eslint": "^9.25.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "metro-config": "~0.83.0",
+    "metro-resolver": "~0.83.0",
+    "nx": "latest",
     "prettier": "^3.8.1",
-    "eslint": "^9.25.0",
     "typescript": "~5.9.2"
   },
   "pnpm": {
@@ -39,5 +44,11 @@
       "hermes-compiler": "250829098.0.4",
       "lightningcss": "1.30.1"
     }
+  },
+  "dependencies": {
+    "expo": "~54.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-native": "0.81.5"
   }
 }
