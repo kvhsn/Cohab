@@ -47,6 +47,21 @@
         "outputStyle": "stream"
       }
     },
+    "storybook": {
+      "options": {
+        "outputStyle": "stream"
+      }
+    },
+    "storybook:ios": {
+      "options": {
+        "outputStyle": "stream"
+      }
+    },
+    "storybook:android": {
+      "options": {
+        "outputStyle": "stream"
+      }
+    },
     "@nx/vitest:test": {
       "cache": true,
       "inputs": ["default", "^production"]

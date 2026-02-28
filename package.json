@@ -15,6 +15,9 @@
   ],
   "scripts": {
     "start": "nx run-many --target=start",
+    "storybook": "nx run-many --target=storybook",
+    "storybook:ios": "nx run-many --target=storybook:ios",
+    "storybook:android": "nx run-many --target=storybook:android",
     "build": "nx run-many --target=build",
     "lint": "nx run-many --target=lint",
     "format": "nx run-many --target=format",
