@@ -13,8 +13,7 @@
     "build": "nx export",
     "lint": "expo lint",
     "format": "prettier --write .",
-    "test": "exit 0",
-    "storybook-generate": "sb-rn-get-stories"
+    "test": "exit 0"
   },
   "dependencies": {
     "@babel/core": "^7.29.0",
