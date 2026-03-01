@@ -1,20 +1,16 @@
-import { tw } from '@/libs/tailwind';
+import { tw, TwSize } from '@/libs/tailwind';
 import { TailwindClass } from '@/types';
-import React, { ComponentType } from 'react';
+import React from 'react';
 import { Pressable, PressableProps, Text } from 'react-native';
-
-interface BaseIconProps {
-  color?: string;
-  size?: number;
-}
+import { type IconType } from '../Icon/Icon';
 
 interface CustomButtonProps extends PressableProps {
   title: string;
-  size: 'sm' | 'md' | 'lg';
+  size: TwSize;
   variant?: 'primary' | 'secondary' | 'link';
   disabled?: boolean;
-  LeftIcon?: ComponentType<BaseIconProps>;
-  RightIcon?: ComponentType<BaseIconProps>;
+  LeftIcon?: IconType;
+  RightIcon?: IconType;
 }
 
 const variantStyles = {
@@ -50,12 +46,6 @@ const stateStyles = {
   disabled: tw('opacity-50'),
 } satisfies Record<'enable' | 'disabled', TailwindClass>;
 
-const iconSizes = {
-  sm: 14,
-  md: 16,
-  lg: 20,
-} satisfies Record<Required<CustomButtonProps>['size'], number>;
-
 export const CustomButton = ({
   title,
   variant = 'primary',
@@ -70,16 +60,15 @@ export const CustomButton = ({
   const textStyle = textVariantStyles(size)[variant];
   const iconColor = iconColorStyles[variant];
   const stateStyle = stateStyles[disabled ? 'disabled' : 'enable'];
-  const iconSize = iconSizes[size];
 
   return (
     <Pressable
       disabled={disabled}
       className={`flex-row items-center justify-center gap-3 rounded-2xl ${variantStyle} ${stateStyle} ${variant === 'link' ? '' : sizeStyle}`}
       {...props}>
-      {LeftIcon && <LeftIcon color={iconColor} size={iconSize} />}
+      {LeftIcon && <LeftIcon color={iconColor} size={size} />}
       <Text className={`font-bold ${textStyle}`}>{title}</Text>
-      {RightIcon && <RightIcon color={iconColor} size={iconSize} />}
+      {RightIcon && <RightIcon color={iconColor} size={size} />}
     </Pressable>
   );
 };

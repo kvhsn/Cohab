@@ -1,7 +1,6 @@
-// create button stories
 import { Meta, StoryObj } from '@storybook/react-native';
 import { CustomButton } from './Button';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Icon from '../Icon/Icon';
 
 const meta: Meta<typeof CustomButton> = {
   title: 'Components/Button',
@@ -38,7 +37,7 @@ export const LeftButtonIcon: Story = {
     title: 'Left Icon',
     variant: 'primary',
     size: 'lg',
-    LeftIcon: (props) => <Ionicons name="add" {...props} />,
+    LeftIcon: (props) => <Icon as="Ionicons" name="add" {...props} />,
   },
 };
 
@@ -47,7 +46,7 @@ export const RightButtonIcon: Story = {
     title: 'Right Icon',
     variant: 'primary',
     size: 'lg',
-    RightIcon: (props) => <Ionicons name="arrow-forward" {...props} />,
+    RightIcon: (props) => <Icon as="Ionicons" name="arrow-forward" {...props} />,
   },
 };
 
@@ -56,10 +55,11 @@ export const BothIcons: Story = {
     title: 'Both Icons',
     variant: 'primary',
     size: 'lg',
-    LeftIcon: (props) => <Ionicons name="star" {...props} />,
-    RightIcon: (props) => <Ionicons name="chevron-forward" {...props} />,
+    LeftIcon: (props) => <Icon as="Ionicons" name="star" {...props} />,
+    RightIcon: (props) => <Icon as="Ionicons" name="chevron-forward" {...props} />,
   },
 };
+
 export const Link: Story = {
   args: {
     title: 'Créer un compte',
