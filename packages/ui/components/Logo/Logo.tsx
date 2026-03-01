@@ -8,7 +8,8 @@ interface LogoProps extends Omit<ImageProps, 'source'> {
 export const Logo: React.FC<LogoProps> = ({ size = 100, style, ...props }) => {
   return (
     <Image
-      source={require('../assets/images/logo.png')}
+      className="rounded-full shadow-2xl shadow-primary/50"
+      source={require('../../assets/images/logo.png')}
       style={[{ width: size, height: size }, style]}
       resizeMode="contain"
       {...props}
