@@ -17,6 +17,13 @@ const meta: Meta<typeof CustomButton> = {
     disabled: {
       control: 'boolean',
     },
+    onPress: { action: 'pressed' },
+  },
+  args: {
+    title: 'Button',
+    variant: 'primary',
+    size: 'md',
+    disabled: false,
   },
 };
 
@@ -24,46 +31,59 @@ export default meta;
 
 type Story = StoryObj<typeof CustomButton>;
 
-export const Default: Story = {
+export const Primary: Story = {
   args: {
-    title: 'Button',
     variant: 'primary',
     size: 'lg',
   },
 };
 
-export const LeftButtonIcon: Story = {
+export const Secondary: Story = {
   args: {
-    title: 'Left Icon',
-    variant: 'primary',
+    variant: 'secondary',
     size: 'lg',
-    LeftIcon: (props) => <Icon as="Ionicons" name="add" {...props} />,
   },
 };
 
-export const RightButtonIcon: Story = {
+export const Link: Story = {
   args: {
-    title: 'Right Icon',
+    title: 'Mot de passe oublié ?',
+    variant: 'link',
+    size: 'md',
+  },
+};
+
+export const WithLeftIcon: Story = {
+  args: {
+    title: 'Ajouter un coloc',
+    variant: 'primary',
+    size: 'lg',
+    LeftIcon: (props) => <Icon as="Ionicons" name="person-add" {...props} />,
+  },
+};
+
+export const WithRightIcon: Story = {
+  args: {
+    title: 'Continuer',
     variant: 'primary',
     size: 'lg',
     RightIcon: (props) => <Icon as="Ionicons" name="arrow-forward" {...props} />,
   },
 };
 
-export const BothIcons: Story = {
+export const Disabled: Story = {
   args: {
-    title: 'Both Icons',
+    title: 'Bouton désactivé',
     variant: 'primary',
     size: 'lg',
-    LeftIcon: (props) => <Icon as="Ionicons" name="star" {...props} />,
-    RightIcon: (props) => <Icon as="Ionicons" name="chevron-forward" {...props} />,
+    disabled: true,
   },
 };
 
-export const Link: Story = {
+export const Small: Story = {
   args: {
-    title: 'Créer un compte',
-    variant: 'link',
-    size: 'lg',
+    title: 'Petit bouton',
+    variant: 'secondary',
+    size: 'sm',
   },
 };

@@ -1,4 +1,4 @@
-import { tw, TwSize } from '@/libs/tailwind';
+import { buttonStateStyles, tw, TwSize } from '@/libs/tailwind';
 import { TailwindClass } from '@/types';
 import React from 'react';
 import { Pressable, PressableProps } from 'react-native';
@@ -38,11 +38,6 @@ const iconColorStyles = {
   link: tw('color-primary'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
 
-const stateStyles = {
-  enable: tw('active:scale-[0.95] active:opacity-90'),
-  disabled: tw('opacity-50'),
-} satisfies Record<'enable' | 'disabled', TailwindClass>;
-
 export default function CustomButton({
   title,
   variant,
@@ -56,7 +51,7 @@ export default function CustomButton({
   const variantStyle = variantStyles[variant];
   const textStyle = textVariantStyles[variant];
   const iconColor = iconColorStyles[variant];
-  const stateStyle = stateStyles[disabled ? 'disabled' : 'enable'];
+  const stateStyle = disabled ? buttonStateStyles.disabled : buttonStateStyles.enabled;
 
   return (
     <Pressable

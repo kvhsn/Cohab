@@ -16,7 +16,7 @@ interface IconBaseProps {
 
 export type IconType = ComponentType<IconBaseProps>;
 
-type IconProvider = keyof typeof Icons;
+export type IconProvider = keyof typeof Icons;
 
 interface IconProps<K extends IconProvider> extends IconBaseProps {
   as: K;
