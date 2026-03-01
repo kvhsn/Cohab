@@ -9,7 +9,7 @@ const meta: Meta<typeof CustomButton> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'outline'],
+      options: ['primary', 'secondary', 'link'],
     },
     size: {
       control: 'select',
@@ -58,5 +58,12 @@ export const BothIcons: Story = {
     size: 'lg',
     LeftIcon: (props) => <Ionicons name="star" {...props} />,
     RightIcon: (props) => <Ionicons name="chevron-forward" {...props} />,
+  },
+};
+export const Link: Story = {
+  args: {
+    title: 'Créer un compte',
+    variant: 'link',
+    size: 'lg',
   },
 };
