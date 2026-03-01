@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react-native';
-import { CustomButton } from './Button';
+import CustomButton from './Button';
 import Icon from '../Icon/Icon';
 
 const meta: Meta<typeof CustomButton> = {

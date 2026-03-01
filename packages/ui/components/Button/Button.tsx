@@ -1,14 +1,14 @@
 import { tw, TwSize } from '@/libs/tailwind';
 import { TailwindClass } from '@/types';
 import React from 'react';
-import { Pressable, PressableProps, Text } from 'react-native';
+import { Pressable, PressableProps } from 'react-native';
 import { type IconType } from '../Icon/Icon';
 import Typography from '../Typography/Typography';
 
 interface CustomButtonProps extends PressableProps {
   title: string;
   size: TwSize;
-  variant?: 'primary' | 'secondary' | 'link';
+  variant: 'primary' | 'secondary' | 'link';
   disabled?: boolean;
   LeftIcon?: IconType;
   RightIcon?: IconType;
@@ -33,7 +33,7 @@ const textVariantStyles = {
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
 
 const iconColorStyles = {
-  primary: 'white',
+  primary: tw('white'),
   secondary: tw('color-gray-900'),
   link: tw('color-primary'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
@@ -43,15 +43,15 @@ const stateStyles = {
   disabled: tw('opacity-50'),
 } satisfies Record<'enable' | 'disabled', TailwindClass>;
 
-export const CustomButton = ({
+export default function CustomButton({
   title,
-  variant = 'primary',
+  variant,
   disabled = false,
   LeftIcon,
   RightIcon,
-  size = 'md',
+  size,
   ...props
-}: CustomButtonProps) => {
+}: CustomButtonProps) {
   const sizeStyle = sizeStyles[size];
   const variantStyle = variantStyles[variant];
   const textStyle = textVariantStyles[variant];
@@ -70,4 +70,4 @@ export const CustomButton = ({
       {RightIcon && <RightIcon color={iconColor} size={size} />}
     </Pressable>
   );
-};
+}

@@ -98,7 +98,11 @@ Every agent must utilize these tools for any technical documentation or implemen
 
 - **Mandatory:** Apply `skill /react-native-best-practices:react-native-best-practices` to all components.
 - **Component-Driven Development:** Build and test all UI components in isolation using Storybook. Run `pnpm run storybook:ios` (or `:android`) within the UI package to start the Storybook environment. Apply `skill /writing-react-native-storybook-stories:writing-react-native-storybook-stories` when creating or editing `.stories.tsx` files.
-- **Styling Standard:** Always use **NativeWind (Tailwind CSS)** via the `className` attribute for styling. **Strictly avoid using the `style` attribute** or `StyleSheet.create` unless absolutely necessary for dynamic values that cannot be expressed via Tailwind (e.g., calculated pixel coordinates from an animation).
+- **Styling Standard:** Always use **NativeWind (Tailwind CSS)** via the `className` attribute for styling. **Strictly avoid using the `style` attribute** or `StyleSheet.create` unless absolutely necessary for dynamic values that cannot be expressed via Tailwind.
+  - **Tailwind DX & Type Safety:**
+    - Use the `tw()` utility function for all string literals containing Tailwind classes **outside of JSX** (constants, records, logic) to enable IDE/extension autocompletion and linting.
+    - **Note:** `tw()` is **not required** within the `className` prop of a component, as Tailwind classes are natively detected there by the IDE.
+    - When defining constants or records of Tailwind classes, always use the `TailwindClass` type (imported from `@/types`) to ensure type safety.
 - Implement a seamless **Onboarding flow** using Expo Router.
 - Build the interactive expense logger and shared grocery list with NativeWind for styling.
 - Ensure offline-first support and smooth navigation.

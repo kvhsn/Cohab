@@ -1,5 +1,6 @@
 import { Text, TextProps } from 'react-native';
-import { type TwSize } from '@/libs/tailwind';
+import { tw, type TwSize } from '@/libs/tailwind';
+import { TailwindClass } from '@/types';
 
 type TypographyVariant = 'h1' | 'subtitle' | 'body' | 'bodySmall' | 'caption' | 'button';
 
@@ -9,21 +10,21 @@ interface TypographyProps extends TextProps {
 }
 
 const variantStyles = {
-  h1: 'font-bold text-gray-900',
-  subtitle: 'text-gray-500',
-  body: 'text-gray-900',
-  bodySmall: 'text-gray-500',
-  caption: 'uppercase tracking-widest text-gray-400 font-bold',
-  button: 'font-bold',
-} satisfies Required<Record<TypographyVariant, string>>;
+  h1: tw('font-bold text-gray-900'),
+  subtitle: tw('text-gray-500'),
+  body: tw('text-gray-900'),
+  bodySmall: tw('text-gray-500'),
+  caption: tw('uppercase tracking-widest text-gray-400 font-bold'),
+  button: tw('font-bold'),
+} satisfies Required<Record<TypographyVariant, TailwindClass>>;
 
 const sizeStyles = {
-  h1: 'text-h1',
-  subtitle: 'text-subtitle',
-  body: 'text-body',
-  bodySmall: 'text-bodySmall',
-  caption: 'text-caption',
-} satisfies Required<Record<Exclude<TypographyVariant, 'button'>, string>>;
+  h1: tw('text-h1'),
+  subtitle: tw('text-subtitle'),
+  body: tw('text-body'),
+  bodySmall: tw('text-bodySmall'),
+  caption: tw('text-caption'),
+} satisfies Required<Record<Exclude<TypographyVariant, 'button'>, TailwindClass>>;
 
 export default function Typography({
   variant,
@@ -33,7 +34,7 @@ export default function Typography({
   ...props
 }: TypographyProps) {
   const baseStyles = variantStyles[variant];
-  const sizeClass = variant === 'button' ? `text-${size}` : sizeStyles[variant];
+  const sizeClass = variant === 'button' ? tw(`text-${size}`) : sizeStyles[variant];
 
   return (
     <Text {...props} className={`${baseStyles} ${sizeClass} ${className || ''}`}>
