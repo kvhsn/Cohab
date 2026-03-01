@@ -32,7 +32,7 @@ export default function Input({ IconComponent, size = 'md', ...props }: InputPro
       <TextInput
         {...props}
         secureTextEntry={isSecureTextEntry}
-        className={placeholderColor}
+        className={`${placeholderColor} text-body text-${size}`}
         ref={inputRef}
       />
       {isPasswordInput && (
