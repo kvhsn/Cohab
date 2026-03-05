@@ -1,7 +1,8 @@
 import { buttonStateStyles, tw, TwSize } from '@/libs/tailwind';
 import { TailwindClass } from '@/types';
 import React from 'react';
-import { Pressable, PressableProps } from 'react-native';
+import { Pressable, PressableProps, StyleSheet, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { type IconType } from '../Icon/Icon';
 import Typography from '../Typography/Typography';
 
@@ -15,7 +16,7 @@ interface CustomButtonProps extends PressableProps {
 }
 
 const variantStyles = {
-  primary: tw('bg-linear-to-r from-primary to-secondary shadow-primary/50 shadow-lg'),
+  primary: tw('shadow-primary/50 shadow-lg'),
   secondary: tw('bg-white/80 shadow-lg'),
   link: tw('bg-transparent shadow-none px-0 py-0'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
@@ -45,6 +46,7 @@ export default function CustomButton({
   LeftIcon,
   RightIcon,
   size,
+  className,
   ...props
 }: CustomButtonProps) {
   const sizeStyle = sizeStyles[size];
@@ -53,16 +55,35 @@ export default function CustomButton({
   const iconColor = iconColorStyles[variant];
   const stateStyle = disabled ? buttonStateStyles.disabled : buttonStateStyles.enabled;
 
-  return (
-    <Pressable
-      disabled={disabled}
-      className={`flex-row items-center justify-center gap-3 rounded-2xl ${variantStyle} ${stateStyle} ${variant === 'link' ? '' : sizeStyle}`}
-      {...props}>
+  const content = (
+    <>
       {LeftIcon && <LeftIcon color={iconColor} size={size} />}
       <Typography variant="button" size={size} className={textStyle}>
         {title}
       </Typography>
       {RightIcon && <RightIcon color={iconColor} size={size} />}
+    </>
+  );
+
+  return (
+    <Pressable disabled={disabled} className={`${stateStyle} ${className ?? ''}`} {...props}>
+      {variant === 'primary' ? (
+        <View
+          className={`overflow-hidden rounded-2xl ${variantStyle} flex-row items-center justify-center gap-3 ${sizeStyle}`}>
+          <LinearGradient
+            colors={['#c084fc', '#60a5fa']}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            style={StyleSheet.absoluteFill}
+          />
+          {content}
+        </View>
+      ) : (
+        <View
+          className={`flex-row items-center justify-center gap-3 rounded-2xl ${variantStyle} ${variant === 'link' ? '' : sizeStyle}`}>
+          {content}
+        </View>
+      )}
     </Pressable>
   );
 }

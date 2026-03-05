@@ -1,10 +1,15 @@
 import React from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Alert, ScrollView } from 'react-native';
 import { useRouter, Link } from 'expo-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import mutations from '@/libs/mutations';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 import { LoginSchema } from '@cohab/shared/src/auth';
+import Screen from '@/components/Screen/Screen';
+import { Logo } from '@/components/Logo/Logo';
+import Typography from '@/components/Typography/Typography';
+import Input from '@/components/Input/Input';
+import CustomButton from '@/components/Button/Button';
 
 export default function Login() {
   const router = useRouter();
@@ -12,10 +17,10 @@ export default function Login() {
 
   const { useAppForm } = createFormHook({
     fieldComponents: {
-      TextInput,
+      Input,
     },
     formComponents: {
-      Button,
+      CustomButton,
     },
     fieldContext,
     formContext,
@@ -48,42 +53,74 @@ export default function Login() {
   });
 
   return (
-    <View>
-      <Text>Login</Text>
-      <View>
-        <form.AppField name="email">
-          {(field) => (
-            <field.TextInput
-              placeholder="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={field.state.value}
-              onChangeText={field.handleChange}
-              onBlur={field.handleBlur}
+    <Screen>
+      <ScrollView
+        contentContainerClassName="grow space-between px-6 py-4"
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
+        <View className="flex-1 gap-10">
+          <View className="flex flex-col items-center gap-4">
+            <Logo />
+            <View className="gap-1 items-center">
+              <Typography variant="h1">Cohab</Typography>
+              <Typography variant="bodySmall">
+                Gérer votre collocation en toute simplicité
+              </Typography>
+            </View>
+          </View>
+          <View className="gap-6">
+            <View className="gap-5">
+              <form.AppField name="email">
+                {(field) => (
+                  <field.Input
+                    placeholder="Adresse email"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                  />
+                )}
+              </form.AppField>
+
+              <form.AppField name="password">
+                {(field) => (
+                  <field.Input
+                    placeholder="Mot de passe"
+                    autoCapitalize="none"
+                    secureTextEntry
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                  />
+                )}
+              </form.AppField>
+            </View>
+            <View className="items-end">
+              <Link href="/register">
+                <Typography variant="bodySmall" className="text-primary">
+                  Mot de passe oublié ?
+                </Typography>
+              </Link>
+            </View>
+            <form.CustomButton
+              variant="primary"
+              size="lg"
+              title="Se connecter"
+              disabled={isPending}
+              onPress={form.handleSubmit}
             />
-          )}
-        </form.AppField>
-
-        <form.AppField name="password">
-          {(field) => (
-            <field.TextInput
-              placeholder="Password"
-              autoCapitalize="none"
-              secureTextEntry
-              value={field.state.value}
-              onChangeText={field.handleChange}
-              onBlur={field.handleBlur}
-            />
-          )}
-        </form.AppField>
-
-        <form.Button title="Login" disabled={isPending} onPress={() => form.handleSubmit()} />
-      </View>
-
-      <View>
-        <Text>Don&apos;t have an account?</Text>
-        <Link href="/register">Register here</Link>
-      </View>
-    </View>
+          </View>
+        </View>
+        <View className="flex-1 flex-row items-end justify-center gap-2 pt-8 pb-2">
+          <Typography variant="bodySmall">Pas encore de compte ?</Typography>
+          <Link href="/register">
+            <Typography variant="bodySmall" className="text-primary">
+              Créer un compte
+            </Typography>
+          </Link>
+        </View>
+      </ScrollView>
+    </Screen>
   );
 }

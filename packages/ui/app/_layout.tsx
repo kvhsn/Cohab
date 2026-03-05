@@ -10,10 +10,8 @@ export const unstable_settings = storybookEnabled ? { initialRouteName: '(storyb
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack>
-        {storybookEnabled && (
-          <Stack.Screen name="(storybook)/index" options={{ headerShown: false }} />
-        )}
+      <Stack screenOptions={{ headerShown: false }}>
+        {storybookEnabled && <Stack.Screen name="(storybook)/index" />}
       </Stack>
     </QueryClientProvider>
   );
