@@ -1,18 +1,19 @@
-import React from 'react';
-import { View, Alert, ScrollView } from 'react-native';
-import { useRouter, Link } from 'expo-router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import mutations from '@/libs/mutations';
-import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { LoginSchema } from '@cohab/shared/src/auth';
-import Screen from '@/components/Screen/Screen';
-import { Logo } from '@/components/Logo/Logo';
-import Typography from '@/components/Typography/Typography';
-import Input from '@/components/Input/Input';
 import CustomButton from '@/components/Button/Button';
+import Input from '@/components/Input/Input';
+import { Logo } from '@/components/Logo/Logo';
+import Screen from '@/components/Screen/Screen';
+import Typography from '@/components/Typography/Typography';
+import mutations from '@/libs/mutations';
+import { LoginSchema } from '@cohab/shared/src/auth';
+import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
+import { useMutation } from '@tanstack/react-query';
+import { Link, useRouter } from 'expo-router';
+import React from 'react';
+import { Alert, ScrollView, View } from 'react-native';
 
 export default function Login() {
   const router = useRouter();
+
   const { fieldContext, formContext } = createFormHookContexts();
 
   const { useAppForm } = createFormHook({
@@ -39,16 +40,13 @@ export default function Login() {
     },
   });
 
-  const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     ...mutations.auth.loginMutation(),
     onSuccess: () => {
-      queryClient.clear();
-      Alert.alert('Success', 'Logged in!');
       router.replace('/');
     },
     onError: (error) => {
-      Alert.alert('Error', error.message || 'Login failed');
+      Alert.alert('Erreur', error.message || 'La connexion a échoué');
     },
   });
 

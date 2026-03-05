@@ -1,4 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
+import { authClient } from './auth';
 
 export async function saveSecureStorage(key: string, value: string) {
   return await SecureStore.setItemAsync(key, value);
@@ -11,8 +12,6 @@ export async function getValueForSecureStorage(key: string) {
 export async function deleteValueForSecureStorage(key: string) {
   return await SecureStore.deleteItemAsync(key);
 }
-
-import { authClient } from './auth';
 
 export async function getAuthHeaders(
   additionalHeaders: Record<string, string> = { 'Content-Type': 'application/json' },

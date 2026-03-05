@@ -1,20 +1,15 @@
-import { Link } from 'expo-router';
-import { View, Text, Button } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/hooks/useAuth';
+import { Redirect } from 'expo-router';
 import React from 'react';
 
-export default function HomeScreen() {
-  const { logout } = useAuth();
+export default function Index() {
+  const { isAuthenticated, isPending } = useAuth();
 
-  return (
-    <SafeAreaView>
-      <View>
-        <Text>Cohab</Text>
-        <Text>Simplify your shared living experience.</Text>
-        <Link href="/households">Households</Link>
-        <Button title="Logout" onPress={logout} />
-      </View>
-    </SafeAreaView>
-  );
+  if (isPending) return null;
+
+  if (!isAuthenticated) {
+    return <Redirect href="/login" />;
+  }
+
+  return <Redirect href="/households" />;
 }

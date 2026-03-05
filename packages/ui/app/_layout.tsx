@@ -1,6 +1,6 @@
+import { queryClient } from '@/libs/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
-import { queryClient } from '@/libs/queryClient';
 import '../global.css';
 
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';

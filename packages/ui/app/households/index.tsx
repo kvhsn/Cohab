@@ -1,9 +1,10 @@
+import { useAuth } from '@/hooks/useAuth';
+import queries from '@/libs/queries';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from 'expo-router';
 import React, { Suspense } from 'react';
-import { Text, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import queries from '@/libs/queries';
 
 function HouseholdDashboard({ householdId }: { householdId: string }) {
   return (
@@ -38,12 +39,15 @@ function HouseholdMembershipView() {
 }
 
 export default function Households() {
+  const { logout } = useAuth();
+
   return (
     <SafeAreaView>
       <Text>Households</Text>
       <Suspense fallback={<Text>Loading household info...</Text>}>
         <HouseholdMembershipView />
       </Suspense>
+      <Button title="Logout" onPress={logout} />
     </SafeAreaView>
   );
 }

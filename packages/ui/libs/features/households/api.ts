@@ -1,12 +1,12 @@
 import { API_URL } from '@/constants/Config';
+import { getAuthHeaders } from '@/libs/secureStorage';
+import { Balance, BalanceSchema } from '@cohab/shared/src/balance';
 import {
   CreateHouseHold,
   GetHouseholdDetails,
   GetHouseholdDetailsSchema,
   JoinHouseHold,
 } from '@cohab/shared/src/household';
-import { getAuthHeaders } from '@/libs/secureStorage';
-import { Balance, BalanceSchema } from '@cohab/shared/src/balance';
 import { RefundsSchema } from '@cohab/shared/src/refund';
 
 export const getHouseholds = async (): Promise<GetHouseholdDetails> => {
