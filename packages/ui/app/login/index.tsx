@@ -114,7 +114,7 @@ export default function Login() {
         </View>
         <View className="flex-1 flex-row items-end justify-center gap-2 pt-8 pb-2">
           <Typography variant="bodySmall">Pas encore de compte ?</Typography>
-          <Link href="/register">
+          <Link href="/register" replace>
             <Typography variant="bodySmall" className="text-primary">
               Créer un compte
             </Typography>
