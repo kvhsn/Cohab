@@ -1,15 +1,15 @@
-import React from 'react';
-import { View, Alert, ScrollView } from 'react-native';
-import { useRouter, Link } from 'expo-router';
-import { useMutation } from '@tanstack/react-query';
-import mutations from '@/libs/mutations';
-import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { RegisterSchema } from '@cohab/shared/src/auth';
-import Screen from '@/components/Screen/Screen';
-import { Logo } from '@/components/Logo/Logo';
-import Typography from '@/components/Typography/Typography';
-import Input from '@/components/Input/Input';
 import CustomButton from '@/components/Button/Button';
+import Input from '@/components/Input/Input';
+import { Logo } from '@/components/Logo/Logo';
+import Screen from '@/components/Screen/Screen';
+import Typography from '@/components/Typography/Typography';
+import mutations from '@/libs/mutations';
+import { RegisterSchema } from '@cohab/shared/src/auth';
+import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
+import { useMutation } from '@tanstack/react-query';
+import { Link, useRouter } from 'expo-router';
+import React from 'react';
+import { Alert, ScrollView, View } from 'react-native';
 
 export default function Register() {
   const router = useRouter();
@@ -76,7 +76,9 @@ export default function Register() {
             <Logo />
             <View className="gap-1 items-center">
               <Typography variant="h1">Cohab</Typography>
-              <Typography variant="bodySmall">Rejoignez l'aventure de la colocation</Typography>
+              <Typography variant="bodySmall">
+                Rejoignez l&apos;aventure de la colocation
+              </Typography>
             </View>
           </View>
           <View className="gap-6">
