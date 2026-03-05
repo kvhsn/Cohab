@@ -1,18 +1,27 @@
 import React from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Alert, ScrollView } from 'react-native';
+import { useRouter, Link } from 'expo-router';
 import { useMutation } from '@tanstack/react-query';
 import mutations from '@/libs/mutations';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 import { RegisterSchema } from '@cohab/shared/src/auth';
+import Screen from '@/components/Screen/Screen';
+import { Logo } from '@/components/Logo/Logo';
+import Typography from '@/components/Typography/Typography';
+import Input from '@/components/Input/Input';
+import CustomButton from '@/components/Button/Button';
 
 export default function Register() {
   const router = useRouter();
   const { fieldContext, formContext } = createFormHookContexts();
 
   const { useAppForm } = createFormHook({
-    fieldComponents: { TextInput },
-    formComponents: { Button },
+    fieldComponents: {
+      Input,
+    },
+    formComponents: {
+      CustomButton,
+    },
     fieldContext,
     formContext,
   });
@@ -27,11 +36,11 @@ export default function Register() {
     validators: {
       onChange: ({ value }) => {
         if (value.password !== value.confirmPassword) {
-          return 'Passwords do not match';
+          return 'Les mots de passe ne correspondent pas';
         }
         const res = RegisterSchema.safeParse(value);
         if (!res.success) {
-          return 'Invalid form data';
+          return 'Données invalides';
         }
         return undefined;
       },
@@ -48,67 +57,100 @@ export default function Register() {
   const { mutate, isPending } = useMutation({
     ...mutations.auth.registerMutation(),
     onSuccess: () => {
-      Alert.alert('Success', 'Registered! Please login.');
+      Alert.alert('Succès', 'Inscription réussie ! Connectez-vous.');
       router.replace('/login');
     },
     onError: (error) => {
-      console.log({ error });
-      Alert.alert('Error', error.message || 'Registration failed');
+      Alert.alert('Erreur', error.message || "L'inscription a échoué");
     },
   });
 
   return (
-    <View>
-      <Text>Register</Text>
-      <View>
-        <form.AppField name="name">
-          {(field) => (
-            <field.TextInput
-              placeholder="Name"
-              autoCapitalize="none"
-              value={field.state.value}
-              onChangeText={field.handleChange}
-              onBlur={field.handleBlur}
+    <Screen>
+      <ScrollView
+        contentContainerClassName="grow space-between px-6 py-4"
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
+        <View className="flex-1 gap-10">
+          <View className="flex flex-col items-center gap-4">
+            <Logo />
+            <View className="gap-1 items-center">
+              <Typography variant="h1">Cohab</Typography>
+              <Typography variant="bodySmall">Rejoignez l'aventure de la colocation</Typography>
+            </View>
+          </View>
+          <View className="gap-6">
+            <View className="gap-5">
+              <form.AppField name="name">
+                {(field) => (
+                  <field.Input
+                    iconName="man"
+                    placeholder="Nom complet"
+                    autoCapitalize="words"
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                  />
+                )}
+              </form.AppField>
+
+              <form.AppField name="email">
+                {(field) => (
+                  <field.Input
+                    placeholder="Adresse email"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                  />
+                )}
+              </form.AppField>
+
+              <form.AppField name="password">
+                {(field) => (
+                  <field.Input
+                    placeholder="Mot de passe"
+                    autoCapitalize="none"
+                    secureTextEntry
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                  />
+                )}
+              </form.AppField>
+
+              <form.AppField name="confirmPassword">
+                {(field) => (
+                  <field.Input
+                    placeholder="Confirmer le mot de passe"
+                    autoCapitalize="none"
+                    secureTextEntry
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                  />
+                )}
+              </form.AppField>
+            </View>
+            <form.CustomButton
+              variant="primary"
+              size="lg"
+              title="S'inscrire"
+              disabled={isPending}
+              onPress={form.handleSubmit}
             />
-          )}
-        </form.AppField>
-        <form.AppField name="email">
-          {(field) => (
-            <field.TextInput
-              placeholder="Email"
-              autoCapitalize="none"
-              value={field.state.value}
-              onChangeText={field.handleChange}
-              onBlur={field.handleBlur}
-            />
-          )}
-        </form.AppField>
-        <form.AppField name="password">
-          {(field) => (
-            <field.TextInput
-              placeholder="Password"
-              autoCapitalize="none"
-              secureTextEntry
-              value={field.state.value}
-              onChangeText={field.handleChange}
-              onBlur={field.handleBlur}
-            />
-          )}
-        </form.AppField>
-        <form.AppField name="confirmPassword">
-          {(field) => (
-            <field.TextInput
-              placeholder="Confirm Password"
-              autoCapitalize="none"
-              secureTextEntry
-              value={field.state.value}
-              onChangeText={field.handleChange}
-              onBlur={field.handleBlur}
-            />
-          )}
-        </form.AppField>
-        <form.Button title="Register" disabled={isPending} onPress={() => form.handleSubmit()} />
-      </View>
-    </View>
+          </View>
+        </View>
+        <View className="flex-1 flex-row items-end justify-center gap-2 pt-8 pb-2">
+          <Typography variant="bodySmall">Déjà un compte ?</Typography>
+          <Link href="/login" replace>
+            <Typography variant="bodySmall" className="text-primary">
+              Se connecter
+            </Typography>
+          </Link>
+        </View>
+      </ScrollView>
+    </Screen>
   );
 }
