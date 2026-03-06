@@ -85,13 +85,6 @@ export default function HouseholdChoiceScreen() {
             className="w-full h-full"
             resizeMode="cover"
           />
-
-          <View className="absolute bottom-4 left-4 flex-row items-center bg-black/60 rounded-xl px-3 py-2 gap-2">
-            <Icon as="Ionicons" name="home" size="sm" className="text-primary" />
-            <Typography variant="caption" className="text-white">
-              COLOCAPP
-            </Typography>
-          </View>
         </View>
       </View>
 
