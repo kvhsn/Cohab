@@ -12,11 +12,14 @@ const trustedOrigins = [
         'exp://', // Trust all Expo URLs (prefix matching)
         'exp://**', // Trust all Expo URLs (wildcard matching)
         'exp://192.168.*.*:*/**', // Trust 192.168.x.x IP range with any port and path
+        'http://localhost:3000',
+        'http://192.168.1.86:3000',
       ]
     : []),
 ];
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,
   plugins: [expo()],
   emailAndPassword: {
     enabled: true,

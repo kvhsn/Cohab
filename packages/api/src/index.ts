@@ -11,7 +11,16 @@ const app = new Hono().basePath('/api');
 app.use('/*', cors());
 app.use('*', requestId());
 
-app.on(['POST', 'GET'], '/auth/*', (c) => auth.handler(c.req.raw));
+app.all(
+  '/auth/*',
+  async (c, next) => {
+    console.log(`[AUTH LOGGER] ${c.req.method} ${c.req.raw.url}`);
+    await next();
+  },
+  (c) => auth.handler(c.req.raw),
+);
+
+app.all('/auth', (c) => auth.handler(c.req.raw));
 app.route('/', household);
 
 app.get('/health', (c) => {
