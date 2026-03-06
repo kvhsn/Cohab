@@ -38,3 +38,11 @@ export const Password: Story = {
     },
   },
 };
+
+export const WithError: Story = {
+  args: {
+    placeholder: 'Enter your name',
+    error: 'This field is required',
+    value: 'John',
+  },
+};

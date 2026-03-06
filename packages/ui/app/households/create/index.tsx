@@ -23,6 +23,7 @@ export default function CreateHousehold() {
     },
     validators: {
       onChange: CreateHouseHoldSchema,
+      onMount: CreateHouseHoldSchema,
     },
     onSubmit: ({ value }) => {
       mutate(value);
@@ -53,7 +54,15 @@ export default function CreateHousehold() {
               />
             )}
           </form.AppField>
-          <form.Button title="Submit" disabled={isPending} onPress={() => form.handleSubmit()} />
+          <form.Subscribe selector={(state) => [state.canSubmit]}>
+            {([canSubmit]) => (
+              <form.Button
+                title="Submit"
+                disabled={isPending || !canSubmit}
+                onPress={() => form.handleSubmit()}
+              />
+            )}
+          </form.Subscribe>
         </View>
       </View>
     </SafeAreaView>

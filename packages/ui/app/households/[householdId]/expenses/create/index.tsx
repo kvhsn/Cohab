@@ -29,6 +29,7 @@ export default function CreateExpense() {
     },
     validators: {
       onChange: CreateExpenseSchema,
+      onMount: CreateExpenseSchema,
     },
     onSubmit: ({ value }) => {
       mutate(value);
@@ -74,11 +75,15 @@ export default function CreateExpense() {
               />
             )}
           </form.AppField>
-          <form.Button
-            title="Submit Expense"
-            disabled={isPending}
-            onPress={() => form.handleSubmit()}
-          />
+          <form.Subscribe selector={(state) => [state.canSubmit]}>
+            {([canSubmit]) => (
+              <form.Button
+                title="Submit Expense"
+                disabled={isPending || !canSubmit}
+                onPress={() => form.handleSubmit()}
+              />
+            )}
+          </form.Subscribe>
         </View>
       </View>
     </SafeAreaView>

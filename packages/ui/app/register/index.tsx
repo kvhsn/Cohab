@@ -6,6 +6,7 @@ import Typography from '@/components/Typography/Typography';
 import mutations from '@/libs/mutations';
 import { RegisterSchema } from '@cohab/shared/src/auth';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
+import { formatErrors } from '@/libs/form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useRouter } from 'expo-router';
 import React from 'react';
@@ -40,7 +41,14 @@ export default function Register() {
         }
         const res = RegisterSchema.safeParse(value);
         if (!res.success) {
-          return 'Données invalides';
+          return undefined;
+        }
+        return undefined;
+      },
+      onMount: ({ value }) => {
+        const res = RegisterSchema.safeParse(value);
+        if (!res.success) {
+          return undefined;
         }
         return undefined;
       },
@@ -92,6 +100,9 @@ export default function Register() {
                     value={field.state.value}
                     onChangeText={field.handleChange}
                     onBlur={field.handleBlur}
+                    error={
+                      field.state.meta.isTouched ? formatErrors(field.state.meta.errors) : undefined
+                    }
                   />
                 )}
               </form.AppField>
@@ -105,6 +116,9 @@ export default function Register() {
                     value={field.state.value}
                     onChangeText={field.handleChange}
                     onBlur={field.handleBlur}
+                    error={
+                      field.state.meta.isTouched ? formatErrors(field.state.meta.errors) : undefined
+                    }
                   />
                 )}
               </form.AppField>
@@ -118,6 +132,9 @@ export default function Register() {
                     value={field.state.value}
                     onChangeText={field.handleChange}
                     onBlur={field.handleBlur}
+                    error={
+                      field.state.meta.isTouched ? formatErrors(field.state.meta.errors) : undefined
+                    }
                   />
                 )}
               </form.AppField>
@@ -131,17 +148,40 @@ export default function Register() {
                     value={field.state.value}
                     onChangeText={field.handleChange}
                     onBlur={field.handleBlur}
+                    error={
+                      field.state.meta.isTouched ? formatErrors(field.state.meta.errors) : undefined
+                    }
+                  />
+                )}
+              </form.AppField>
+
+              <form.AppField name="confirmPassword">
+                {(field) => (
+                  <field.Input
+                    placeholder="Confirmer le mot de passe"
+                    autoCapitalize="none"
+                    secureTextEntry
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    onBlur={field.handleBlur}
+                    error={
+                      field.state.meta.isTouched ? formatErrors(field.state.meta.errors) : undefined
+                    }
                   />
                 )}
               </form.AppField>
             </View>
-            <form.CustomButton
-              variant="primary"
-              size="lg"
-              title="S'inscrire"
-              disabled={isPending}
-              onPress={form.handleSubmit}
-            />
+            <form.Subscribe selector={(state) => [state.canSubmit]}>
+              {([canSubmit]) => (
+                <form.CustomButton
+                  variant="primary"
+                  size="lg"
+                  title="S'inscrire"
+                  disabled={isPending || !canSubmit}
+                  onPress={form.handleSubmit}
+                />
+              )}
+            </form.Subscribe>
           </View>
         </View>
         <View className="flex-1 flex-row items-end justify-center gap-2 pt-8 pb-2">

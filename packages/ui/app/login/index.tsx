@@ -3,13 +3,14 @@ import Input from '@/components/Input/Input';
 import { Logo } from '@/components/Logo/Logo';
 import Screen from '@/components/Screen/Screen';
 import Typography from '@/components/Typography/Typography';
+import { formatErrors } from '@/libs/form';
 import mutations from '@/libs/mutations';
 import { LoginSchema } from '@cohab/shared/src/auth';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useRouter } from 'expo-router';
 import React from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, View } from 'react-native';
 
 export default function Login() {
   const router = useRouter();
@@ -34,10 +35,12 @@ export default function Login() {
     },
     validators: {
       onChange: LoginSchema,
+      onMount: LoginSchema,
     },
     onSubmit: ({ value }) => {
       mutate(value);
     },
+    canSubmitWhenInvalid: false,
   });
 
   const { mutate, isPending } = useMutation({
@@ -52,73 +55,76 @@ export default function Login() {
 
   return (
     <Screen>
-      <ScrollView
-        contentContainerClassName="grow space-between px-6 py-4"
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}>
-        <View className="flex-1 gap-10">
-          <View className="flex flex-col items-center gap-4">
-            <Logo />
-            <View className="gap-1 items-center">
-              <Typography variant="h1">Cohab</Typography>
-              <Typography variant="bodySmall">
-                Gérer votre collocation en toute simplicité
-              </Typography>
-            </View>
+      <View className="flex-1 gap-10">
+        <View className="flex flex-col items-center gap-4">
+          <Logo />
+          <View className="gap-1 items-center">
+            <Typography variant="h1">Cohab</Typography>
+            <Typography variant="bodySmall">Gérer votre collocation en toute simplicité</Typography>
           </View>
-          <View className="gap-6">
-            <View className="gap-5">
-              <form.AppField name="email">
-                {(field) => (
-                  <field.Input
-                    placeholder="Adresse email"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    value={field.state.value}
-                    onChangeText={field.handleChange}
-                    onBlur={field.handleBlur}
-                  />
-                )}
-              </form.AppField>
+        </View>
+        <View className="gap-6">
+          <View className="gap-5">
+            <form.AppField name="email">
+              {(field) => (
+                <field.Input
+                  placeholder="Adresse email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  onBlur={field.handleBlur}
+                  error={
+                    field.state.meta.isTouched ? formatErrors(field.state.meta.errors) : undefined
+                  }
+                />
+              )}
+            </form.AppField>
 
-              <form.AppField name="password">
-                {(field) => (
-                  <field.Input
-                    placeholder="Mot de passe"
-                    autoCapitalize="none"
-                    secureTextEntry
-                    value={field.state.value}
-                    onChangeText={field.handleChange}
-                    onBlur={field.handleBlur}
-                  />
-                )}
-              </form.AppField>
-            </View>
-            <View className="items-end">
-              <Link href="/register">
-                <Typography variant="bodySmall" className="text-primary">
-                  Mot de passe oublié ?
-                </Typography>
-              </Link>
-            </View>
-            <form.CustomButton
-              variant="primary"
-              size="lg"
-              title="Se connecter"
-              disabled={isPending}
-              onPress={form.handleSubmit}
-            />
+            <form.AppField name="password">
+              {(field) => (
+                <field.Input
+                  placeholder="Mot de passe"
+                  autoCapitalize="none"
+                  secureTextEntry
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  onBlur={field.handleBlur}
+                  error={
+                    field.state.meta.isTouched ? formatErrors(field.state.meta.errors) : undefined
+                  }
+                />
+              )}
+            </form.AppField>
           </View>
+          <View className="items-end">
+            <Link href="/register">
+              <Typography variant="bodySmall" className="text-primary">
+                Mot de passe oublié ?
+              </Typography>
+            </Link>
+          </View>
+          <form.Subscribe>
+            {({ canSubmit }) => (
+              <form.CustomButton
+                variant="primary"
+                size="lg"
+                title="Se connecter"
+                disabled={isPending || !canSubmit}
+                onPress={form.handleSubmit}
+              />
+            )}
+          </form.Subscribe>
         </View>
-        <View className="flex-1 flex-row items-end justify-center gap-2 pt-8 pb-2">
-          <Typography variant="bodySmall">Pas encore de compte ?</Typography>
-          <Link href="/register" replace>
-            <Typography variant="bodySmall" className="text-primary">
-              Créer un compte
-            </Typography>
-          </Link>
-        </View>
-      </ScrollView>
+      </View>
+      <View className="flex-1 flex-row items-end justify-center gap-2 pt-8 pb-2">
+        <Typography variant="bodySmall">Pas encore de compte ?</Typography>
+        <Link href="/register" replace>
+          <Typography variant="bodySmall" className="text-primary">
+            Créer un compte
+          </Typography>
+        </Link>
+      </View>
     </Screen>
   );
 }

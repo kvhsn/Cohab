@@ -23,6 +23,7 @@ export default function JoinHousehold() {
     },
     validators: {
       onChange: JoinHouseHoldSchema,
+      onMount: JoinHouseHoldSchema,
     },
     onSubmit: ({ value }) => {
       mutate(value);
@@ -58,7 +59,15 @@ export default function JoinHousehold() {
               />
             )}
           </form.AppField>
-          <form.Button title="Submit" disabled={isPending} onPress={() => form.handleSubmit()} />
+          <form.Subscribe selector={(state) => [state.canSubmit]}>
+            {([canSubmit]) => (
+              <form.Button
+                title="Submit"
+                disabled={isPending || !canSubmit}
+                onPress={() => form.handleSubmit()}
+              />
+            )}
+          </form.Subscribe>
         </View>
       </View>
     </SafeAreaView>

@@ -17,7 +17,7 @@ const variantStyles = {
   primary: tw('bg-linear-to-r from-primary to-secondary shadow-primary/50 shadow-lg'),
   secondary: tw('bg-white shadow-sm border border-gray-100'),
   ghost: tw('bg-transparent'),
-} satisfies Record<NonNullable<IconButtonProps<any>['variant']>, TailwindClass>;
+} satisfies Record<NonNullable<IconButtonProps<IconProvider>['variant']>, TailwindClass>;
 
 const sizeStyles = {
   sm: tw('size-8 rounded-lg'),
@@ -29,7 +29,7 @@ const iconColorStyles = {
   primary: tw('white'),
   secondary: tw('color-gray-900'),
   ghost: tw('color-gray-500'),
-} satisfies Record<NonNullable<IconButtonProps<any>['variant']>, TailwindClass>;
+} satisfies Record<NonNullable<IconButtonProps<IconProvider>['variant']>, TailwindClass>;
 
 export default function IconButton<K extends IconProvider>({
   as,
