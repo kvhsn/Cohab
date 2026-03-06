@@ -1,7 +1,9 @@
 import z from 'zod';
 
 export const CreateHouseHoldSchema = z.object({
-  name: z.string(),
+  name: z.string().min(3, {
+    message: 'Le nom de votre colocation doit contenir au moins 3 caractères',
+  }),
 });
 
 export type CreateHouseHold = z.infer<typeof CreateHouseHoldSchema>;

@@ -12,11 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 type ScreenProps = {
   children: React.ReactNode;
   className?: string;
-  headerTitle?: string;
+  title?: string;
 };
 
-export default function Screen({ children, className, headerTitle }: ScreenProps) {
-  const headerShown = !!headerTitle;
+export default function Screen({ children, className, title }: ScreenProps) {
+  const headerShown = typeof title !== 'undefined';
   const paddingTop = headerShown ? tw('mt-6') : '';
   return (
     <KeyboardAvoidingView
@@ -26,7 +26,7 @@ export default function Screen({ children, className, headerTitle }: ScreenProps
         options={{
           headerShown,
           headerTransparent: true,
-          title: headerTitle,
+          title: title ?? '',
         }}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

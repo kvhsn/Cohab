@@ -52,7 +52,7 @@ export default function CreateHousehold() {
 
   return (
     <View className="flex-1">
-      <Screen headerTitle="Creation de la colocation">
+      <Screen title="">
         <View className="flex-1 py-4">
           <View className="mt-2 mb-8 gap-3">
             <Typography variant="h1">Créez votre coloc</Typography>
@@ -88,11 +88,11 @@ export default function CreateHousehold() {
                 <form.CustomButton
                   variant="primary"
                   size="lg"
-                  title="Suivant"
+                  title="Créer"
                   disabled={isPending || !canSubmit}
                   onPress={form.handleSubmit}
                   RightIcon={({ color: iconColor, size: iconSize }) => (
-                    <Icon as="Ionicons" name="arrow-forward" size={iconSize} color={iconColor} />
+                    <Icon as="Ionicons" name="create-outline" size={iconSize} color={iconColor} />
                   )}
                 />
               )}

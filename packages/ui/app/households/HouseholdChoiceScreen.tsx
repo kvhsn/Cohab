@@ -88,7 +88,6 @@ export default function HouseholdChoiceScreen() {
         </View>
       </View>
 
-      {/* Join Section */}
       <Card className="mt-8">
         <View className="flex-row items-center gap-4 mb-4">
           <View className="w-12 h-12 rounded-2xl bg-primary/10 items-center justify-center">
