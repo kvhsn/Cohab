@@ -1,5 +1,5 @@
-import { mutationOptions } from '@tanstack/react-query';
 import { authClient } from '@/libs/auth';
+import { mutationOptions } from '@tanstack/react-query';
 
 export const loginMutation = () =>
   mutationOptions({
@@ -16,7 +16,6 @@ export const registerMutation = () =>
     mutationKey: ['auth', 'register'],
     mutationFn: async (args: Parameters<typeof authClient.signUp.email>[0]) => {
       const result = await authClient.signUp.email(args);
-      console.log({ result });
       if (result.error) throw result.error;
       return result;
     },
