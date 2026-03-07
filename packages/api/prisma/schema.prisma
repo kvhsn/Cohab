@@ -50,12 +50,20 @@ model Household {
   Refunds        Refund[]        @relation("HouseHold_refund")
 }
 
+enum InvitationValidity {
+  HOURS_24
+  HOURS_48
+  PERMANENT
+}
+
 model Invitation {
-  id          String    @id @default(cuid())
-  householdId String    @unique
-  createdAt   DateTime  @default(now())
-  code        String    @unique
-  household   Household @relation("HouseHold_invitation", fields: [householdId], references: [id])
+  id          String             @id @default(cuid())
+  householdId String             @unique
+  createdAt   DateTime           @default(now())
+  code        String             @unique
+  validity    InvitationValidity @default(HOURS_24)
+  revokedAt   DateTime?
+  household   Household          @relation("HouseHold_invitation", fields: [householdId], references: [id])
 }
 
 enum ExpenseCategory {

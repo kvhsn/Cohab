@@ -18,7 +18,7 @@ interface CustomButtonProps extends PressableProps {
 const variantStyles = {
   primary: tw('shadow-primary/50 shadow-lg'),
   secondary: tw('bg-white/80 dark:bg-slate-700/80 shadow-lg dark:border dark:border-slate-600'),
-  link: tw('bg-transparent shadow-none px-0 py-0'),
+  link: tw('bg-transparent px-0 py-0'),
   danger: tw('bg-red-500'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
 

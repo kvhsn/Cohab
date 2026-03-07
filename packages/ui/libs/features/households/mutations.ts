@@ -6,9 +6,17 @@ import {
   leaveHousehold,
   removeMember,
   respondToInvitation,
+  revokeInviteCode,
   updateHousehold,
+  updateInviteValidity,
 } from './api';
-import { CreateHouseHold, JoinHouseHold, UpdateHousehold } from '@cohab/shared/src/household';
+import {
+  CreateHouseHold,
+  CreateInviteCode,
+  JoinHouseHold,
+  UpdateHousehold,
+  UpdateInviteValidity,
+} from '@cohab/shared/src/household';
 
 export const createHouseholdMutation = () =>
   mutationOptions({
@@ -18,8 +26,22 @@ export const createHouseholdMutation = () =>
 
 export const createInviteCodeMutation = () =>
   mutationOptions({
-    mutationKey: ['households', 'invite'],
-    mutationFn: ({ householdId }: { householdId: string }) => createInviteCode(householdId),
+    mutationKey: ['households', 'invite', 'create'],
+    mutationFn: ({ householdId, ...data }: { householdId: string } & CreateInviteCode) =>
+      createInviteCode(householdId, data),
+  });
+
+export const updateInviteValidityMutation = () =>
+  mutationOptions({
+    mutationKey: ['households', 'invite', 'update'],
+    mutationFn: ({ householdId, ...data }: { householdId: string } & UpdateInviteValidity) =>
+      updateInviteValidity(householdId, data),
+  });
+
+export const revokeInviteCodeMutation = () =>
+  mutationOptions({
+    mutationKey: ['households', 'invite', 'revoke'],
+    mutationFn: ({ householdId }: { householdId: string }) => revokeInviteCode(householdId),
   });
 
 export const joinHouseholdMutation = () =>
@@ -62,6 +84,8 @@ const mutations = {
   households: {
     createHouseholdMutation,
     createInviteCodeMutation,
+    updateInviteValidityMutation,
+    revokeInviteCodeMutation,
     joinHouseholdMutation,
     updateHouseholdMutation,
     removeMemberMutation,

@@ -73,3 +73,27 @@ export type PendingInvite = z.infer<typeof PendingInviteSchema>;
 export const GetPendingInvitesSchema = z.array(PendingInviteSchema);
 
 export type GetPendingInvites = z.infer<typeof GetPendingInvitesSchema>;
+
+export const InvitationValidityEnum = z.enum(['HOURS_24', 'HOURS_48', 'PERMANENT']);
+
+export type InvitationValidity = z.infer<typeof InvitationValidityEnum>;
+
+export const InvitationCodeSchema = z.object({
+  code: z.string(),
+  validity: InvitationValidityEnum,
+  createdAt: z.string(),
+});
+
+export type InvitationCode = z.infer<typeof InvitationCodeSchema>;
+
+export const CreateInviteCodeSchema = z.object({
+  validity: InvitationValidityEnum.default('HOURS_24'),
+});
+
+export type CreateInviteCode = z.infer<typeof CreateInviteCodeSchema>;
+
+export const UpdateInviteValiditySchema = z.object({
+  validity: InvitationValidityEnum,
+});
+
+export type UpdateInviteValidity = z.infer<typeof UpdateInviteValiditySchema>;

@@ -3,13 +3,17 @@ import { getAuthHeaders } from '@/libs/secureStorage';
 import { Balance, BalanceSchema } from '@cohab/shared/src/balance';
 import {
   CreateHouseHold,
+  CreateInviteCode,
   GetHouseholdDetails,
   GetHouseholdDetailsSchema,
   GetPendingInvites,
   GetPendingInvitesSchema,
+  InvitationCode,
+  InvitationCodeSchema,
   JoinHouseHold,
   RespondToInvitation,
   UpdateHousehold,
+  UpdateInviteValidity,
 } from '@cohab/shared/src/household';
 
 import { Refunds, RefundsSchema } from '@cohab/shared/src/refund';
@@ -59,17 +63,73 @@ export const createHousehold = async (data: CreateHouseHold): Promise<GetHouseho
   return GetHouseholdDetailsSchema.parse(body);
 };
 
-export const createInviteCode = async (householdId: string): Promise<{ code: string }> => {
+export const getInviteCode = async (householdId: string): Promise<InvitationCode | null> => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households/${householdId}/invite`, {
-    method: 'POST',
+    method: 'GET',
     headers,
   });
 
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
-    console.error(data.message);
-    throw new Error(data.message || 'Invite household failed');
+    throw new Error(data.message || 'Failed to fetch invite code');
+  }
+
+  const body = await response.json();
+  if (body === null) return null;
+  return InvitationCodeSchema.parse(body);
+};
+
+export const createInviteCode = async (
+  householdId: string,
+  data: CreateInviteCode,
+): Promise<InvitationCode> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/${householdId}/invite`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Invite household failed');
+  }
+
+  const body = await response.json();
+  return InvitationCodeSchema.parse(body);
+};
+
+export const updateInviteValidity = async (
+  householdId: string,
+  data: UpdateInviteValidity,
+): Promise<InvitationCode> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/${householdId}/invite`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to update invite validity');
+  }
+
+  const body = await response.json();
+  return InvitationCodeSchema.parse(body);
+};
+
+export const revokeInviteCode = async (householdId: string): Promise<{ status: string }> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/${householdId}/invite`, {
+    method: 'DELETE',
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to revoke invite code');
   }
 
   return response.json();

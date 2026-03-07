@@ -1,8 +1,10 @@
 import {
   CreateHouseHoldSchema,
+  CreateInviteCodeSchema,
   JoinHouseHoldSchema,
   RespondToInvitationSchema,
   UpdateHouseholdSchema,
+  UpdateInviteValiditySchema,
 } from '@cohab/shared/src/household';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
@@ -13,7 +15,7 @@ import withPrisma from '../libs/prisma';
 import { ContextWithAuth, ContextWithPrisma } from '../types/Contexts';
 import expenses from './expenses';
 import refunds from './refunds';
-import { isOutdatedInvitation } from './utils/invitation';
+import { isValidInvitation } from './utils/invitation';
 
 export default new Hono<ContextWithPrisma & ContextWithAuth>()
   .basePath('/households')
@@ -58,18 +60,13 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
               });
 
               if (matchingUser) {
-                // If the user exists and doesn't have a household, join them immediately
                 if (!matchingUser.houseHoldId) {
                   await prisma.user.update({
                     where: { id: matchingUser.id },
                     data: { houseHoldId: createdHousehold.id },
                   });
                 }
-                // If they are already in a household, we don't invite/move them
-                // We could collect these to notify the creator, but following the rule:
-                // "add people only if they're not attached to an existing household"
               } else {
-                // User doesn't exist yet, create a pending invitation
                 await prisma.pendingInvite.create({
                   data: {
                     householdId: createdHousehold.id,
@@ -227,22 +224,26 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
       }
 
       const invitation = await prisma.invitation.findUnique({
-        where: {
-          code,
-        },
-        select: { householdId: true },
+        where: { code },
+        select: { householdId: true, validity: true, createdAt: true, revokedAt: true },
       });
+
       if (!invitation) {
-        throw new Error('Invitation not found');
+        return c.json({ status: 'error', message: "Code d'invitation invalide" }, 404);
       }
+
+      if (!isValidInvitation(invitation)) {
+        return c.json(
+          { status: 'error', message: "Ce code d'invitation a expiré ou a été révoqué" },
+          410,
+        );
+      }
+
       await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          houseHoldId: invitation.householdId,
-        },
+        where: { id: userId },
+        data: { houseHoldId: invitation.householdId },
       });
+
       return c.json(
         { status: 'ok', message: `Successfully joined household ${invitation.householdId}` },
         200,
@@ -310,19 +311,16 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
         });
 
         if (action === 'ACCEPT') {
-          // Link user to household
           await prisma.user.update({
             where: { id: userId },
             data: { houseHoldId: invite.householdId },
           });
 
-          // Update invite status
           await prisma.pendingInvite.update({
             where: { id: inviteId },
             data: { status: 'ACCEPTED' },
           });
         } else {
-          // Decline: we simply delete or mark as rejected
           await prisma.pendingInvite.update({
             where: { id: inviteId },
             data: { status: 'REJECTED' },
@@ -337,10 +335,12 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
       }
     },
   )
-  .post('/:householdId/invite', withAuth, withPrisma, async (c) => {
+  // GET current invitation code for a household
+  .get('/:householdId/invite', withAuth, withPrisma, async (c) => {
     const householdId = c.req.param('householdId');
     const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
+
     try {
       const user = await prisma.user.findUniqueOrThrow({
         where: { id: userId },
@@ -348,30 +348,121 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
       });
 
       if (user.administeredHouseHold?.id !== householdId) {
-        throw new Error(`You need to be admin of ${householdId} to create an invite`);
+        return c.json({ status: 'error', message: 'Forbidden' }, 403);
       }
 
-      const existingInvitation = await prisma.invitation.findUnique({
+      const invitation = await prisma.invitation.findUnique({
         where: { householdId },
-        select: { createdAt: true, code: true },
+        select: { code: true, validity: true, createdAt: true, revokedAt: true },
       });
 
-      if (
-        existingInvitation &&
-        !isOutdatedInvitation(Date.now(), existingInvitation.createdAt.getTime())
-      ) {
-        return c.json({ householdId, code: existingInvitation.code }, 200);
+      if (!invitation || !isValidInvitation(invitation)) {
+        return c.json(null, 200);
       }
 
-      const generatedCode = crypto.randomInt(100000, 1000000).toString();
-      const invitation = await prisma.invitation.upsert({
-        where: { householdId },
-        update: { code: generatedCode, createdAt: new Date() },
-        create: { householdId, code: generatedCode },
-        select: { code: true },
+      return c.json(
+        { code: invitation.code, validity: invitation.validity, createdAt: invitation.createdAt },
+        200,
+      );
+    } catch (error) {
+      console.error(error);
+      return c.json({ status: 'error', message: 'Internal error' }, 500);
+    }
+  })
+  // POST create a new invitation code
+  .post(
+    '/:householdId/invite',
+    withAuth,
+    withPrisma,
+    zValidator('json', CreateInviteCodeSchema),
+    async (c) => {
+      const householdId = c.req.param('householdId');
+      const { id: userId } = c.get('user');
+      const prisma = c.get('prisma');
+      const { validity } = c.req.valid('json');
+
+      try {
+        const user = await prisma.user.findUniqueOrThrow({
+          where: { id: userId },
+          select: { administeredHouseHold: { select: { id: true } } },
+        });
+
+        if (user.administeredHouseHold?.id !== householdId) {
+          return c.json({ status: 'error', message: 'Forbidden' }, 403);
+        }
+
+        const generatedCode = crypto.randomInt(100000, 1000000).toString();
+        const invitation = await prisma.invitation.upsert({
+          where: { householdId },
+          update: { code: generatedCode, createdAt: new Date(), validity, revokedAt: null },
+          create: { householdId, code: generatedCode, validity },
+          select: { code: true, validity: true, createdAt: true },
+        });
+
+        return c.json(invitation, 200);
+      } catch (error) {
+        console.error(error);
+        return c.json({ status: 'error', message: 'Internal error' }, 500);
+      }
+    },
+  )
+  // PATCH update invitation validity
+  .patch(
+    '/:householdId/invite',
+    withAuth,
+    withPrisma,
+    zValidator('json', UpdateInviteValiditySchema),
+    async (c) => {
+      const householdId = c.req.param('householdId');
+      const { id: userId } = c.get('user');
+      const prisma = c.get('prisma');
+      const { validity } = c.req.valid('json');
+
+      try {
+        const user = await prisma.user.findUniqueOrThrow({
+          where: { id: userId },
+          select: { administeredHouseHold: { select: { id: true } } },
+        });
+
+        if (user.administeredHouseHold?.id !== householdId) {
+          return c.json({ status: 'error', message: 'Forbidden' }, 403);
+        }
+
+        const invitation = await prisma.invitation.update({
+          where: { householdId },
+          data: { validity, createdAt: new Date(), revokedAt: null },
+          select: { code: true, validity: true, createdAt: true },
+        });
+
+        return c.json(invitation, 200);
+      } catch (error) {
+        console.error(error);
+        return c.json({ status: 'error', message: 'Internal error' }, 500);
+      }
+    },
+  )
+  // DELETE revoke invitation code
+  .delete('/:householdId/invite', withAuth, withPrisma, async (c) => {
+    const householdId = c.req.param('householdId');
+    const { id: userId } = c.get('user');
+    const prisma = c.get('prisma');
+
+    try {
+      const user = await prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { administeredHouseHold: { select: { id: true } } },
       });
 
-      return c.json(invitation, 200);
+      if (user.administeredHouseHold?.id !== householdId) {
+        return c.json({ status: 'error', message: 'Forbidden' }, 403);
+      }
+
+      await prisma.invitation.update({
+        where: { householdId },
+        data: { revokedAt: new Date() },
+      });
+
+      return c.json({ status: 'ok' }, 200);
     } catch (error) {
       console.error(error);
       return c.json({ status: 'error', message: 'Internal error' }, 500);
