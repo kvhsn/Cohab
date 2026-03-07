@@ -1,6 +1,7 @@
 import Card from '@/components/Card/Card';
 import Icon from '@/components/Icon/Icon';
 import Typography from '@/components/Typography/Typography';
+import { cn } from '@/libs/tailwind';
 import React from 'react';
 import { View } from 'react-native';
 
@@ -14,9 +15,11 @@ export function SummaryCard({ share, className }: SummaryCardProps) {
 
   return (
     <Card
-      className={`items-center justify-center border-none overflow-hidden ${
-        isPositive ? 'bg-primary/10 dark:bg-primary/20' : 'bg-rose-500/10 dark:bg-rose-500/20'
-      } ${className}`}>
+      className={cn(
+        'items-center justify-center border-none overflow-hidden',
+        isPositive ? 'bg-primary/10 dark:bg-primary/20' : 'bg-rose-500/10 dark:bg-rose-500/20',
+        className,
+      )}>
       <View className="w-full flex-row items-center justify-between">
         <View className="items-center py-4">
           <Typography variant="bodySmall" className="mb-2 opacity-70">

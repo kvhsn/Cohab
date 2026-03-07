@@ -1,5 +1,6 @@
 import Icon, { IconNames } from '@/components/Icon/Icon';
 import Typography from '@/components/Typography/Typography';
+import { cn } from '@/libs/tailwind';
 import React from 'react';
 import { Pressable, PressableProps, View } from 'react-native';
 
@@ -18,7 +19,7 @@ export default function SettingsItem({
 }: SettingsItemProps) {
   return (
     <Pressable
-      className={`flex-row items-center p-4 bg-gray-50 dark:bg-slate-700 ${className ?? ''}`}
+      className={cn('flex-row items-center p-4 bg-gray-50 dark:bg-slate-700', className)}
       {...props}>
       <View className="mr-4 size-10 items-center justify-center rounded-xl bg-primary/10">
         <Icon as="Ionicons" name={iconName} size="md" className="color-primary" />

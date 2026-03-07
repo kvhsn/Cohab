@@ -1,6 +1,7 @@
-import { tw, type TwSize } from '@/libs/tailwind';
+import { colors } from '@/libs/colors';
+import { cn, tw, type TwSize } from '@/libs/tailwind';
 import * as VectorIcons from '@expo/vector-icons';
-import React, { useRef, useState, type ComponentProps } from 'react';
+import React, { useRef, useState, type ComponentProps, type ReactElement } from 'react';
 import {
   GestureResponderEvent,
   Pressable,
@@ -23,9 +24,18 @@ interface InputProps extends Omit<TextInputProps, 'ref'> {
   iconName?: IoniconsName;
   size?: TwSize;
   error?: string;
+  /** Custom element rendered on the right side of the input (e.g. an icon button). When provided, overrides the default password reveal toggle. */
+  rightElement?: ReactElement;
 }
 
-export default function Input({ iconName, size = 'md', className, error, ...props }: InputProps) {
+export default function Input({
+  iconName,
+  size = 'md',
+  className,
+  error,
+  rightElement,
+  ...props
+}: InputProps) {
   const [isSecureTextEntry, setIsSecureTextEntry] = useState(!!props.secureTextEntry);
   const inputRef = useRef<TextInput | null>(null);
 
@@ -33,11 +43,11 @@ export default function Input({ iconName, size = 'md', className, error, ...prop
   const isDark = useColorScheme() === 'dark';
   const placeholderTextColor = error
     ? isDark
-      ? '#f87171'
-      : '#ef4444' // red-400 en dark, red-500 en light
+      ? colors.errorDark
+      : colors.error
     : isDark
-      ? '#6b7280'
-      : '#9ca3af';
+      ? colors.placeholderDark
+      : colors.placeholderLight;
 
   const isPasswordInput = !!props.secureTextEntry;
   const keyboardIconName = props.keyboardType ? KEYBOARD_ICONS[props.keyboardType] : undefined;
@@ -51,7 +61,7 @@ export default function Input({ iconName, size = 'md', className, error, ...prop
   };
 
   return (
-    <View className={`w-full gap-1 ${className ?? ''}`}>
+    <View className={cn('w-full gap-1', className)}>
       <Pressable
         className={`flex flex-row self-center items-center gap-2 border rounded-2xl px-2 py-4 bg-white/85 dark:bg-slate-800/85 shadow-sm ${
           error ? 'border-red-500' : 'border-gray-100 dark:border-slate-700'
@@ -73,16 +83,18 @@ export default function Input({ iconName, size = 'md', className, error, ...prop
             ref={inputRef}
           />
         </View>
-        {isPasswordInput && (
-          <Pressable onPress={() => setIsSecureTextEntry(!isSecureTextEntry)}>
-            <Icon
-              as="Ionicons"
-              name={isSecureTextEntry ? 'eye-outline' : 'eye-off-outline'}
-              size={size}
-              className={iconClass}
-            />
-          </Pressable>
-        )}
+        {rightElement
+          ? rightElement
+          : isPasswordInput && (
+              <Pressable onPress={() => setIsSecureTextEntry(!isSecureTextEntry)}>
+                <Icon
+                  as="Ionicons"
+                  name={isSecureTextEntry ? 'eye-outline' : 'eye-off-outline'}
+                  size={size}
+                  className={iconClass}
+                />
+              </Pressable>
+            )}
       </Pressable>
       <View className="h-5 justify-center">
         {error ? (

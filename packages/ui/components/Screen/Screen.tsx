@@ -1,4 +1,5 @@
-import { tw } from '@/libs/tailwind';
+import { colors } from '@/libs/colors';
+import { cn } from '@/libs/tailwind';
 import { Stack } from 'expo-router';
 import {
   Keyboard,
@@ -7,8 +8,9 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   useColorScheme,
+  View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type ScreenProps = {
   children: React.ReactNode;
@@ -18,10 +20,9 @@ type ScreenProps = {
 
 export default function Screen({ children, className, title }: ScreenProps) {
   const headerShown = typeof title !== 'undefined';
-  const paddingTop = headerShown ? tw('mt-10') : '';
   const isDark = useColorScheme() === 'dark';
-  // headerTintColor est une option React Navigation (prop JS, non stylable via CSS)
-  const headerTintColor = isDark ? '#f1f5f9' : '#0f172a';
+  const { bottom, top, left, right } = useSafeAreaInsets();
+  const headerTintColor = isDark ? colors.headerDark : colors.headerLight;
   return (
     <KeyboardAvoidingView
       className="flex-1"
@@ -36,9 +37,19 @@ export default function Screen({ children, className, title }: ScreenProps) {
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
-          contentContainerClassName={`grow space-between px-6 py-4 ${paddingTop}`}
-          className={`flex-1 bg-linear-to-br from-background-primary via-background-secondary via-40% to-background-tertiary dark:from-slate-950 dark:via-slate-900 dark:via-40% dark:to-slate-800 ${className}`}>
-          <SafeAreaView style={{ flex: 1 }}>{children}</SafeAreaView>
+          contentContainerStyle={{
+            paddingTop: top,
+            paddingBottom: bottom,
+            paddingLeft: left,
+            paddingRight: right,
+          }}
+          className={cn(
+            'flex-1 bg-linear-to-br from-background-primary via-background-secondary via-40% to-background-tertiary dark:from-slate-950 dark:via-slate-900 dark:via-40% dark:to-slate-800',
+            className,
+          )}>
+          <SafeAreaView>
+            <View className="px-4 pb-4">{children}</View>
+          </SafeAreaView>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

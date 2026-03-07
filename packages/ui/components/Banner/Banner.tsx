@@ -1,4 +1,5 @@
-import { tw } from '@/libs/tailwind';
+import { colors } from '@/libs/colors';
+import { cn, tw } from '@/libs/tailwind';
 import { TailwindClass } from '@/types';
 import React from 'react';
 import { View, ViewProps } from 'react-native';
@@ -18,9 +19,9 @@ const variantContainerStyles: Record<BannerVariant, TailwindClass> = {
 };
 
 const variantIconColors: Record<BannerVariant, string> = {
-  information: '#3b82f6',
-  warning: '#eab308',
-  danger: '#ef4444',
+  information: colors.info,
+  warning: colors.warning,
+  danger: colors.error,
 };
 
 const variantIconNames = {
@@ -37,7 +38,11 @@ export default function Banner({
 }: BannerProps) {
   return (
     <View
-      className={`flex-row gap-3 p-4 rounded-2xl border ${variantContainerStyles[variant]} ${className || ''}`}
+      className={cn(
+        'flex-row gap-3 p-4 rounded-2xl border',
+        variantContainerStyles[variant],
+        className,
+      )}
       {...props}>
       <Icon
         as="Ionicons"

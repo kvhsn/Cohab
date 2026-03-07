@@ -1,8 +1,9 @@
-import { buttonStateStyles, tw, TwSize } from '@/libs/tailwind';
+import { colors } from '@/libs/colors';
+import { buttonStateStyles, cn, tw, TwSize } from '@/libs/tailwind';
 import { TailwindClass } from '@/types';
 import * as Icons from '@expo/vector-icons';
 import React, { ComponentProps } from 'react';
-import { Pressable, PressableProps } from 'react-native';
+import { Pressable, PressableProps, useColorScheme } from 'react-native';
 import Icon, { IconProvider } from '../Icon/Icon';
 
 interface IconButtonProps<K extends IconProvider> extends PressableProps {
@@ -28,13 +29,6 @@ const sizeStyles = {
   lg: tw('size-12 rounded-2xl'),
 } satisfies Required<Record<TwSize, TailwindClass>>;
 
-const iconClasses = {
-  primary: tw('text-white'),
-  secondary: tw('text-gray-900 dark:text-gray-100'),
-  ghost: tw('text-gray-900 dark:text-white'),
-  danger: tw('text-white'),
-} satisfies Record<NonNullable<IconButtonProps<IconProvider>['variant']>, TailwindClass>;
-
 export default function IconButton<K extends IconProvider>({
   as,
   name,
@@ -44,17 +38,23 @@ export default function IconButton<K extends IconProvider>({
   className,
   ...props
 }: IconButtonProps<K>) {
+  const isDark = useColorScheme() === 'dark';
   const sizeStyle = sizeStyles[size];
   const variantStyle = variantStyles[variant];
-  const iconClass = iconClasses[variant];
   const stateStyle = disabled ? buttonStateStyles.disabled : buttonStateStyles.enabled;
+  const iconColor = {
+    primary: colors.white,
+    secondary: isDark ? colors.textDark : colors.textLight,
+    ghost: isDark ? colors.white : colors.textLight,
+    danger: colors.white,
+  }[variant];
 
   return (
     <Pressable
       disabled={disabled}
-      className={`${sizeStyle} ${variantStyle} ${stateStyle} items-center justify-center ${className || ''}`}
+      className={cn(sizeStyle, variantStyle, stateStyle, 'items-center justify-center', className)}
       {...props}>
-      <Icon as={as} name={name} size={size} className={iconClass} />
+      <Icon as={as} name={name} size={size} color={iconColor} />
     </Pressable>
   );
 }

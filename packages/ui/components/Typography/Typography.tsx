@@ -1,4 +1,4 @@
-import { tw, type TwSize } from '@/libs/tailwind';
+import { cn, tw, type TwSize } from '@/libs/tailwind';
 import { TailwindClass } from '@/types';
 import { Text, TextProps } from 'react-native';
 
@@ -37,7 +37,7 @@ export default function Typography({
   const sizeClass = variant === 'button' ? tw(`text-${size}`) : sizeStyles[variant];
 
   return (
-    <Text {...props} className={`${baseStyles} ${sizeClass} ${className}`}>
+    <Text {...props} className={cn(baseStyles, sizeClass, className)}>
       {children}
     </Text>
   );
