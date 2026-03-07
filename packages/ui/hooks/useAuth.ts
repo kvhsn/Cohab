@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 
 export const useAuth = () => {
-  const { data, isPending } = authClient.useSession();
+  const { data, isPending, error } = authClient.useSession();
   const queryClient = useQueryClient();
   const isAuthenticated = !!data?.session;
 
@@ -13,5 +13,5 @@ export const useAuth = () => {
     router.dismissAll();
     router.replace('/login');
   };
-  return { data, isPending, logout, isAuthenticated };
+  return { data, isPending, error, logout, isAuthenticated };
 };

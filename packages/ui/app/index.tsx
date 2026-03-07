@@ -3,9 +3,9 @@ import { Redirect } from 'expo-router';
 import React from 'react';
 
 export default function Index() {
-  const { isAuthenticated, isPending } = useAuth();
+  const { isAuthenticated, isPending, error } = useAuth();
 
-  if (isPending) return null;
+  if (isPending || error) return null;
 
   if (!isAuthenticated) {
     return <Redirect href="/login" />;
