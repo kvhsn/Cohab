@@ -1,25 +1,38 @@
-import IconButton from '@/components/IconButton/IconButton';
+import MemberAvatar from '@/components/MemberAvatar/MemberAvatar';
 import Screen from '@/components/Screen/Screen';
+import { SummaryCard } from '@/components/SummaryCard/SummaryCard';
 import Typography from '@/components/Typography/Typography';
-import { Link, useLocalSearchParams } from 'expo-router';
-import { View } from 'react-native';
+import { useAuth } from '@/hooks/useAuth';
+import queries from '@/libs/queries';
+import { GetMe } from '@cohab/shared/src/me';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Link, router, useLocalSearchParams } from 'expo-router';
+import { Suspense } from 'react';
+import { Pressable, View } from 'react-native';
 
 export default function HouseholdDetails() {
   const { householdId } = useLocalSearchParams<{ householdId: string }>();
-
+  const { data } = useSuspenseQuery(queries.me.getMeQuery());
+  const { data: balance } = useSuspenseQuery(
+    queries.households.getHouseholdBalanceQuery(householdId),
+  );
   return (
     <Screen>
-      <View className="flex-row items-center justify-between px-4 py-2">
-        <Typography variant="h1">Household Details</Typography>
-        <Link href={`/households/${householdId}/settings`} asChild>
-          <IconButton as="Ionicons" name="settings-outline" variant="ghost" />
-        </Link>
-      </View>
-      <View className="px-4">
-        <Typography variant="bodySmall" className="text-gray-400">
-          ID: {householdId}
-        </Typography>
+      <Suspense fallback="Is loading...">
+        <MemberHeader
+          me={data}
+          onSettings={() => router.push(`/households/${householdId}/settings`)}
+        />
+      </Suspense>
 
+      <View className="flex mt-8 px-4">
+        <Link
+          href={{
+            pathname: '/households/[householdId]/balance',
+            params: { householdId },
+          }}>
+          <SummaryCard share={balance.total} />
+        </Link>
         <View>
           <Link
             href={{
@@ -31,26 +44,37 @@ export default function HouseholdDetails() {
         </View>
         <Link
           href={{
-            pathname: '/households/[householdId]/balance',
-            params: { householdId },
-          }}>
-          <Typography variant="bodySmall">Show balance</Typography>
-        </Link>
-        <Link
-          href={{
             pathname: '/households/[householdId]/refunds',
             params: { householdId },
           }}>
           <Typography variant="bodySmall">Show refunds</Typography>
         </Link>
-        <Link
-          href={{
-            pathname: '/households/[householdId]/invite',
-            params: { householdId },
-          }}>
-          <Typography variant="bodySmall">Invite</Typography>
-        </Link>
       </View>
     </Screen>
+  );
+}
+
+type MemberHeaderProps = {
+  me: GetMe;
+  onSettings: () => void;
+};
+
+function MemberHeader({ me, onSettings }: MemberHeaderProps) {
+  const { data: userData } = useAuth();
+
+  return (
+    <View className="flex flex-row items-center gap-4">
+      <Pressable onPress={onSettings}>
+        <MemberAvatar name={me.name} isAdmin={me.household?.adminId === userData?.user?.id} />
+      </Pressable>
+      <View className="flex flex-1 flex-col self-center">
+        <Typography variant="h1" className="text-primary">
+          Salut {me.name} 👋 !
+        </Typography>
+        <Typography variant="bodySmall" className="text-gray-400">
+          Voici ce qui se passe à la coloc
+        </Typography>
+      </View>
+    </View>
   );
 }

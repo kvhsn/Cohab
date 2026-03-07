@@ -1,19 +1,20 @@
 import Card from '@/components/Card/Card';
 import Icon from '@/components/Icon/Icon';
 import Typography from '@/components/Typography/Typography';
+import { tw } from '@/libs/tailwind';
+import { GetHouseholdMember } from '@cohab/shared/src/household';
 import React from 'react';
 import { View } from 'react-native';
-import { HouseholdMember } from './types';
 
 interface DebtItemProps {
-  member?: HouseholdMember;
+  member?: GetHouseholdMember;
   amount: number;
   type: 'owe-me' | 'i-owe';
 }
 
 export function DebtItem({ member, amount, type }: DebtItemProps) {
   const isOweMe = type === 'owe-me';
-  const colorClass = isOweMe ? 'primary' : 'rose-500';
+  const colorClass = isOweMe ? tw('primary') : tw('rose-500');
 
   return (
     <Card className="mb-3 p-4 flex-row items-center justify-between bg-white/40 dark:bg-slate-800/40">

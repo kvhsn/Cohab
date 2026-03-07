@@ -1,13 +1,13 @@
 import Typography from '@/components/Typography/Typography';
+import { GetHouseholdMember } from '@cohab/shared/src/household';
 import React from 'react';
 import { View } from 'react-native';
 import { DebtItem } from './DebtItem';
-import { HouseholdMember } from './types';
 
 interface DebtSectionProps {
   title: string;
   total: number;
-  items: { id: string; amount: number; member?: HouseholdMember }[];
+  items: { id: string; amount: number; member?: GetHouseholdMember }[];
   type: 'owe-me' | 'i-owe';
 }
 
