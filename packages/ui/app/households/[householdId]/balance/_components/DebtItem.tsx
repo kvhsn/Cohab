@@ -1,5 +1,7 @@
+import CustomButton from '@/components/Button/Button';
 import Card from '@/components/Card/Card';
 import Icon from '@/components/Icon/Icon';
+import MemberAvatar from '@/components/MemberAvatar/MemberAvatar';
 import Typography from '@/components/Typography/Typography';
 import { tw } from '@/libs/tailwind';
 import { GetHouseholdMember } from '@cohab/shared/src/household';
@@ -20,16 +22,10 @@ export default function DebtItem({ member, amount, type }: DebtItemProps) {
     <Card className="mb-3 p-4 flex-row items-center justify-between bg-white/40 dark:bg-slate-800/40">
       <View className="flex-row items-center flex-1">
         <View
-          className={`w-12 h-12 rounded-full bg-${colorClass}/20 items-center justify-center mr-3 overflow-hidden border border-${colorClass}/20`}>
-          {member?.image ? (
-            <View className="w-full h-full bg-slate-300" />
-          ) : (
-            <Typography variant="body" className={`text-${colorClass} font-bold`}>
-              {member?.name?.[0].toUpperCase()}
-            </Typography>
-          )}
+          className={`relative size-12 rounded-full bg-${colorClass}/20 items-center justify-center mr-8 border border-${colorClass}/20`}>
+          {member && <MemberAvatar isAdmin={false} name={member.name} />}
           <View
-            className={`absolute bottom-0 right-0 bg-${colorClass} px-1.5 rounded-sm border border-white dark:border-slate-900`}>
+            className={`absolute bottom-0 -right-6 bg-${colorClass} px-1.5 rounded-sm border border-white dark:border-slate-900`}>
             <Typography variant="caption" className="text-[9px] text-white">
               {amount.toFixed(0)}€
             </Typography>
@@ -45,24 +41,20 @@ export default function DebtItem({ member, amount, type }: DebtItemProps) {
         </View>
       </View>
 
-      <View
-        className={`flex-row items-center px-4 py-2 rounded-2xl ${
-          isOweMe
-            ? 'bg-primary/10 dark:bg-primary/20 border border-primary/20'
-            : 'bg-rose-500 shadow-sm'
-        }`}>
-        <Icon
-          as="Ionicons"
-          name={isOweMe ? 'notifications-outline' : 'card-outline'}
-          size="sm"
-          className={isOweMe ? 'text-primary mr-2' : 'text-white mr-2'}
-        />
-        <Typography
-          variant="bodySmall"
-          className={`font-bold ${isOweMe ? 'text-primary' : 'text-white'}`}>
-          {isOweMe ? 'Relancer' : 'Payer'}
-        </Typography>
-      </View>
+      <CustomButton
+        onPress={() => {}}
+        size="sm"
+        variant={isOweMe ? 'primary' : 'danger'}
+        title={isOweMe ? 'Relancer' : 'Payer'}
+        LeftIcon={() => (
+          <Icon
+            as="Ionicons"
+            name={isOweMe ? 'notifications-outline' : 'card-outline'}
+            size="sm"
+            color="white"
+          />
+        )}
+      />
     </Card>
   );
 }
