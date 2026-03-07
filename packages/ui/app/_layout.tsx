@@ -21,6 +21,8 @@ export default function RootLayout() {
           },
         }}>
         {storybookEnabled && <Stack.Screen name="(storybook)/index" />}
+        <Stack.Screen name="(auth)/login" options={{ gestureEnabled: false }} />
+        <Stack.Screen name="(auth)/register" options={{ gestureEnabled: false }} />
       </Stack>
     </QueryClientProvider>
   );

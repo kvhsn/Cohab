@@ -1,12 +1,15 @@
+import CustomButton from '@/components/Button/Button';
 import Icon from '@/components/Icon/Icon';
 import Screen from '@/components/Screen/Screen';
+import Typography from '@/components/Typography/Typography';
+import { useAuth } from '@/hooks/useAuth';
 import { Link, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Pressable, View } from 'react-native';
-import Typography from '@/components/Typography/Typography';
 
 export default function SettingsIndex() {
   const { householdId } = useLocalSearchParams<{ householdId: string }>();
+  const { logout } = useAuth();
 
   return (
     <Screen title="Paramètres">
@@ -56,6 +59,9 @@ export default function SettingsIndex() {
             </Pressable>
           </Link>
         </View>
+      </View>
+      <View className="flex self-center">
+        <CustomButton size="sm" onPress={logout} variant="secondary" title="Déconnexion" />
       </View>
     </Screen>
   );

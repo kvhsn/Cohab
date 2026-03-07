@@ -10,6 +10,7 @@ export const useAuth = () => {
   const logout = async () => {
     await authClient.signOut();
     queryClient.clear();
+    router.dismissAll();
     router.replace('/login');
   };
   return { data, isPending, logout, isAuthenticated };
