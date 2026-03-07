@@ -121,12 +121,15 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
           },
         },
       });
-      return c.json({
-        id: household?.id,
-        name: household?.name,
-        adminId: household?.adminId,
-        members: household?.members,
-      } as GetHouseholdDetails);
+      return c.json(
+        {
+          id: household?.id,
+          name: household?.name,
+          adminId: household?.adminId,
+          members: household?.members,
+        } as GetHouseholdDetails,
+        200,
+      );
     } catch (error) {
       console.error(error);
       return c.json({ status: 'error', message: 'Internal error' }, 500);
