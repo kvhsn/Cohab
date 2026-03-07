@@ -18,7 +18,7 @@ type ScreenProps = {
 
 export default function Screen({ children, className, title }: ScreenProps) {
   const headerShown = typeof title !== 'undefined';
-  const paddingTop = headerShown ? tw('mt-6') : '';
+  const paddingTop = headerShown ? tw('mt-10') : '';
   const isDark = useColorScheme() === 'dark';
   // headerTintColor est une option React Navigation (prop JS, non stylable via CSS)
   const headerTintColor = isDark ? '#f1f5f9' : '#0f172a';

@@ -37,7 +37,7 @@ export default function Typography({
   const sizeClass = variant === 'button' ? tw(`text-${size}`) : sizeStyles[variant];
 
   return (
-    <Text {...props} className={`${baseStyles} ${sizeClass} ${className || ''}`}>
+    <Text {...props} className={`${baseStyles} ${sizeClass} ${className}`}>
       {children}
     </Text>
   );
