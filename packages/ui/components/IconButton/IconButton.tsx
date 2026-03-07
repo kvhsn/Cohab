@@ -9,7 +9,7 @@ interface IconButtonProps<K extends IconProvider> extends PressableProps {
   as: K;
   name: ComponentProps<(typeof Icons)[K]>['name'];
   size?: TwSize;
-  variant?: 'primary' | 'secondary' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   disabled?: boolean;
 }
 
@@ -19,6 +19,7 @@ const variantStyles = {
     'bg-white dark:bg-slate-700 shadow-sm border border-gray-100 dark:border-slate-600',
   ),
   ghost: tw('bg-transparent'),
+  danger: tw('bg-red-500'),
 } satisfies Record<NonNullable<IconButtonProps<IconProvider>['variant']>, TailwindClass>;
 
 const sizeStyles = {
@@ -31,6 +32,7 @@ const iconClasses = {
   primary: tw('text-white'),
   secondary: tw('text-gray-900 dark:text-gray-100'),
   ghost: tw('text-gray-900 dark:text-white'),
+  danger: tw('text-white'),
 } satisfies Record<NonNullable<IconButtonProps<IconProvider>['variant']>, TailwindClass>;
 
 export default function IconButton<K extends IconProvider>({

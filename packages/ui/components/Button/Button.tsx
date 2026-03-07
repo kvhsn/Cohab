@@ -9,7 +9,7 @@ import Typography from '../Typography/Typography';
 interface CustomButtonProps extends PressableProps {
   title: string;
   size: TwSize;
-  variant: 'primary' | 'secondary' | 'link';
+  variant: 'primary' | 'secondary' | 'link' | 'danger';
   disabled?: boolean;
   LeftIcon?: IconType;
   RightIcon?: IconType;
@@ -19,6 +19,7 @@ const variantStyles = {
   primary: tw('shadow-primary/50 shadow-lg'),
   secondary: tw('bg-white/80 dark:bg-slate-700/80 shadow-lg dark:border dark:border-slate-600'),
   link: tw('bg-transparent shadow-none px-0 py-0'),
+  danger: tw('bg-red-500'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
 
 const sizeStyles = {
@@ -31,12 +32,14 @@ const textVariantStyles = {
   primary: tw('text-white'),
   secondary: tw('text-gray-900 dark:text-gray-100'),
   link: tw('text-primary'),
+  danger: tw('text-white'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
 
 const iconColorStyles = {
   primary: tw('white'),
   secondary: tw('color-gray-900'),
   link: tw('color-primary'),
+  danger: tw('color-white'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
 
 export default function CustomButton({
