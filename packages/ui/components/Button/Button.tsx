@@ -36,7 +36,7 @@ const textVariantStyles = {
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
 
 const iconColorStyles = {
-  primary: tw('white'),
+  primary: tw('color-white'),
   secondary: tw('color-gray-900'),
   link: tw('color-primary'),
   danger: tw('color-white'),
