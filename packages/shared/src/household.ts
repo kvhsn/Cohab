@@ -1,9 +1,10 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const CreateHouseHoldSchema = z.object({
   name: z.string().min(3, {
     message: 'Le nom de votre colocation doit contenir au moins 3 caractères',
   }),
+  invites: z.string().array().optional(),
 });
 
 export type CreateHouseHold = z.infer<typeof CreateHouseHoldSchema>;
@@ -17,8 +18,56 @@ export const JoinHouseHoldSchema = z.object({
 
 export type JoinHouseHold = z.infer<typeof JoinHouseHoldSchema>;
 
+export const GetHouseholdMemberSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  image: z.string().nullable().optional(),
+});
+
 export const GetHouseholdDetailsSchema = z.object({
   id: z.string().optional(),
+  name: z.string().optional(),
+  adminId: z.string().optional(),
+  members: z.array(GetHouseholdMemberSchema).optional(),
 });
 
 export type GetHouseholdDetails = z.infer<typeof GetHouseholdDetailsSchema>;
+
+export const UpdateHouseholdSchema = z.object({
+  name: z.string().min(3, {
+    message: 'Le nom de votre colocation doit contenir au moins 3 caractères',
+  }),
+});
+
+export type UpdateHousehold = z.infer<typeof UpdateHouseholdSchema>;
+
+export const RespondToInvitationSchema = z.object({
+  action: z.enum(['ACCEPT', 'DECLINE']),
+});
+
+export type RespondToInvitation = z.infer<typeof RespondToInvitationSchema>;
+
+export const PendingInviteSchema = z.object({
+  id: z.string(),
+  email: z.string().nullable(),
+  phone: z.string().nullable(),
+  householdId: z.string(),
+  status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED', 'EXPIRED']),
+  expiresAt: z.string().nullable().optional(),
+  createdAt: z.string(),
+  household: z.object({
+    id: z.string(),
+    name: z.string(),
+    admin: z.object({
+      name: z.string(),
+      image: z.string().nullable().optional(),
+    }),
+  }),
+});
+
+export type PendingInvite = z.infer<typeof PendingInviteSchema>;
+
+export const GetPendingInvitesSchema = z.array(PendingInviteSchema);
+
+export type GetPendingInvites = z.infer<typeof GetPendingInvitesSchema>;

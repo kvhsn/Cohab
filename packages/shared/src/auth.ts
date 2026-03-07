@@ -7,6 +7,7 @@ export const RegisterSchema = z.object({
   email: z.email({
     error: "L'adresse email est invalide",
   }),
+  phoneNumber: z.string().min(5, 'Le numéro de téléphone est requis'),
   password: z.string().min(8, 'Le mot de passe doit faire au moins 8 caractères'),
 });
 

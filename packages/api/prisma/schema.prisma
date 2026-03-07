@@ -5,14 +5,16 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  email       String   @unique
+  phoneNumber String?  @unique
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   houseHoldId           String?
   household             Household? @relation("HouseHold_members", fields: [houseHoldId], references: [id])
@@ -42,9 +44,10 @@ model Household {
   members User[] @relation("HouseHold_members")
   admin   User   @relation("HouseHold_admin", fields: [adminId], references: [id])
 
-  invitation Invitation? @relation("HouseHold_invitation")
-  Expenses   Expense[]   @relation("HouseHold_expense")
-  Refunds    Refund[]    @relation("HouseHold_refund")
+  invitation     Invitation?     @relation("HouseHold_invitation")
+  pendingInvites PendingInvite[] @relation("HouseHold_pending_invites")
+  Expenses       Expense[]       @relation("HouseHold_expense")
+  Refunds        Refund[]        @relation("HouseHold_refund")
 }
 
 model Invitation {
@@ -55,14 +58,23 @@ model Invitation {
   household   Household @relation("HouseHold_invitation", fields: [householdId], references: [id])
 }
 
+enum ExpenseCategory {
+  GROCERIES
+  RENT
+  ELECTRICITY
+  OTHER
+}
+
 model Expense {
-  id          String    @id @default(cuid())
+  id          String          @id @default(cuid())
   name        String
   amount      Float
+  category    ExpenseCategory @default(OTHER)
+  note        String?
   householdId String
-  household   Household @relation("HouseHold_expense", fields: [householdId], references: [id])
+  household   Household       @relation("HouseHold_expense", fields: [householdId], references: [id])
   memberId    String
-  member      User      @relation("Member_expense", fields: [memberId], references: [id])
+  member      User            @relation("Member_expense", fields: [memberId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -72,6 +84,7 @@ model Refund {
   id           String    @id @default(cuid())
   name         String?
   amount       Float
+  note         String?
   householdId  String
   household    Household @relation("HouseHold_refund", fields: [householdId], references: [id])
   fromMemberId String
@@ -129,4 +142,25 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model PendingInvite {
+  id          String       @id @default(cuid())
+  email       String?
+  phone       String?
+  householdId String
+  status      InviteStatus @default(PENDING)
+  expiresAt   DateTime?
+  household   Household    @relation("HouseHold_pending_invites", fields: [householdId], references: [id])
+  createdAt   DateTime     @default(now())
+
+  @@unique([email, householdId])
+  @@unique([phone, householdId])
 }
