@@ -23,8 +23,8 @@ import { CATEGORY_ICONS } from '@/libs/features/expenses/constants';
 const CATEGORIES: ExpenseCategory[] = ['GROCERIES', 'RENT', 'ELECTRICITY', 'OTHER'];
 
 function HouseholdMemberCount() {
-  const { data } = useSuspenseQuery(queries.households.getHouseholdsQuery());
-  const memberCount = data.members?.length ?? 0;
+  const { data } = useSuspenseQuery(queries.me.getMeQuery());
+  const memberCount = data.household?.members?.length ?? 0;
   return (
     <Typography variant="body" className="font-bold">
       Tous les colocs ({memberCount})

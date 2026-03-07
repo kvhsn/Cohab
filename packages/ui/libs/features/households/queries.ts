@@ -1,14 +1,8 @@
-import { queryOptions } from '@tanstack/react-query';
-import { getHouseholds, getHouseholdBalance, getRefunds, getPendingInvitations } from './api';
-import { GetHouseholdDetails, GetPendingInvites } from '@cohab/shared/src/household';
 import { Balance } from '@cohab/shared/src/balance';
+import { GetPendingInvites } from '@cohab/shared/src/household';
 import { Refunds } from '@cohab/shared/src/refund';
-
-export const getHouseholdsQuery = () =>
-  queryOptions<GetHouseholdDetails>({
-    queryKey: ['households', 'details'],
-    queryFn: () => getHouseholds(),
-  });
+import { queryOptions } from '@tanstack/react-query';
+import { getHouseholdBalance, getPendingInvitations, getRefunds } from './api';
 
 export const getPendingInvitationsQuery = () =>
   queryOptions<GetPendingInvites>({
@@ -27,14 +21,3 @@ export const getRefundsQuery = (householdId: string) =>
     queryKey: ['households', householdId, 'refunds'],
     queryFn: () => getRefunds(householdId),
   });
-
-const queries = {
-  households: {
-    getHouseholdsQuery,
-    getPendingInvitationsQuery,
-    getHouseholdBalanceQuery,
-    getRefundsQuery,
-  },
-};
-
-export default queries;

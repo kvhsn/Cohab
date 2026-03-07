@@ -11,21 +11,8 @@ import {
   RespondToInvitation,
   UpdateHousehold,
 } from '@cohab/shared/src/household';
+
 import { Refunds, RefundsSchema } from '@cohab/shared/src/refund';
-
-export const getHouseholds = async (): Promise<GetHouseholdDetails> => {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/api/households`, {
-    method: 'GET',
-    headers,
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch household details');
-  }
-  const body = await response.json();
-  return GetHouseholdDetailsSchema.parse(body);
-};
 
 export const getHouseholdBalance = async (householdId: string): Promise<Balance> => {
   const headers = await getAuthHeaders();
@@ -74,13 +61,14 @@ export const createHousehold = async (data: CreateHouseHold): Promise<GetHouseho
 
 export const createInviteCode = async (householdId: string): Promise<{ code: string }> => {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/api/households/${householdId}/invite-code`, {
+  const response = await fetch(`${API_URL}/api/households/${householdId}/invite`, {
     method: 'POST',
     headers,
   });
 
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
+    console.error(data.message);
     throw new Error(data.message || 'Invite household failed');
   }
 

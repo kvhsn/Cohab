@@ -15,7 +15,7 @@ import { Alert, View } from 'react-native';
 export default function EditName() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { data } = useSuspenseQuery(queries.households.getHouseholdsQuery());
+  const { data } = useSuspenseQuery(queries.me.getMeQuery());
 
   const { fieldContext, formContext } = createFormHookContexts();
 
@@ -33,7 +33,7 @@ export default function EditName() {
   const { mutate, isPending } = useMutation({
     ...updateHouseholdMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries(queries.households.getHouseholdsQuery());
+      queryClient.invalidateQueries(queries.me.getMeQuery());
       router.back();
     },
     onError: (error: Error) => {
@@ -43,7 +43,7 @@ export default function EditName() {
 
   const form = useAppForm({
     defaultValues: {
-      name: data.name || '',
+      name: data.household?.name || '',
     },
     validators: {
       onChange: UpdateHouseholdSchema,
