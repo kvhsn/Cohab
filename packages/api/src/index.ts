@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import household from './household';
+import me from './me';
 import { requestId } from 'hono/request-id';
 import { auth } from './libs/auth';
 import { showRoutes } from 'hono/dev';
@@ -22,6 +23,7 @@ app.all(
 
 app.all('/auth', (c) => auth.handler(c.req.raw));
 app.route('/', household);
+app.route('/', me);
 
 app.get('/health', (c) => {
   return c.json({ status: 'ok' });

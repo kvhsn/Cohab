@@ -1,6 +1,5 @@
 import {
   CreateHouseHoldSchema,
-  GetHouseholdDetails,
   JoinHouseHoldSchema,
   RespondToInvitationSchema,
   UpdateHouseholdSchema,
@@ -95,44 +94,6 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
         },
         500,
       );
-    }
-  })
-  .get('/', withAuth, withPrisma, async (c) => {
-    const { id: userId } = c.get('user');
-    const prisma = c.get('prisma');
-    try {
-      const { household } = await prisma.user.findUniqueOrThrow({
-        where: { id: userId },
-        select: {
-          household: {
-            select: {
-              id: true,
-              name: true,
-              adminId: true,
-              members: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                  image: true,
-                },
-              },
-            },
-          },
-        },
-      });
-      return c.json(
-        {
-          id: household?.id,
-          name: household?.name,
-          adminId: household?.adminId,
-          members: household?.members,
-        } as GetHouseholdDetails,
-        200,
-      );
-    } catch (error) {
-      console.error(error);
-      return c.json({ status: 'error', message: 'Internal error' }, 500);
     }
   })
   .put('/', withAuth, withPrisma, zValidator('json', UpdateHouseholdSchema), async (c) => {
