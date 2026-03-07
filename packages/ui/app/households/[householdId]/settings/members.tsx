@@ -1,11 +1,12 @@
-import queries from '@/libs/queries';
-import { removeMemberMutation } from '@/libs/features/households/mutations';
-import { useMutation, useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
-import { Alert, Pressable, Text, View } from 'react-native';
-import { useAuth } from '@/hooks/useAuth';
-import Icon from '@/components/Icon/Icon';
 import Screen from '@/components/Screen/Screen';
+import { useAuth } from '@/hooks/useAuth';
+import { removeMemberMutation } from '@/libs/features/households/mutations';
+import queries from '@/libs/queries';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import React from 'react';
+import { Alert, View } from 'react-native';
+import { HouseholdMember } from '../balance/_components/types';
+import MemberCard from './_components/MemberCard';
 
 export default function ManageMembers() {
   const queryClient = useQueryClient();
@@ -13,7 +14,7 @@ export default function ManageMembers() {
   const { data: authData } = useAuth();
   const user = authData?.user;
 
-  const { mutate, isPending } = useMutation({
+  const { mutate } = useMutation({
     ...removeMemberMutation(),
     onSuccess: () => {
       queryClient.invalidateQueries(queries.households.getHouseholdsQuery());
@@ -23,10 +24,10 @@ export default function ManageMembers() {
     },
   });
 
-  const handleRemove = (memberId: string, memberName: string) => {
-    Alert.alert('Retirer', `Veux-tu vraiment retirer ${memberName} de la colocation ?`, [
+  const handleRemove = (member: HouseholdMember) => {
+    Alert.alert('Retirer', `Veux-tu vraiment retirer ${member.name} de la colocation ?`, [
       { text: 'Annuler', style: 'cancel' },
-      { text: 'Retirer', style: 'destructive', onPress: () => mutate(memberId) },
+      { text: 'Retirer', style: 'destructive', onPress: () => mutate(member.id) },
     ]);
   };
 
@@ -36,36 +37,13 @@ export default function ManageMembers() {
     <Screen title="Gérer les membres">
       <View className="flex-1 p-4">
         {data.members?.map((item) => (
-          <View
+          <MemberCard
             key={item.id}
-            className="mb-3 flex-row items-center rounded-xl bg-white dark:bg-slate-800 p-4 shadow-sm border border-transparent dark:border-slate-700">
-            <View className="mr-4 relative">
-              <View className="size-12 items-center justify-center rounded-full bg-primary/10">
-                <Text className="text-lg font-bold text-primary">
-                  {item.name.charAt(0).toUpperCase()}
-                </Text>
-              </View>
-              {data.adminId === item.id && (
-                <View className="absolute -right-1 -top-1 rounded-full bg-white dark:bg-slate-700 p-0.5 shadow-sm">
-                  <Icon as="FontAwesome5" name="crown" size="sm" color="#ca8a04" />
-                </View>
-              )}
-            </View>
-            <View className="flex-1">
-              <Text className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                {item.name}
-              </Text>
-              <Text className="text-sm text-gray-500 dark:text-gray-400">{item.email}</Text>
-            </View>
-            {isAdmin && item.id !== user?.id && (
-              <Pressable
-                disabled={isPending}
-                onPress={() => handleRemove(item.id, item.name)}
-                className="ml-2 rounded-lg bg-red-50 dark:bg-red-950/40 p-2 active:bg-red-100 dark:active:bg-red-900/40">
-                <Icon as="Ionicons" name="trash-outline" size="sm" className="color-red-500" />
-              </Pressable>
-            )}
-          </View>
+            member={item}
+            isMemberAdmin={data.adminId === item.id}
+            canRemove={isAdmin && item.id !== user?.id}
+            onRemove={handleRemove}
+          />
         ))}
       </View>
     </Screen>
