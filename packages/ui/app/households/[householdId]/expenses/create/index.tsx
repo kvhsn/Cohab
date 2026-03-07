@@ -2,10 +2,10 @@ import CustomButton from '@/components/Button/Button';
 import Card from '@/components/Card/Card';
 import Divider from '@/components/Divider/Divider';
 import Icon from '@/components/Icon/Icon';
-import IconButton from '@/components/IconButton/IconButton';
 import Input from '@/components/Input/Input';
 import Screen from '@/components/Screen/Screen';
 import Typography from '@/components/Typography/Typography';
+import { CATEGORY_ICONS } from '@/libs/features/expenses/constants';
 import mutations from '@/libs/mutations';
 import queries from '@/libs/queries';
 import {
@@ -18,7 +18,6 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import { router, useLocalSearchParams } from 'expo-router';
 import { Suspense, useState } from 'react';
 import { Alert, Pressable, TextInput, View } from 'react-native';
-import { CATEGORY_ICONS } from '@/libs/features/expenses/constants';
 
 const CATEGORIES: ExpenseCategory[] = ['GROCERIES', 'RENT', 'ELECTRICITY', 'OTHER'];
 
@@ -81,21 +80,7 @@ export default function CreateExpense() {
   });
 
   return (
-    <Screen>
-      <View className="flex-row items-center justify-between pb-4">
-        <IconButton
-          as="Ionicons"
-          name="close"
-          size="md"
-          variant="ghost"
-          onPress={() => router.back()}
-        />
-        <Typography variant="body" className="font-semibold">
-          Ajouter une dépense
-        </Typography>
-        <View className="size-10" />
-      </View>
-
+    <Screen title="Ajouter une dépense">
       <Card className="gap-4 p-0 overflow-hidden">
         <View className="items-center px-6 pb-4 pt-8">
           <Typography variant="caption" className="mb-3">
@@ -176,7 +161,7 @@ export default function CreateExpense() {
         </View>
 
         <View className="mx-5">
-          <Typography variant="subtitle" className="mb-3 font-bold  text-base">
+          <Typography variant="subtitle" className="mb-3 font-bold text-base">
             Catégorie
           </Typography>
           <form.AppField name="category">

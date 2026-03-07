@@ -17,12 +17,10 @@ export default function MemberCard({ member, isMemberAdmin, onRemove }: MemberCa
     <Card className="flex-row items-center gap-2">
       <MemberAvatar name={member.name} isAdmin={isMemberAdmin} className="relative" />
       <View className="flex-1">
-        <Typography variant="body" className="font-semibold text-gray-900 dark:text-gray-100">
+        <Typography variant="body" className="font-semibold">
           {member.name}
         </Typography>
-        <Typography variant="bodySmall" className="text-gray-500 dark:text-gray-400">
-          {member.email}
-        </Typography>
+        <Typography variant="bodySmall">{member.email}</Typography>
       </View>
       {!isMemberAdmin && onRemove && (
         <IconButton

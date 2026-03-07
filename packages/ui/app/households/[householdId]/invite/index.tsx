@@ -1,4 +1,5 @@
 import Banner from '@/components/Banner/Banner';
+import { colors } from '@/libs/colors';
 import CustomButton from '@/components/Button/Button';
 import Card from '@/components/Card/Card';
 import Icon from '@/components/Icon/Icon';
@@ -97,7 +98,7 @@ export default function InviteHousehold() {
     <Screen title="Inviter un colocataire">
       <View className="flex justify-center items-center">
         <View className="flex justify-center items-center rounded-full size-24 bg-white/60 dark:bg-white/5 shadow-sm">
-          <Icon as="FontAwesome" size="lg" name="user" color="#c084fc" />
+          <Icon as="FontAwesome" size="lg" name="user" color={colors.primary} />
         </View>
         <Typography variant="h1">Générer un code</Typography>
         <Typography variant="bodySmall" className="text-center mt-1">
@@ -128,14 +129,18 @@ export default function InviteHousehold() {
                 onPress={onCopy}
                 variant="secondary"
                 size="md"
-                LeftIcon={() => <Icon as="Ionicons" name="copy-outline" size="lg" />}
+                LeftIcon={({ color, size }) => (
+                  <Icon as="Ionicons" name="copy-outline" size={size} color={color} />
+                )}
               />
               <CustomButton
                 title="Partager"
                 onPress={onShare}
                 variant="secondary"
                 size="md"
-                LeftIcon={() => <Icon as="Ionicons" name="share-outline" size="lg" />}
+                LeftIcon={({ color, size }) => (
+                  <Icon as="Ionicons" name="share-outline" size={size} color={color} />
+                )}
               />
             </View>
           </View>
@@ -146,9 +151,9 @@ export default function InviteHousehold() {
         <>
           <Card className="mt-4">
             <View className="flex-row justify-between items-center mb-4 wrap-normal">
-              <Typography variant="body">Durée de validité</Typography>
+              <Typography variant="body">Validité</Typography>
               {isEditingValidity ? (
-                <View className="flex-row gap-2 items-center ml-4">
+                <View className="flex-row gap-2 items-center">
                   <CustomButton
                     title="Annuler"
                     variant="secondary"
@@ -181,7 +186,7 @@ export default function InviteHousehold() {
                   <Pressable
                     key={option.value}
                     onPress={() => isEditingValidity && setSelectedValidity(option.value)}>
-                    <Card isActive={isActive}>
+                    <Card isActive={isActive} isDisabled={!isEditingValidity}>
                       <Typography variant="body">{option.label}</Typography>
                     </Card>
                   </Pressable>
@@ -191,9 +196,9 @@ export default function InviteHousehold() {
           </Card>
           <Banner variant="information" className="mt-4">
             <Typography variant="bodySmall">
-              Le futur membre devra saisir ce code lors de son inscription pour rejoindre
+              Le futur colocataire devra saisir ce code lors de son inscription pour rejoindre
               automatiquement le groupe{' '}
-              <Text className="text-blue-500 font-bold">"{me?.household?.name}"</Text>.
+              <Text className="text-blue-500 font-bold">&quot;{me?.household?.name}&quot;</Text>.
             </Typography>
           </Banner>
 
