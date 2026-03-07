@@ -106,7 +106,10 @@ Every agent must utilize these tools for any technical documentation or implemen
 - Implement a seamless **Onboarding flow** using Expo Router.
 - Build the interactive expense logger and shared grocery list with NativeWind for styling.
 - Ensure offline-first support and smooth navigation.
-- **Architecture Standard (Data Fetching):** Strictly follow Vertical Feature Slicing (`libs/features/[featureName]/{api,mutations,queries}.ts`). Use named exports for TanStack Query v5 definitions, and centralize them in `libs/queries.ts` and `libs/mutations.ts` for UI consumption. Never use raw `fetch` calls or manual loading states in React component files; always use `useMutation` and `useSuspenseQuery`.
+- **Architecture Standard (Data Fetching):** Strictly follow Vertical Feature Slicing (`libs/features/[featureName]/{api,mutations,queries}.ts`).
+  - **Single Source of Truth:** Use `@cohab/shared` for all Zod schemas and TypeScript types. Every API response MUST be validated at runtime using `SharedSchema.parse(body)` in the `api.ts` layer.
+  - **Strict Typing:** Always use explicit generic types in `queryOptions<TData>` and `useMutation<TData, TError, TVariables>` to enforce the contract. Never use `any` or loose objects.
+  - **Centralization:** Centralize all query/mutation definitions in `libs/queries.ts` and `libs/mutations.ts` for UI consumption. Never use raw `fetch` calls or manual loading states in React component files; always use `useMutation` and `useSuspenseQuery`.
 
 ## 📋 4. Product Owner / UX Specialist
 
