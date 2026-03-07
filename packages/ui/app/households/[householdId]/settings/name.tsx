@@ -77,7 +77,7 @@ export default function EditName() {
           )}
         </form.AppField>
 
-        <form.Subscribe>
+        <form.Subscribe selector={(state) => ({ canSubmit: state.canSubmit })}>
           {({ canSubmit }) => (
             <form.CustomButton
               variant="primary"

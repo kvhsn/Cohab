@@ -113,6 +113,9 @@ Every agent must utilize these tools for any technical documentation or implemen
   - **Zod Limitation (CRITICAL):** Define and infer all Zod schemas and types **ONLY** within the `@cohab/shared` package. Do not use `z.infer` or define schemas in the `ui` or `api` packages. Export inferred types from `shared` for use across the monorepo.
   - **Strict Typing:** Always use explicit generic types in `queryOptions<TData>` and `useMutation<TData, TError, TVariables>` to enforce the contract. Never use `any` or loose objects.
   - **Centralization:** Centralize all query/mutation definitions in `libs/queries.ts` and `libs/mutations.ts` for UI consumption. Never use raw `fetch` calls or manual loading states in React component files; always use `useMutation` and `useSuspenseQuery`.
+- **TanStack Form — `form.Subscribe` (CRITICAL for Android):** Always provide a `selector` prop to `<form.Subscribe>`. Without it, the full state object is passed to the render children, and on Android (Hermes engine), destructuring properties like `canSubmit` can return `undefined`. The `selector` creates an explicit plain object, which is safe on all JS engines. This bug is silent on iOS (JavaScriptCore) and only manifests on Android.
+  - ✅ **Correct**: `<form.Subscribe selector={(state) => ({ canSubmit: state.canSubmit })}>`
+  - ❌ **Incorrect**: `<form.Subscribe>` (silent bug on Android only)
 
 ## 📋 4. Product Owner / UX Specialist
 

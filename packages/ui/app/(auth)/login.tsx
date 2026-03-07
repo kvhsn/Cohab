@@ -98,7 +98,7 @@ export default function Login() {
             </form.AppField>
           </View>
           <View className="items-end"></View>
-          <form.Subscribe>
+          <form.Subscribe selector={(state) => ({ canSubmit: state.canSubmit })}>
             {({ canSubmit }) => (
               <form.CustomButton
                 variant="primary"
