@@ -1,14 +1,13 @@
+import { CreateHouseHold, JoinHouseHold, UpdateHousehold } from '@cohab/shared/src/household';
 import { mutationOptions } from '@tanstack/react-query';
 import {
   createHousehold,
   createInviteCode,
   joinHousehold,
-  leaveHousehold,
   removeMember,
   respondToInvitation,
   updateHousehold,
 } from './api';
-import { CreateHouseHold, JoinHouseHold, UpdateHousehold } from '@cohab/shared/src/household';
 
 export const createHouseholdMutation = () =>
   mutationOptions({
@@ -38,12 +37,6 @@ export const removeMemberMutation = () =>
   mutationOptions({
     mutationKey: ['households', 'remove-member'],
     mutationFn: (memberId: string) => removeMember(memberId),
-  });
-
-export const leaveHouseholdMutation = () =>
-  mutationOptions({
-    mutationKey: ['households', 'leave'],
-    mutationFn: () => leaveHousehold(),
   });
 
 export const respondToInvitationMutation = () =>

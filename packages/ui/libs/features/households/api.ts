@@ -135,20 +135,6 @@ export const removeMember = async (memberId: string): Promise<{ status: string }
   return response.json();
 };
 
-export const leaveHousehold = async (): Promise<{ status: string }> => {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/api/households/leave`, {
-    method: 'POST',
-    headers,
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to leave household');
-  }
-
-  return response.json();
-};
-
 export const getPendingInvitations = async (): Promise<GetPendingInvites> => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households/invitations/pending`, {
