@@ -1,6 +1,6 @@
-import { Meta, StoryObj } from '@storybook/react-native';
-import CustomButton from './Button';
+import type { Meta, StoryObj } from '@storybook/react';
 import Icon from '../Icon/Icon';
+import CustomButton from './Button';
 
 const meta: Meta<typeof CustomButton> = {
   title: 'Components/Button',
@@ -49,7 +49,15 @@ export const Link: Story = {
   args: {
     title: 'Mot de passe oublié ?',
     variant: 'link',
-    size: 'md',
+    size: 'lg',
+  },
+};
+
+export const Danger: Story = {
+  args: {
+    title: 'Bouton danger',
+    variant: 'danger',
+    size: 'lg',
   },
 };
 
@@ -58,8 +66,13 @@ export const WithLeftIcon: Story = {
     title: 'Ajouter un coloc',
     variant: 'primary',
     size: 'lg',
-    LeftIcon: (props) => <Icon as="Ionicons" name="person-add" {...props} />,
   },
+  render: (args) => (
+    <CustomButton
+      {...args}
+      LeftIcon={(props) => <Icon as="Ionicons" name="person-add" {...props} />}
+    />
+  ),
 };
 
 export const WithRightIcon: Story = {
@@ -67,8 +80,13 @@ export const WithRightIcon: Story = {
     title: 'Continuer',
     variant: 'primary',
     size: 'lg',
-    RightIcon: (props) => <Icon as="Ionicons" name="arrow-forward" {...props} />,
   },
+  render: (args) => (
+    <CustomButton
+      {...args}
+      RightIcon={(props) => <Icon as="Ionicons" name="arrow-forward" {...props} />}
+    />
+  ),
 };
 
 export const Disabled: Story = {

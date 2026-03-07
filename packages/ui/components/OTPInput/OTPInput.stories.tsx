@@ -1,18 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react-native';
-import { View } from 'react-native';
-import OTPInput from './OTPInput';
+import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
+import OTPInput from './OTPInput';
 
 const meta = {
   title: 'Components/OTPInput',
   component: OTPInput,
-  decorators: [
-    (Story) => (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <Story />
-      </View>
-    ),
-  ],
   argTypes: {
     onCodeFilled: { action: 'onCodeFilled' },
     onChange: { action: 'onChange' },

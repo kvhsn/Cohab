@@ -1,5 +1,5 @@
 // create the story for logo component
-import { Meta, StoryObj } from '@storybook/react-native';
+import type { Meta, StoryObj } from '@storybook/react';
 import { Logo } from './Logo';
 
 const meta: Meta<typeof Logo> = {
