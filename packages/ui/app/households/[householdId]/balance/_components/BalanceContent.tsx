@@ -1,15 +1,15 @@
+import { SummaryCard } from '@/components/SummaryCard/SummaryCard';
 import { useAuth } from '@/hooks/useAuth';
 import queries from '@/libs/queries';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import React from 'react';
-import { SummaryCard } from '../../../../../components/SummaryCard/SummaryCard';
-import { DebtSection } from './DebtSection';
+import DebtSection from './DebtSection';
 
 interface BalanceContentProps {
   householdId: string;
 }
 
-export function BalanceContent({ householdId }: BalanceContentProps) {
+export default function BalanceContent({ householdId }: BalanceContentProps) {
   const { data: session } = useAuth();
   const { data: balance } = useSuspenseQuery(
     queries.households.getHouseholdBalanceQuery(householdId),

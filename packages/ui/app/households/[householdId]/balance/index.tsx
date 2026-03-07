@@ -3,7 +3,7 @@ import Typography from '@/components/Typography/Typography';
 import { useLocalSearchParams } from 'expo-router';
 import React, { Suspense } from 'react';
 import { View } from 'react-native';
-import { BalanceContent } from './_components/BalanceContent';
+import BalanceContent from './_components/BalanceContent';
 
 export default function BalanceRoot() {
   const { householdId } = useLocalSearchParams<{ householdId: string }>();

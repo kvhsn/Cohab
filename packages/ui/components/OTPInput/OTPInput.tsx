@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { TextInput, View, Pressable } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Pressable, TextInput, View } from 'react-native';
 import Typography from '../Typography/Typography';
 
 interface OTPInputProps {
@@ -10,6 +10,7 @@ interface OTPInputProps {
   error?: string;
   className?: string;
   autoFocus?: boolean;
+  disabled?: boolean;
 }
 
 export default function OTPInput({
@@ -20,6 +21,7 @@ export default function OTPInput({
   error,
   className,
   autoFocus = false,
+  disabled = false,
 }: OTPInputProps) {
   const [internalValue, setInternalValue] = useState(value || '');
   const inputValue = value !== undefined ? value : internalValue;
@@ -52,6 +54,7 @@ export default function OTPInput({
   return (
     <View className={`w-full ${className || ''}`}>
       <Pressable
+        disabled
         onPress={handlePress}
         className="flex-row items-center justify-between gap-1 w-full relative">
         {codeArray.map((char, index) => {

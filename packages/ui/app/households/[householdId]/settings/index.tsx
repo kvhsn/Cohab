@@ -20,19 +20,10 @@ export default function SettingsIndex() {
 
         <View className="mb-8 overflow-hidden rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
           <Link href={`/households/${householdId}/settings/name`} asChild>
-            <SettingsItem
-              label="Nom"
-              subtitle="Modifier le nom"
-              iconName="pencil"
-              className="border-b border-gray-50 dark:border-slate-700"
-            />
+            <SettingsItem label="Nom" subtitle="Modifier le nom" iconName="pencil" />
           </Link>
           <Link href={`/households/${householdId}/settings/members`} asChild>
-            <SettingsItem
-              label="Gérer les membres"
-              iconName="people"
-              className="border-b border-gray-50 dark:border-slate-700"
-            />
+            <SettingsItem label="Gérer les membres" iconName="people" />
           </Link>
           <Link
             href={{

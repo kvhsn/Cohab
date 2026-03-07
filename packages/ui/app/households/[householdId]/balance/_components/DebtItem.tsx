@@ -12,7 +12,7 @@ interface DebtItemProps {
   type: 'owe-me' | 'i-owe';
 }
 
-export function DebtItem({ member, amount, type }: DebtItemProps) {
+export default function DebtItem({ member, amount, type }: DebtItemProps) {
   const isOweMe = type === 'owe-me';
   const colorClass = isOweMe ? tw('primary') : tw('rose-500');
 

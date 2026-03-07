@@ -2,7 +2,7 @@ import Typography from '@/components/Typography/Typography';
 import { GetHouseholdMember } from '@cohab/shared/src/household';
 import React from 'react';
 import { View } from 'react-native';
-import { DebtItem } from './DebtItem';
+import DebtItem from './DebtItem';
 
 interface DebtSectionProps {
   title: string;
@@ -11,7 +11,7 @@ interface DebtSectionProps {
   type: 'owe-me' | 'i-owe';
 }
 
-export function DebtSection({ title, total, items, type }: DebtSectionProps) {
+export default function DebtSection({ title, total, items, type }: DebtSectionProps) {
   const isOweMe = type === 'owe-me';
   const colorClass = isOweMe ? 'primary' : 'rose-500';
 

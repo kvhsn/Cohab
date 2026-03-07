@@ -8,6 +8,10 @@ const meta = {
   argTypes: {
     onCodeFilled: { action: 'onCodeFilled' },
     onChange: { action: 'onChange' },
+    disabled: {
+      control: 'boolean',
+      defaultValue: false,
+    },
   },
 } satisfies Meta<typeof OTPInput>;
 
@@ -46,6 +50,13 @@ export const Interactive: Story = {
 export const Filled: Story = {
   args: {
     value: '123456',
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    value: '123456',
+    disabled: true,
   },
 };
 
