@@ -65,7 +65,7 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
   })
   .basePath('/expenses')
   .post('/', withAuth, withPrisma, zValidator('json', CreateExpenseSchema), async (c) => {
-    const { name, amount } = c.req.valid('json');
+    const { name, amount, category, note } = c.req.valid('json');
     const householdId = c.req.param('householdId');
     const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
@@ -84,6 +84,8 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
         data: {
           name,
           amount,
+          category,
+          note,
           householdId,
           memberId: userId,
         },
@@ -118,6 +120,8 @@ export default new Hono<ContextWithPrisma & ContextWithAuth>()
           id: true,
           name: true,
           amount: true,
+          category: true,
+          note: true,
           member: {
             select: {
               name: true,

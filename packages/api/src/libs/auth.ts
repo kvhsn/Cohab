@@ -28,6 +28,14 @@ export const auth = betterAuth({
     provider: 'postgresql',
   }),
   trustedOrigins,
+  user: {
+    additionalFields: {
+      phoneNumber: {
+        type: 'string',
+        required: true,
+      },
+    },
+  },
 });
 
 export async function withAuth(c: Context, next: Next) {
