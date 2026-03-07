@@ -4,11 +4,24 @@ import * as SecureStore from 'expo-secure-store';
 
 import { API_URL } from '@/constants/Config';
 
-// In-memory cache to ensure synchronous reads work reliably on Android.
-// Android's synchronous Keystore API can be unreliable — writes via setItem()
-// may not always persist correctly. Using setItemAsync() + a memory cache
-// fixes the Android auto-logout-on-reload issue.
+// In-memory cache that bridges the sync interface required by @better-auth/expo
+// with Android's async Keystore. On Android, SecureStore.getItem() (sync) can
+// silently return null before the Keystore is ready after a JS bundle reload.
+// Solution: async-preload the cache at app startup, then all sync reads hit memory.
 const memoryStorage: Record<string, string | null> = {};
+
+// Keys written by @better-auth/expo (storagePrefix + suffix)
+const AUTH_STORAGE_KEYS = ['cohab_cookie', 'cohab_session_data'];
+
+export async function preloadAuthStorage() {
+  await Promise.all(
+    AUTH_STORAGE_KEYS.map(async (key) => {
+      if (key in memoryStorage) return;
+      const value = await SecureStore.getItemAsync(key);
+      if (value !== null) memoryStorage[key] = value;
+    }),
+  );
+}
 
 const secureStorage = {
   getItem(key: string): string | null {
