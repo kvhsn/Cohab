@@ -1,4 +1,4 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
+import Screen from '@/components/Screen/Screen';
 import { Alert, Button, TextInput, View, Text } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMutation } from '@tanstack/react-query';
@@ -40,7 +40,7 @@ export default function InviteHousehold() {
   });
 
   return (
-    <SafeAreaView>
+    <Screen title="Inviter">
       <View>
         <Text>Create invite :</Text>
         <View>
@@ -51,6 +51,6 @@ export default function InviteHousehold() {
           />
         </View>
       </View>
-    </SafeAreaView>
+    </Screen>
   );
 }

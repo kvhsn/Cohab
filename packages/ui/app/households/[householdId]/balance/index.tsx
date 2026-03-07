@@ -1,6 +1,8 @@
+import Screen from '@/components/Screen/Screen';
 import { useLocalSearchParams } from 'expo-router';
 import { Suspense } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import Typography from '@/components/Typography/Typography';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import queries from '@/libs/queries';
 
@@ -9,11 +11,11 @@ function BalanceContent({ householdId }: { householdId: string }) {
   const { total, shares } = data;
   return (
     <View>
-      <Text>Total: {total}</Text>
+      <Typography variant="body">Total: {total}</Typography>
       {Object.entries(shares).map(([memberId, amount]) => (
-        <Text key={memberId}>
+        <Typography variant="bodySmall" key={memberId}>
           {memberId}: {amount}
-        </Text>
+        </Typography>
       ))}
     </View>
   );
@@ -25,8 +27,10 @@ export default function BalanceRoot() {
   if (!householdId) return null;
 
   return (
-    <Suspense fallback={<Text>Loading balance...</Text>}>
-      <BalanceContent householdId={householdId} />
-    </Suspense>
+    <Screen title="Balance">
+      <Suspense fallback={<Typography variant="body">Chargement...</Typography>}>
+        <BalanceContent householdId={householdId} />
+      </Suspense>
+    </Screen>
   );
 }

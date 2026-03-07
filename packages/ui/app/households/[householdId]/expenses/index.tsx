@@ -1,9 +1,10 @@
-import { Link, useLocalSearchParams } from 'expo-router';
-import { FlatList, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Suspense } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import Screen from '@/components/Screen/Screen';
+import Typography from '@/components/Typography/Typography';
 import queries from '@/libs/queries';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Link, useLocalSearchParams } from 'expo-router';
+import { Suspense } from 'react';
+import { FlatList, View } from 'react-native';
 
 function ExpenseList({ householdId }: { householdId: string }) {
   const { data } = useSuspenseQuery(queries.expenses.getExpensesQuery(householdId));
@@ -11,15 +12,19 @@ function ExpenseList({ householdId }: { householdId: string }) {
   return (
     <FlatList
       data={data.expenses}
-      ListEmptyComponent={<Text>No expenses found</Text>}
+      ListEmptyComponent={
+        <Typography variant="bodySmall" className="text-center">
+          Aucune dépense pour l&apos;instant
+        </Typography>
+      }
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => {
         return (
           <View>
-            <Text>Name: {item.name}</Text>
-            <Text>Amount: {item.amount}</Text>
-            <Text>Created At: {item.createdAt}</Text>
-            <Text>Member: {item.member.name}</Text>
+            <Typography variant="body">{item.name}</Typography>
+            <Typography variant="bodySmall">{item.amount} €</Typography>
+            <Typography variant="caption">{item.createdAt}</Typography>
+            <Typography variant="bodySmall">{item.member.name}</Typography>
           </View>
         );
       }}
@@ -33,20 +38,17 @@ export default function Expenses() {
   if (!householdId) return null;
 
   return (
-    <SafeAreaView>
-      <View>
-        <Text>Expenses</Text>
-        <Suspense fallback={<Text>Loading expenses...</Text>}>
-          <ExpenseList householdId={householdId} />
-        </Suspense>
-        <Link
-          href={{
-            pathname: '/households/[householdId]/expenses/create',
-            params: { householdId },
-          }}>
-          Add Expense
-        </Link>
-      </View>
-    </SafeAreaView>
+    <Screen title="Dépenses">
+      <Suspense fallback={<Typography variant="body">Chargement...</Typography>}>
+        <ExpenseList householdId={householdId} />
+      </Suspense>
+      <Link
+        href={{
+          pathname: '/households/[householdId]/expenses/create',
+          params: { householdId },
+        }}>
+        <Typography variant="bodySmall">Ajouter les dépenses</Typography>
+      </Link>
+    </Screen>
   );
 }

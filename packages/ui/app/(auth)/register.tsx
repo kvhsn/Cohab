@@ -39,6 +39,7 @@ export default function Register() {
     defaultValues: {
       name: '',
       email: '',
+      phoneNumber: '',
       password: '',
       confirmPassword: '',
     },
@@ -50,6 +51,7 @@ export default function Register() {
       mutate({
         name: value.name,
         email: value.email,
+        phoneNumber: value.phoneNumber,
         password: value.password,
       });
     },
@@ -99,6 +101,22 @@ export default function Register() {
                 <field.Input
                   placeholder="Adresse email"
                   keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  onBlur={field.handleBlur}
+                  error={
+                    field.state.meta.isTouched ? formatErrors(field.state.meta.errors) : undefined
+                  }
+                />
+              )}
+            </form.AppField>
+
+            <form.AppField name="phoneNumber">
+              {(field) => (
+                <field.Input
+                  placeholder="Numéro de téléphone"
+                  keyboardType="phone-pad"
                   autoCapitalize="none"
                   value={field.state.value}
                   onChangeText={field.handleChange}

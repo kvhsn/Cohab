@@ -1,3 +1,4 @@
+import Screen from '@/components/Screen/Screen';
 import { useLocalSearchParams } from 'expo-router';
 import { Suspense } from 'react';
 import { Text, View } from 'react-native';
@@ -24,8 +25,10 @@ export default function RefundRoot() {
   if (!householdId) return null;
 
   return (
-    <Suspense fallback={<Text>Loading refund...</Text>}>
-      <RefundContent householdId={householdId} />
-    </Suspense>
+    <Screen title="Remboursements">
+      <Suspense fallback={<Text>Loading refund...</Text>}>
+        <RefundContent householdId={householdId} />
+      </Suspense>
+    </Screen>
   );
 }

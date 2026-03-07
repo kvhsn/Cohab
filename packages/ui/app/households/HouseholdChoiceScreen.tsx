@@ -63,7 +63,7 @@ export default function HouseholdChoiceScreen() {
   return (
     <Screen>
       <View className="flex-row justify-between items-center mt-4">
-        <View className="w-10 h-10 items-center justify-center rounded-full bg-white/50"></View>
+        <View className="w-10 h-10 items-center justify-center rounded-full bg-white/50 dark:bg-white/10"></View>
         <Typography variant="bodySmall" className="text-gray-500 font-bold">
           Aide
         </Typography>
@@ -79,7 +79,7 @@ export default function HouseholdChoiceScreen() {
       </View>
 
       <View className="mt-8 items-center">
-        <View className="w-full aspect-4/3 rounded-3xl overflow-hidden bg-white/30 shadow-sm border border-white/50">
+        <View className="w-full aspect-4/3 rounded-3xl overflow-hidden bg-white/30 dark:bg-white/5 shadow-sm border border-white/50 dark:border-white/10">
           <Image
             source={require('@/assets/images/onboarding-house.png')}
             className="w-full h-full"

@@ -1,6 +1,6 @@
+import Screen from '@/components/Screen/Screen';
 import { router } from 'expo-router';
-import { Alert, Button, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Alert, Button, TextInput, View } from 'react-native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import mutations from '@/libs/mutations';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
@@ -43,33 +43,30 @@ export default function JoinHousehold() {
   });
 
   return (
-    <SafeAreaView>
+    <Screen title="Rejoindre">
       <View>
-        <Text>Join Household</Text>
-        <View>
-          <form.AppField name="code">
-            {(field) => (
-              <field.TextInput
-                placeholder="join code"
-                autoCapitalize="none"
-                keyboardType="numeric"
-                value={field.state.value}
-                onChangeText={field.handleChange}
-                onBlur={field.handleBlur}
-              />
-            )}
-          </form.AppField>
-          <form.Subscribe selector={(state) => [state.canSubmit]}>
-            {([canSubmit]) => (
-              <form.Button
-                title="Submit"
-                disabled={isPending || !canSubmit}
-                onPress={() => form.handleSubmit()}
-              />
-            )}
-          </form.Subscribe>
-        </View>
+        <form.AppField name="code">
+          {(field) => (
+            <field.TextInput
+              placeholder="join code"
+              autoCapitalize="none"
+              keyboardType="numeric"
+              value={field.state.value}
+              onChangeText={field.handleChange}
+              onBlur={field.handleBlur}
+            />
+          )}
+        </form.AppField>
+        <form.Subscribe selector={(state) => [state.canSubmit]}>
+          {([canSubmit]) => (
+            <form.Button
+              title="Submit"
+              disabled={isPending || !canSubmit}
+              onPress={() => form.handleSubmit()}
+            />
+          )}
+        </form.Subscribe>
       </View>
-    </SafeAreaView>
+    </Screen>
   );
 }
