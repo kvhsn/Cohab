@@ -17,20 +17,18 @@ interface CustomButtonProps extends PressableProps {
 
 const variantStyles = {
   primary: tw('shadow-primary/50 shadow-lg'),
-  // En dark mode, le secondary devient un fond slate translucide avec bordure subtile
   secondary: tw('bg-white/80 dark:bg-slate-700/80 shadow-lg dark:border dark:border-slate-600'),
   link: tw('bg-transparent shadow-none px-0 py-0'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;
 
 const sizeStyles = {
-  sm: tw('px-2 py-1'),
-  md: tw('px-4 py-2'),
-  lg: tw('px-8 py-4'),
+  sm: tw('px-4 py-2'),
+  md: tw('px-6 py-3'),
+  lg: tw('px-10 py-4'),
 } satisfies Record<Required<CustomButtonProps>['size'], TailwindClass>;
 
 const textVariantStyles = {
   primary: tw('text-white'),
-  // En dark mode, secondary -> texte clair (gray-100) pour contraste sur fond slate
   secondary: tw('text-gray-900 dark:text-gray-100'),
   link: tw('text-primary'),
 } satisfies Record<Required<CustomButtonProps>['variant'], TailwindClass>;

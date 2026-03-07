@@ -26,6 +26,12 @@ const sizeStyles = {
   caption: tw('text-caption'),
 } satisfies Required<Record<Exclude<TypographyVariant, 'button'>, TailwindClass>>;
 
+const buttonSizeStyles = {
+  sm: tw('text-bodySmall'),
+  md: tw('text-body'),
+  lg: tw('text-lg'), // Using standard Tailwind lg or we can use text-h1/subtitle if we want
+} satisfies Required<Record<TwSize, TailwindClass>>;
+
 export default function Typography({
   variant,
   size,
@@ -34,7 +40,10 @@ export default function Typography({
   ...props
 }: TypographyProps) {
   const baseStyles = variantStyles[variant];
-  const sizeClass = variant === 'button' ? tw(`text-${size}`) : sizeStyles[variant];
+  const sizeClass =
+    variant === 'button'
+      ? buttonSizeStyles[size || 'md']
+      : sizeStyles[variant as Exclude<TypographyVariant, 'button'>];
 
   return (
     <Text {...props} className={`${baseStyles} ${sizeClass} ${className || ''}`}>
