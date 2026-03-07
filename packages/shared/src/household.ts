@@ -25,6 +25,8 @@ export const GetHouseholdMemberSchema = z.object({
   image: z.string().nullable().optional(),
 });
 
+export type GetHouseholdMember = z.infer<typeof GetHouseholdMemberSchema>;
+
 export const GetHouseholdDetailsSchema = z.object({
   id: z.string().optional(),
   name: z.string().optional(),

@@ -101,13 +101,16 @@ Every agent must utilize these tools for any technical documentation or implemen
 - **Styling Standard:** Always use **NativeWind (Tailwind CSS)** via the `className` attribute for styling. **Strictly avoid using the `style` attribute** or `StyleSheet.create` unless absolutely necessary for dynamic values that cannot be expressed via Tailwind.
   - **Tailwind DX & Type Safety:**
     - **Usage of `tw()`**: Use the `tw()` utility function **ONLY** for string literals containing Tailwind classes that are defined **outside of JSX** (e.g., in constants, style objects, or component logic). This is strictly for enabling IDE/extension autocompletion and linting in those contexts.
-    - **No `tw()` in JSX**: Never use the `tw()` function inside a `className` prop. Tailwind classes are natively detected by the IDE within `className="{...}"`.
+    - **No `tw()` in JSX (CRITICAL)**: Never use the `tw()` function inside a `className` prop. It is redundant and adds noise. Tailwind classes are natively detected by the IDE within `className="... "`. Use string templates `${...}` for dynamic parts without `tw()`.
+      - ✅ **Correct**: `const styles = tw('text-red-500');` and `<View className={`${styles} flex-1`} />`
+      - ❌ **Incorrect**: `<View className={tw('text-red-500')} />` or `<View className={tw(`${styles} flex-1`)} />`
     - **Type Safety**: When defining constants or records of Tailwind classes, always use the `TailwindClass` type (imported from `@/types`) to ensure type safety.
 - Implement a seamless **Onboarding flow** using Expo Router.
 - Build the interactive expense logger and shared grocery list with NativeWind for styling.
 - Ensure offline-first support and smooth navigation.
 - **Architecture Standard (Data Fetching):** Strictly follow Vertical Feature Slicing (`libs/features/[featureName]/{api,mutations,queries}.ts`).
   - **Single Source of Truth:** Use `@cohab/shared` for all Zod schemas and TypeScript types. Every API response MUST be validated at runtime using `SharedSchema.parse(body)` in the `api.ts` layer.
+  - **Zod Limitation (CRITICAL):** Define and infer all Zod schemas and types **ONLY** within the `@cohab/shared` package. Do not use `z.infer` or define schemas in the `ui` or `api` packages. Export inferred types from `shared` for use across the monorepo.
   - **Strict Typing:** Always use explicit generic types in `queryOptions<TData>` and `useMutation<TData, TError, TVariables>` to enforce the contract. Never use `any` or loose objects.
   - **Centralization:** Centralize all query/mutation definitions in `libs/queries.ts` and `libs/mutations.ts` for UI consumption. Never use raw `fetch` calls or manual loading states in React component files; always use `useMutation` and `useSuspenseQuery`.
 
