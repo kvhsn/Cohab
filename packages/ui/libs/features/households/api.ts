@@ -5,9 +5,13 @@ import {
   CreateHouseHold,
   GetHouseholdDetails,
   GetHouseholdDetailsSchema,
+  GetPendingInvites,
+  GetPendingInvitesSchema,
   JoinHouseHold,
+  RespondToInvitation,
+  UpdateHousehold,
 } from '@cohab/shared/src/household';
-import { RefundsSchema } from '@cohab/shared/src/refund';
+import { Refunds, RefundsSchema } from '@cohab/shared/src/refund';
 
 export const getHouseholds = async (): Promise<GetHouseholdDetails> => {
   const headers = await getAuthHeaders();
@@ -37,7 +41,7 @@ export const getHouseholdBalance = async (householdId: string): Promise<Balance>
   return BalanceSchema.parse(body);
 };
 
-export const getRefunds = async (householdId: string) => {
+export const getRefunds = async (householdId: string): Promise<Refunds> => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households/${householdId}/refunds`, {
     method: 'GET',
@@ -48,10 +52,10 @@ export const getRefunds = async (householdId: string) => {
     throw new Error('Failed to fetch household refunds');
   }
   const body = await response.json();
-  return RefundsSchema.parse(body).refunds;
+  return RefundsSchema.parse(body);
 };
 
-export const createHousehold = async (data: CreateHouseHold) => {
+export const createHousehold = async (data: CreateHouseHold): Promise<GetHouseholdDetails> => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households`, {
     method: 'POST',
@@ -60,28 +64,30 @@ export const createHousehold = async (data: CreateHouseHold) => {
   });
 
   if (!response.ok) {
-    throw new Error('Something goes wrong');
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(`Create household failed: ${errorData.message || ''}`);
   }
 
-  return response.json();
+  const body = await response.json();
+  return GetHouseholdDetailsSchema.parse(body);
 };
 
-export const createInviteCode = async (householdId: string) => {
+export const createInviteCode = async (householdId: string): Promise<{ code: string }> => {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/api/households/${householdId}/invite`, {
+  const response = await fetch(`${API_URL}/api/households/${householdId}/invite-code`, {
     method: 'POST',
     headers,
   });
 
   if (!response.ok) {
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
     throw new Error(data.message || 'Invite household failed');
   }
 
   return response.json();
 };
 
-export const joinHousehold = async (data: JoinHouseHold) => {
+export const joinHousehold = async (data: JoinHouseHold): Promise<{ status: string }> => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households/join`, {
     method: 'POST',
@@ -90,8 +96,93 @@ export const joinHousehold = async (data: JoinHouseHold) => {
   });
 
   if (!response.ok) {
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
     throw new Error(data.message || 'Join household failed');
+  }
+
+  return response.json();
+};
+
+export const updateHousehold = async (data: UpdateHousehold): Promise<GetHouseholdDetails> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || 'Update household failed');
+  }
+
+  const body = await response.json();
+  return GetHouseholdDetailsSchema.parse(body);
+};
+
+export const removeMember = async (memberId: string): Promise<{ status: string }> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/members/${memberId}`, {
+    method: 'DELETE',
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to remove member');
+  }
+
+  return response.json();
+};
+
+export const leaveHousehold = async (): Promise<{ status: string }> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/leave`, {
+    method: 'POST',
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to leave household');
+  }
+
+  return response.json();
+};
+
+export const getPendingInvitations = async (): Promise<GetPendingInvites> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/invitations/pending`, {
+    method: 'GET',
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      `Failed to fetch pending invitations: ${response.status} ${errorData.message || ''}`,
+    );
+  }
+
+  const body = await response.json();
+  return GetPendingInvitesSchema.parse(body);
+};
+
+export const respondToInvitation = async (
+  invitationId: string,
+  action: RespondToInvitation['action'],
+): Promise<{ status: string }> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/invitations/${invitationId}/respond`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ action }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      `Failed to respond to invitation: ${response.status} ${errorData.message || ''}`,
+    );
   }
 
   return response.json();

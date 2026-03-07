@@ -14,8 +14,14 @@ export const loginMutation = () =>
 export const registerMutation = () =>
   mutationOptions({
     mutationKey: ['auth', 'register'],
-    mutationFn: async (args: Parameters<typeof authClient.signUp.email>[0]) => {
-      const result = await authClient.signUp.email(args);
+    mutationFn: async (
+      args: Parameters<typeof authClient.signUp.email>[0] & { phoneNumber: string },
+    ) => {
+      const { phoneNumber, ...rest } = args;
+      const result = await authClient.signUp.email({
+        ...rest,
+        phoneNumber,
+      } as any);
       if (result.error) throw result.error;
       return result;
     },

@@ -1,6 +1,6 @@
 import { API_URL } from '@/constants/Config';
 import { getAuthHeaders } from '@/libs/secureStorage';
-import { GetExpenses, GetExpensesSchema } from '@cohab/shared/src/expense';
+import { CreateExpense, GetExpenses, GetExpensesSchema } from '@cohab/shared/src/expense';
 
 export const getExpenses = async (householdId: string): Promise<GetExpenses> => {
   const headers = await getAuthHeaders();
@@ -16,17 +16,16 @@ export const getExpenses = async (householdId: string): Promise<GetExpenses> => 
   return GetExpensesSchema.parse(body);
 };
 
-export const createExpense = async (
-  householdId: string,
-  form: { name: string; amount: number },
-) => {
+export const createExpense = async (householdId: string, form: CreateExpense) => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households/${householdId}/expenses`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
       name: form.name,
-      amount: Number(form.amount),
+      amount: form.amount,
+      category: form.category,
+      note: form.note,
     }),
   });
 
