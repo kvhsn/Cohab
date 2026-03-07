@@ -6,17 +6,18 @@ import { View } from 'react-native';
 
 interface SummaryCardProps {
   share: number;
+  className?: string;
 }
 
-export function SummaryCard({ share }: SummaryCardProps) {
+export function SummaryCard({ share, className }: SummaryCardProps) {
   const isPositive = share >= 0;
 
   return (
     <Card
-      className={`mb-8 mt-2 items-center justify-center border-none overflow-hidden ${
+      className={`items-center justify-center border-none overflow-hidden ${
         isPositive ? 'bg-primary/10 dark:bg-primary/20' : 'bg-rose-500/10 dark:bg-rose-500/20'
-      }`}>
-      <View className="flex-1 flex flex-row items-center justify-between">
+      } ${className}`}>
+      <View className="w-full flex-row items-center justify-between">
         <View className="items-center py-4">
           <Typography variant="bodySmall" className="mb-2 opacity-70">
             Solde total
