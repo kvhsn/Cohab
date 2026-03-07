@@ -15,7 +15,9 @@ interface IconButtonProps<K extends IconProvider> extends PressableProps {
 
 const variantStyles = {
   primary: tw('bg-linear-to-r from-primary to-secondary shadow-primary/50 shadow-lg'),
-  secondary: tw('bg-white shadow-sm border border-gray-100'),
+  secondary: tw(
+    'bg-white dark:bg-slate-700 shadow-sm border border-gray-100 dark:border-slate-600',
+  ),
   ghost: tw('bg-transparent'),
 } satisfies Record<NonNullable<IconButtonProps<IconProvider>['variant']>, TailwindClass>;
 
@@ -25,10 +27,10 @@ const sizeStyles = {
   lg: tw('size-12 rounded-2xl'),
 } satisfies Required<Record<TwSize, TailwindClass>>;
 
-const iconColorStyles = {
-  primary: tw('white'),
-  secondary: tw('color-gray-900'),
-  ghost: tw('color-gray-500'),
+const iconClasses = {
+  primary: tw('text-white'),
+  secondary: tw('text-gray-900 dark:text-gray-100'),
+  ghost: tw('text-gray-900 dark:text-white'),
 } satisfies Record<NonNullable<IconButtonProps<IconProvider>['variant']>, TailwindClass>;
 
 export default function IconButton<K extends IconProvider>({
@@ -42,7 +44,7 @@ export default function IconButton<K extends IconProvider>({
 }: IconButtonProps<K>) {
   const sizeStyle = sizeStyles[size];
   const variantStyle = variantStyles[variant];
-  const iconColor = iconColorStyles[variant];
+  const iconClass = iconClasses[variant];
   const stateStyle = disabled ? buttonStateStyles.disabled : buttonStateStyles.enabled;
 
   return (
@@ -52,7 +54,7 @@ export default function IconButton<K extends IconProvider>({
         `${sizeStyle} ${variantStyle} ${stateStyle} items-center justify-center ${className || ''}`,
       )}
       {...props}>
-      <Icon as={as} name={name} size={size} color={iconColor} />
+      <Icon as={as} name={name} size={size} className={iconClass} />
     </Pressable>
   );
 }

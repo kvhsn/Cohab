@@ -63,22 +63,24 @@ export default function OTPInput({
           return (
             <React.Fragment key={index}>
               <View
-                className={`w-12 h-14 bg-white/50 border-2 rounded-xl items-center justify-center ${
+                className={`w-12 h-14 border-2 rounded-xl items-center justify-center ${
                   error
-                    ? 'border-red-500'
+                    ? 'bg-red-50 dark:bg-red-950/30 border-red-500 dark:border-red-400'
                     : isBoxFocused
-                      ? 'border-primary'
+                      ? 'bg-white/50 dark:bg-slate-700/50 border-primary'
                       : isFilled
-                        ? 'border-primary/50'
-                        : 'border-gray-200'
+                        ? 'bg-white/50 dark:bg-slate-700/50 border-primary/50'
+                        : 'bg-white/50 dark:bg-slate-800/50 border-gray-200 dark:border-slate-600'
                 }`}>
                 <Typography
                   variant="h1"
-                  className={`text-2xl font-bold ${error ? 'text-red-500' : 'text-gray-900'}`}>
+                  className={`text-2xl font-bold ${error ? 'text-red-500 dark:text-red-400' : 'text-gray-900 dark:text-gray-100'}`}>
                   {char}
                 </Typography>
               </View>
-              {index === 2 && length === 6 && <View className="w-2 h-0.5 bg-gray-300 mx-1" />}
+              {index === 2 && length === 6 && (
+                <View className="w-2 h-0.5 bg-gray-300 dark:bg-gray-600 mx-1" />
+              )}
             </React.Fragment>
           );
         })}
@@ -99,7 +101,9 @@ export default function OTPInput({
       </Pressable>
       <View className="h-5 justify-center mt-1">
         {error ? (
-          <Typography variant="bodySmall" className="text-red-500 font-medium text-center">
+          <Typography
+            variant="bodySmall"
+            className="text-red-500 dark:text-red-400 font-medium text-center">
             {error}
           </Typography>
         ) : null}

@@ -5,6 +5,7 @@ import {
   GestureResponderEvent,
   Pressable,
   TextInput,
+  useColorScheme,
   View,
   type KeyboardTypeOptions,
   type TextInputProps,
@@ -27,9 +28,22 @@ interface InputProps extends Omit<TextInputProps, 'ref'> {
 export default function Input({ iconName, size = 'md', className, error, ...props }: InputProps) {
   const [isSecureTextEntry, setIsSecureTextEntry] = useState(!!props.secureTextEntry);
   const inputRef = useRef<TextInput | null>(null);
-  const placeholderColor = tw('text-gray-400');
+
+  // placeholderTextColor est une prop RN qui ne peut pas être gérée via classes CSS
+  const isDark = useColorScheme() === 'dark';
+  const placeholderTextColor = error
+    ? isDark
+      ? '#f87171'
+      : '#ef4444' // red-400 en dark, red-500 en light
+    : isDark
+      ? '#6b7280'
+      : '#9ca3af';
+
   const isPasswordInput = !!props.secureTextEntry;
   const keyboardIconName = props.keyboardType ? KEYBOARD_ICONS[props.keyboardType] : undefined;
+  const iconClass = tw(
+    error ? 'text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-gray-500',
+  );
 
   const onPress = (event: GestureResponderEvent) => {
     event.preventDefault();
@@ -39,39 +53,23 @@ export default function Input({ iconName, size = 'md', className, error, ...prop
   return (
     <View className={`w-full gap-1 ${className ?? ''}`}>
       <Pressable
-        className={`flex flex-row self-center items-center gap-2 border rounded-2xl px-2 py-4 bg-white/85 shadow-sm ${
-          error ? 'border-red-500' : 'border-gray-100'
+        className={`flex flex-row self-center items-center gap-2 border rounded-2xl px-2 py-4 bg-white/85 dark:bg-slate-800/85 shadow-sm ${
+          error ? 'border-red-500' : 'border-gray-100 dark:border-slate-700'
         }`}
         onPress={onPress}>
-        <View className="flex-1 flex-row gap-2">
+        <View className="flex-1 flex-row items-center gap-2">
           {isPasswordInput ? (
-            <Icon
-              as="Ionicons"
-              name="lock-closed"
-              size={size}
-              className={error ? 'text-red-500' : placeholderColor}
-            />
+            <Icon as="Ionicons" name="lock-closed" size={size} className={iconClass} />
           ) : keyboardIconName ? (
-            <Icon
-              as="Ionicons"
-              name={keyboardIconName}
-              size={size}
-              className={error ? 'text-red-500' : placeholderColor}
-            />
+            <Icon as="Ionicons" name={keyboardIconName} size={size} className={iconClass} />
           ) : (
-            iconName && (
-              <Icon
-                as="Ionicons"
-                name={iconName}
-                size={size}
-                className={error ? 'text-red-500' : placeholderColor}
-              />
-            )
+            iconName && <Icon as="Ionicons" name={iconName} size={size} className={iconClass} />
           )}
           <TextInput
             {...props}
             secureTextEntry={isSecureTextEntry}
-            className={`${error ? 'text-red-500' : placeholderColor} text-body text-${size}`}
+            className={`${error ? 'text-red-500 dark:text-red-400' : 'text-gray-900 dark:text-gray-100'} text-body text-${size} flex-1 p-0`}
+            placeholderTextColor={placeholderTextColor}
             ref={inputRef}
           />
         </View>
@@ -81,14 +79,16 @@ export default function Input({ iconName, size = 'md', className, error, ...prop
               as="Ionicons"
               name={isSecureTextEntry ? 'eye-outline' : 'eye-off-outline'}
               size={size}
-              className={error ? 'text-red-500' : placeholderColor}
+              className={iconClass}
             />
           </Pressable>
         )}
       </Pressable>
       <View className="h-5 justify-center">
         {error ? (
-          <Typography variant="bodySmall" className="text-red-500 ml-4 font-medium">
+          <Typography
+            variant="bodySmall"
+            className="text-red-500 dark:text-red-400 ml-4 font-medium">
             {error}
           </Typography>
         ) : null}

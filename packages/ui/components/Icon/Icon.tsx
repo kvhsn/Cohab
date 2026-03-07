@@ -1,6 +1,6 @@
 import { type TwSize } from '@/libs/tailwind';
-import React, { type ComponentProps, type ComponentType } from 'react';
 import * as Icons from '@expo/vector-icons';
+import React, { type ComponentProps, type ComponentType } from 'react';
 
 const iconSizes = {
   sm: 14,
@@ -18,9 +18,11 @@ export type IconType = ComponentType<IconBaseProps>;
 
 export type IconProvider = keyof typeof Icons;
 
+export type IconNames<K extends IconProvider> = ComponentProps<(typeof Icons)[K]>['name'];
+
 interface IconProps<K extends IconProvider> extends IconBaseProps {
   as: K;
-  name: ComponentProps<(typeof Icons)[K]>['name'];
+  name: IconNames<K>;
 }
 
 export default function Icon<K extends IconProvider>({

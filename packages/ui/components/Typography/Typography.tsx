@@ -10,11 +10,11 @@ interface TypographyProps extends TextProps {
 }
 
 const variantStyles = {
-  h1: tw('font-bold text-gray-900'),
-  subtitle: tw('text-gray-500'),
-  body: tw('text-gray-900'),
-  bodySmall: tw('text-gray-500'),
-  caption: tw('uppercase tracking-widest text-gray-400 font-bold'),
+  h1: tw('font-bold text-gray-900 dark:text-gray-50'),
+  subtitle: tw('text-gray-500 dark:text-gray-400'),
+  body: tw('text-gray-900 dark:text-gray-100'),
+  bodySmall: tw('text-gray-500 dark:text-gray-400'),
+  caption: tw('uppercase tracking-widest text-gray-400 dark:text-gray-500 font-bold'),
   button: tw('font-bold'),
 } satisfies Required<Record<TypographyVariant, TailwindClass>>;
 
