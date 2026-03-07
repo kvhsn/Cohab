@@ -34,8 +34,8 @@ export default function HouseholdChoiceScreen() {
   const { mutate, isPending } = useMutation({
     ...joinHouseholdMutation(),
     onSuccess: () => {
-      Alert.alert('Success', 'Household joined!');
       queryClient.invalidateQueries({ queryKey: ['households'] });
+      router.reload();
     },
     onError: (error: Error) => {
       console.error(error);
@@ -62,13 +62,6 @@ export default function HouseholdChoiceScreen() {
 
   return (
     <Screen>
-      <View className="flex-row justify-between items-center mt-4">
-        <View className="w-10 h-10 items-center justify-center rounded-full bg-white/50 dark:bg-white/10"></View>
-        <Typography variant="bodySmall" className="text-gray-500 font-bold">
-          Aide
-        </Typography>
-      </View>
-
       <View className="mt-8 gap-2">
         <Typography variant="h1" className="text-center">
           Bienvenue chez vous

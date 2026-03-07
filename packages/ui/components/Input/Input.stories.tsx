@@ -1,5 +1,7 @@
-// create input stories with default
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-native';
+import React from 'react';
+import { Pressable } from 'react-native';
+import Icon from '../Icon/Icon';
 import Input from './Input';
 
 const meta: Meta<typeof Input> = {
@@ -36,6 +38,26 @@ export const Password: Story = {
     secureTextEntry: {
       control: false,
     },
+  },
+};
+
+export const WithRightElement: Story = {
+  args: {
+    placeholder: 'Search…',
+    iconName: 'search',
+    rightElement: (
+      <Pressable onPress={() => {}}>
+        <Icon
+          as="Ionicons"
+          name="close-circle"
+          size="md"
+          className="text-gray-400 dark:text-gray-500"
+        />
+      </Pressable>
+    ),
+  },
+  argTypes: {
+    rightElement: { control: false },
   },
 };
 

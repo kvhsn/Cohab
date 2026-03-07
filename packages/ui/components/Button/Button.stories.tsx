@@ -12,7 +12,7 @@ const meta: Meta<typeof CustomButton> = {
     },
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
+      options: ['xs', 'sm', 'md', 'lg'],
     },
     disabled: {
       control: 'boolean',
@@ -102,6 +102,6 @@ export const Small: Story = {
   args: {
     title: 'Petit bouton',
     variant: 'secondary',
-    size: 'sm',
+    size: 'xs',
   },
 };

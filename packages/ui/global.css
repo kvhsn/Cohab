@@ -16,7 +16,21 @@
   /* Dark mode backgrounds */
   --color-dark-surface: #0f172a;
   --color-dark-surface-2: #1e293b;
-  --color-dark-surface-3: #1a1a2e;
+  --color-dark-surface-3: #334155;
+
+  /* Surfaces */
+  --color-surface: #ffffff;
+  --color-surface-2: #f8fafc;
+
+  /* Borders */
+  --color-border: #f3f4f6;
+  --color-dark-border: #334155;
+
+  /* Feedback */
+  --color-error: #ef4444;
+  --color-warning: #eab308;
+  --color-info: #3b82f6;
+  --color-success: #22c55e;
 
   --text-h1: 2rem;
   --text-subtitle: 1.5rem;

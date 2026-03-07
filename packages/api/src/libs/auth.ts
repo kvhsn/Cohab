@@ -1,8 +1,8 @@
-import { Context, Next } from 'hono';
+import { expo } from '@better-auth/expo';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { Context, Next } from 'hono';
 import { prisma } from './prisma';
-import { expo } from '@better-auth/expo';
 
 const trustedOrigins = [
   'cohab://',
@@ -19,6 +19,17 @@ const trustedOrigins = [
 ];
 
 export const auth = betterAuth({
+  advanced: {
+    cookies: {
+      session_token: {
+        attributes: {
+          sameSite: 'none',
+          secure: true,
+          httpOnly: true,
+        },
+      },
+    },
+  },
   baseURL: process.env.BETTER_AUTH_URL,
   plugins: [expo()],
   emailAndPassword: {

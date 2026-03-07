@@ -13,29 +13,28 @@ export default function SettingsIndex() {
 
   return (
     <Screen title="Paramètres">
-      <View className="flex-1 p-4">
-        <Typography variant="caption" className="mb-2 ml-4 dark:text-gray-400">
-          Général
-        </Typography>
+      <Typography variant="caption" className="mb-2 ml-4 dark:text-gray-400">
+        Général
+      </Typography>
 
-        <View className="mb-8 overflow-hidden rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
-          <Link href={`/households/${householdId}/settings/name`} asChild>
-            <SettingsItem label="Nom" subtitle="Modifier le nom" iconName="pencil" />
-          </Link>
-          <Link href={`/households/${householdId}/settings/members`} asChild>
-            <SettingsItem label="Gérer les membres" iconName="people" />
-          </Link>
-          <Link
-            href={{
-              pathname: '/households/[householdId]/invite',
-              params: { householdId },
-            }}
-            asChild>
-            <SettingsItem label="Créer un code d'invitation" iconName="key" />
-          </Link>
-        </View>
+      <View className="mb-8 overflow-hidden rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
+        <Link href={`/households/${householdId}/settings/name`} asChild>
+          <SettingsItem label="Nom" subtitle="Modifier le nom" iconName="pencil" />
+        </Link>
+        <Link href={`/households/${householdId}/settings/members`} asChild>
+          <SettingsItem label="Gérer les membres" iconName="people" />
+        </Link>
+        <Link
+          href={{
+            pathname: '/households/[householdId]/invite',
+            params: { householdId },
+          }}
+          asChild>
+          <SettingsItem label="Créer un code d'invitation" iconName="key" />
+        </Link>
       </View>
-      <View className="flex self-center">
+
+      <View className="mt-auto self-center">
         <CustomButton size="sm" onPress={logout} variant="secondary" title="Déconnexion" />
       </View>
     </Screen>

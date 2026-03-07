@@ -111,10 +111,10 @@ export default function Login() {
           </form.Subscribe>
         </View>
       </View>
-      <View className="flex-1 flex-row items-end justify-center gap-2 pt-8 pb-2">
+      <View className="flex-1 flex-row items-center justify-center pt-8 pb-2 gap-2">
         <Typography variant="bodySmall">Pas encore de compte ?</Typography>
         <Link href="/register" replace>
-          <Typography variant="bodySmall" className="text-primary">
+          <Typography variant="bodySmall" size="xs" className="text-primary dark:text-primary">
             Créer un compte
           </Typography>
         </Link>

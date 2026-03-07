@@ -6,7 +6,7 @@ export default function SettingsLayout() {
   const router = useRouter();
 
   return (
-    <Stack>
+    <Stack screenOptions={{ contentStyle: { backgroundColor: 'transparent' } }}>
       <Stack.Screen
         name="index"
         options={{

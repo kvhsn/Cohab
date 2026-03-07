@@ -3,6 +3,7 @@ import * as Icons from '@expo/vector-icons';
 import React, { type ComponentProps, type ComponentType } from 'react';
 
 const iconSizes = {
+  xs: 12,
   sm: 14,
   md: 16,
   lg: 20,

@@ -1,3 +1,4 @@
+import { colors } from '@/libs/colors';
 import { queryClient } from '@/libs/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
@@ -17,7 +18,7 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: false,
           contentStyle: {
-            backgroundColor: colorScheme === 'dark' ? '#0f172a' : '#e3fdfd',
+            backgroundColor: colorScheme === 'dark' ? colors.bgDark : colors.bgLight,
           },
         }}>
         {storybookEnabled && <Stack.Screen name="(storybook)/index" />}

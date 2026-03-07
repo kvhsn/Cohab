@@ -31,7 +31,7 @@ export default function HouseholdDetails() {
             pathname: '/households/[householdId]/balance',
             params: { householdId },
           }}>
-          <SummaryCard share={balance.total} />
+          <SummaryCard share={balance.shares[data?.id]} />
         </Link>
         <View>
           <Link
