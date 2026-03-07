@@ -29,6 +29,29 @@ export const Default: Story = {
   ),
 };
 
+export const Active: Story = {
+  args: {
+    isActive: true,
+  } as any,
+  argTypes: {
+    isActive: {
+      control: 'boolean',
+    },
+  },
+  render: (props) => (
+    <Card {...props}>
+      <View>
+        <Typography variant="body" className="font-bold mb-2">
+          Card Title
+        </Typography>
+        <Typography variant="bodySmall">
+          This is the content of a basic card. It uses the premium glassmorphism effect.
+        </Typography>
+      </View>
+    </Card>
+  ),
+};
+
 export const WithCustomPadding: Story = {
   args: {
     className: 'p-10',
