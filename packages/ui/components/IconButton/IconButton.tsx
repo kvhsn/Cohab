@@ -50,9 +50,7 @@ export default function IconButton<K extends IconProvider>({
   return (
     <Pressable
       disabled={disabled}
-      className={tw(
-        `${sizeStyle} ${variantStyle} ${stateStyle} items-center justify-center ${className || ''}`,
-      )}
+      className={`${sizeStyle} ${variantStyle} ${stateStyle} items-center justify-center ${className || ''}`}
       {...props}>
       <Icon as={as} name={name} size={size} className={iconClass} />
     </Pressable>

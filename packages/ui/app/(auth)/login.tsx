@@ -97,13 +97,7 @@ export default function Login() {
               )}
             </form.AppField>
           </View>
-          <View className="items-end">
-            <Link href="/register">
-              <Typography variant="bodySmall" className="text-primary">
-                Mot de passe oublié ?
-              </Typography>
-            </Link>
-          </View>
+          <View className="items-end"></View>
           <form.Subscribe>
             {({ canSubmit }) => (
               <form.CustomButton
