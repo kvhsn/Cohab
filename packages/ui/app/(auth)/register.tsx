@@ -5,13 +5,12 @@ import Screen from '@/components/Screen/Screen';
 import Typography from '@/components/Typography/Typography';
 import { formatErrors } from '@/libs/form';
 import mutations from '@/libs/mutations';
-import { RegisterSchema } from '@cohab/shared/src/auth';
+import { RegisterValidationSchema } from '@cohab/shared/src/auth';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useRouter } from 'expo-router';
 import React from 'react';
 import { Alert, View } from 'react-native';
-import { z } from 'zod';
 
 export default function Register() {
   const router = useRouter();
@@ -28,13 +27,6 @@ export default function Register() {
     formContext,
   });
 
-  const registerValidationSchema = RegisterSchema.extend({
-    confirmPassword: z.string().min(1, 'Veuillez confirmer votre mot de passe'),
-  }).refine((data) => data.password === data.confirmPassword, {
-    message: 'Les mots de passe ne correspondent pas',
-    path: ['confirmPassword'],
-  });
-
   const form = useAppForm({
     defaultValues: {
       name: '',
@@ -44,8 +36,8 @@ export default function Register() {
       confirmPassword: '',
     },
     validators: {
-      onChange: registerValidationSchema,
-      onMount: registerValidationSchema,
+      onChange: RegisterValidationSchema,
+      onMount: RegisterValidationSchema,
     },
     onSubmit: ({ value }) => {
       mutate({
