@@ -1,16 +1,18 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { requestId } from 'hono/request-id';
+import { showRoutes } from 'hono/dev';
+import { auth } from './libs/auth';
+import { onError } from './libs/errors';
 import household from './household';
 import me from './me';
-import { requestId } from 'hono/request-id';
-import { auth } from './libs/auth';
-import { showRoutes } from 'hono/dev';
 
 const app = new Hono().basePath('/api');
 
 app.use('/*', cors());
 app.use('*', requestId());
+app.onError(onError);
 
 app.all(
   '/auth/*',

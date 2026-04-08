@@ -1,171 +1,85 @@
-import { Hono } from 'hono';
-import { ContextWithAuth, ContextWithPrisma } from '../../types/Contexts';
-import { zValidator } from '@hono/zod-validator';
-import withPrisma from '../../libs/prisma';
-import { withAuth } from '../../libs/auth';
 import { CreateExpenseSchema, GetExpenses } from '@cohab/shared/src/expense';
+import { Hono } from 'hono';
+import { validate } from '../../libs/validation';
+import { withHouseholdMember } from '../../middleware/household';
+import { AppContext } from '../../types/Contexts';
 import { createBalance } from './helpers';
 
-export default new Hono<ContextWithPrisma & ContextWithAuth>()
+export default new Hono<AppContext>()
   .basePath('/:householdId')
-  .get('/balance', withAuth, withPrisma, async (c) => {
+  .use('*', withHouseholdMember)
+
+  // ── Balance ───────────────────────────────────────────────────────────
+  .get('/balance', async (c) => {
     const householdId = c.req.param('householdId');
-    const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
 
-    try {
-      const user = await prisma.user.findUniqueOrThrow({
-        where: { id: userId },
-        select: { houseHoldId: true },
-      });
+    const { members: householdMembers } = await prisma.household.findFirstOrThrow({
+      where: { id: householdId },
+      select: { members: { select: { id: true } } },
+    });
 
-      if (user.houseHoldId !== householdId) {
-        return c.json({ status: 'error', message: 'You do not belong to this household' }, 403);
-      }
+    const householdMemberIds = householdMembers.map(({ id }) => id);
 
-      const { members: householdMembers } = await prisma.household.findFirstOrThrow({
-        where: {
-          id: householdId,
-        },
-        select: {
-          members: {
-            select: {
-              id: true,
-            },
-          },
-        },
-      });
-      const householdMemberIds = householdMembers.map(({ id }) => id);
+    const [expenses, refunds] = await Promise.all([
+      prisma.expense.findMany({
+        where: { householdId },
+        select: { amount: true, memberId: true },
+      }),
+      prisma.refund.findMany({
+        where: { householdId },
+        select: { amount: true, fromMemberId: true, toMemberId: true },
+      }),
+    ]);
 
-      const expenses = await prisma.expense.findMany({
-        where: {
-          householdId,
-        },
-        select: {
-          amount: true,
-          memberId: true,
-        },
-      });
-      const refunds = await prisma.refund.findMany({
-        where: {
-          householdId,
-        },
-        select: {
-          amount: true,
-          fromMemberId: true,
-          toMemberId: true,
-        },
-      });
-      const balance = createBalance(expenses, refunds, householdMemberIds);
-      return c.json(balance, 200);
-    } catch (error) {
-      console.error(error);
-      return c.json({ status: 'error', message: 'Internal error' }, 500);
-    }
+    return c.json(createBalance(expenses, refunds, householdMemberIds), 200);
   })
+
+  // ── Expenses CRUD ─────────────────────────────────────────────────────
   .basePath('/expenses')
-  .post('/', withAuth, withPrisma, zValidator('json', CreateExpenseSchema), async (c) => {
+  .post('/', validate('json', CreateExpenseSchema), async (c) => {
     const { name, amount, category, note } = c.req.valid('json');
     const householdId = c.req.param('householdId');
     const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
 
-    try {
-      const user = await prisma.user.findUniqueOrThrow({
-        where: { id: userId },
-        select: { houseHoldId: true },
-      });
+    const expense = await prisma.expense.create({
+      data: { name, amount, category, note, householdId, memberId: userId },
+    });
 
-      if (user.houseHoldId !== householdId) {
-        return c.json({ status: 'error', message: 'You do not belong to this household' }, 403);
-      }
-
-      const expense = await prisma.expense.create({
-        data: {
-          name,
-          amount,
-          category,
-          note,
-          householdId,
-          memberId: userId,
-        },
-      });
-
-      return c.json(expense, 201);
-    } catch (error) {
-      console.error(error);
-      return c.json({ status: 'error', message: 'Internal error' }, 500);
-    }
+    return c.json(expense, 201);
   })
-  .get('/', withAuth, withPrisma, async (c) => {
-    const { id: userId } = c.get('user');
+  .get('/', async (c) => {
     const householdId = c.req.param('householdId');
     const prisma = c.get('prisma');
-    try {
-      const user = await prisma.user.findUniqueOrThrow({
-        where: { id: userId },
-        select: { houseHoldId: true },
-      });
 
-      if (user.houseHoldId !== householdId) {
-        return c.json({ status: 'error', message: 'You do not belong to this household' }, 403);
-      }
+    const expenses = await prisma.expense.findMany({
+      where: { householdId },
+      select: {
+        createdAt: true,
+        id: true,
+        name: true,
+        amount: true,
+        category: true,
+        note: true,
+        member: { select: { name: true } },
+      },
+    });
 
-      const expenses = await prisma.expense.findMany({
-        where: {
-          householdId,
-        },
-        select: {
-          createdAt: true,
-          id: true,
-          name: true,
-          amount: true,
-          category: true,
-          note: true,
-          member: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      });
-      return c.json(
-        {
-          expenses: expenses.map((expense) => ({
-            ...expense,
-            createdAt: expense.createdAt.toISOString(),
-          })),
-        } as GetExpenses,
-        200,
-      );
-    } catch (error) {
-      console.error(error);
-      return c.json({ status: 'error', message: 'Internal error' }, 500);
-    }
+    return c.json(
+      {
+        expenses: expenses.map((expense) => ({
+          ...expense,
+          createdAt: expense.createdAt.toISOString(),
+        })),
+      } as GetExpenses,
+      200,
+    );
   })
-  .delete('/:expenseId', withAuth, withPrisma, async (c) => {
-    const { id: userId } = c.get('user');
-    const householdId = c.req.param('householdId');
+  .delete('/:expenseId', async (c) => {
     const expenseId = c.req.param('expenseId');
     const prisma = c.get('prisma');
-    try {
-      const user = await prisma.user.findUniqueOrThrow({
-        where: { id: userId },
-        select: { houseHoldId: true },
-      });
 
-      if (user.houseHoldId !== householdId) {
-        return c.json({ status: 'error', message: 'You do not belong to this household' }, 403);
-      }
-
-      const expense = await prisma.expense.delete({
-        where: {
-          id: expenseId,
-        },
-      });
-      return c.json(expense, 200);
-    } catch (error) {
-      console.error(error);
-      return c.json({ status: 'error', message: 'Internal error' }, 500);
-    }
+    const expense = await prisma.expense.delete({ where: { id: expenseId } });
+    return c.json(expense, 200);
   });

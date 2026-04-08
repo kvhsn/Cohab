@@ -2,6 +2,7 @@ import { expo } from '@better-auth/expo';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { Context, Next } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { prisma } from './prisma';
 
 const trustedOrigins = [
@@ -55,7 +56,7 @@ export async function withAuth(c: Context, next: Next) {
   });
 
   if (!session) {
-    return c.json({ status: 'error', message: 'Unauthorized' }, 401);
+    throw new HTTPException(401, { message: 'Unauthorized' });
   }
 
   c.set('session', session.session);

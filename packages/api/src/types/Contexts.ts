@@ -17,3 +17,6 @@ export type ContextWithAuth = {
     session: typeof auth.$Infer.Session.session;
   };
 } & RequestIdVariables;
+
+/** Authenticated route with database access — the common case. */
+export type AppContext = ContextWithPrisma & ContextWithAuth;

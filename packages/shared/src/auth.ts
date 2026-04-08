@@ -13,6 +13,15 @@ export const RegisterSchema = z.object({
 
 export type RegisterSchema = z.infer<typeof RegisterSchema>;
 
+export const RegisterValidationSchema = RegisterSchema.extend({
+  confirmPassword: z.string().min(1, 'Veuillez confirmer votre mot de passe'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Les mots de passe ne correspondent pas',
+  path: ['confirmPassword'],
+});
+
+export type RegisterValidationSchema = z.infer<typeof RegisterValidationSchema>;
+
 export const LoginSchema = z.object({
   email: z.email("L'adresse email est invalide"),
   password: z.string().min(8, 'Le mot de passe doit faire au moins 8 caractères'),
