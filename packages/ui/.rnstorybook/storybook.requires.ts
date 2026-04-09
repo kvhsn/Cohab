@@ -26,11 +26,7 @@ declare global {
   var STORIES: typeof normalizedStories;
 }
 
-const annotations = [
-  require('./preview'),
-  require('@storybook/react-native/preview'),
-  require('@storybook/addon-ondevice-actions/preview'),
-];
+const annotations = [require('./preview'), require('@storybook/react-native/preview')];
 
 global.STORIES = normalizedStories;
 
