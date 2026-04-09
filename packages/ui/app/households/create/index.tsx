@@ -29,8 +29,12 @@ export default function CreateHousehold() {
 
   const { mutate, isPending } = useMutation({
     ...mutations.households.createHouseholdMutation(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['households'] });
+    onSuccess: async () => {
+      // invalidate user data because now part of household
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['me'] }),
+        queryClient.invalidateQueries({ queryKey: ['households'] }),
+      ]);
       router.replace('/');
     },
     onError: (error: Error) => {
@@ -167,13 +171,18 @@ export default function CreateHousehold() {
       </View>
 
       {/* Submit */}
-      <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
-        {([canSubmit, isSubmitting]) => (
+      <form.Subscribe
+        selector={(state) => ({
+          canSubmit: state.canSubmit,
+          isSubmitting: state.isSubmitting,
+          values: state.values,
+        })}>
+        {({ canSubmit, isSubmitting, values }) => (
           <CustomButton
             title={isSubmitting ? 'Création...' : 'Créer ma colocation'}
             variant="primary"
             size="lg"
-            disabled={!canSubmit || isSubmitting || isPending}
+            disabled={!canSubmit || isSubmitting || isPending || !values.name}
             onPress={form.handleSubmit}
             RightIcon={({ color, size }) => (
               <Icon as="Ionicons" name="sparkles-outline" color={color} size={size} />
