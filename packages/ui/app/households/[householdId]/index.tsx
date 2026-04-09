@@ -16,6 +16,9 @@ export default function HouseholdDetails() {
   const { data: balance } = useSuspenseQuery(
     queries.households.getHouseholdBalanceQuery(householdId),
   );
+  const isAlone = Object.keys(balance.shares).length === 1;
+  const displayShare = isAlone ? balance.total : data?.id ? balance.shares[data.id] || 0 : 0;
+
   return (
     <Screen>
       <Suspense fallback="Is loading...">
@@ -31,7 +34,7 @@ export default function HouseholdDetails() {
             pathname: '/households/[householdId]/balance',
             params: { householdId },
           }}>
-          <SummaryCard share={balance.shares[data?.id]} />
+          <SummaryCard share={displayShare} isAlone={isAlone} />
         </Link>
         <Link
           href={{

@@ -8,10 +8,28 @@ import { View } from 'react-native';
 interface SummaryCardProps {
   share: number;
   className?: string;
+  isAlone?: boolean;
+  title?: string;
 }
 
-export function SummaryCard({ share, className }: SummaryCardProps) {
+export function SummaryCard({ share, className, isAlone, title }: SummaryCardProps) {
   const isPositive = share >= 0;
+
+  const getTitle = () => {
+    if (title) return title;
+    return isAlone ? 'Total investi' : 'Solde total';
+  };
+
+  const getSubtitle = () => {
+    if (isAlone) {
+      return share === 0
+        ? 'Commencez à suivre vos frais !'
+        : 'C’est un bon début ! Invitez vos colocs.';
+    }
+
+    if (share === 0) return 'Vous êtes à l’équilibre !';
+    return share > 0 ? 'On vous doit de l’argent !' : 'Vous avez des dettes à régler.';
+  };
 
   return (
     <Card
@@ -23,7 +41,7 @@ export function SummaryCard({ share, className }: SummaryCardProps) {
       <View className="w-full flex-row items-center justify-between">
         <View className="items-center py-4">
           <Typography variant="bodySmall" weight="medium" className="mb-2 opacity-70">
-            Solde total
+            {getTitle()}
           </Typography>
           <Typography
             variant="h1"
@@ -32,11 +50,7 @@ export function SummaryCard({ share, className }: SummaryCardProps) {
             {share.toFixed(2)} €
           </Typography>
           <Typography variant="bodySmall" weight="medium" className="mt-2 opacity-60">
-            {share === 0
-              ? 'Vous êtes à l’équilibre !'
-              : share > 0
-                ? 'On vous doit de l’argent !'
-                : 'Vous avez des dettes à régler.'}
+            {getSubtitle()}
           </Typography>
         </View>
 

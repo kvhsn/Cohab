@@ -28,9 +28,8 @@ export default function BalanceContent({ householdId }: BalanceContentProps) {
   const { data: expensesData } = useSuspenseQuery(queries.expenses.getExpensesQuery(householdId));
 
   const currentUserId = session?.user?.id;
-  const currentUserShare = currentUserId ? balance.shares[currentUserId] || 0 : 0;
-
   const othersBalances = Object.entries(balance.shares).filter(([id]) => id !== currentUserId);
+  const isAlone = othersBalances.length === 0;
 
   const peopleWhoOwe = othersBalances
     .filter(([, amount]) => amount < 0)
@@ -51,6 +50,12 @@ export default function BalanceContent({ householdId }: BalanceContentProps) {
   const totalOwedToMe = peopleWhoOwe.reduce((acc, p) => acc + p.amount, 0);
   const totalIOwe = peopleIOwe.reduce((acc, p) => acc + p.amount, 0);
 
+  const displayShare = isAlone
+    ? balance.total
+    : currentUserId
+      ? balance.shares[currentUserId] || 0
+      : 0;
+
   const expenses = expensesData.expenses;
   const expenseTotal = expenses.reduce((sum, e) => sum + e.amount, 0);
   const hasDebts = peopleWhoOwe.length > 0 || peopleIOwe.length > 0;
@@ -58,7 +63,7 @@ export default function BalanceContent({ householdId }: BalanceContentProps) {
   return (
     <View className="gap-2">
       {/* ── Balance overview ── */}
-      <SummaryCard share={currentUserShare} className="mt-2" />
+      <SummaryCard share={displayShare} isAlone={isAlone} className="mt-2" />
 
       {/* ── Debts ── */}
       {hasDebts && (

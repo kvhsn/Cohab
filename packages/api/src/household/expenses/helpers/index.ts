@@ -1,6 +1,6 @@
-import { Expense } from '../types';
-import { Refund } from '@cohab/shared/src/refund';
 import { Balance } from '@cohab/shared/src/balance';
+import { Refund } from '@cohab/shared/src/refund';
+import { Expense } from '../types';
 
 export const createBalance = (
   expenses: Expense[],

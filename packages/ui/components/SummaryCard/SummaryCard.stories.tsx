@@ -8,6 +8,12 @@ const meta: Meta<typeof SummaryCard> = {
     share: {
       control: { type: 'number' },
     },
+    isAlone: {
+      control: { type: 'boolean' },
+    },
+    title: {
+      control: { type: 'text' },
+    },
   },
 };
 
@@ -30,5 +36,19 @@ export const Negative: Story = {
 export const Balanced: Story = {
   args: {
     share: 0,
+  },
+};
+
+export const Alone: Story = {
+  args: {
+    share: 324,
+    isAlone: true,
+  },
+};
+
+export const AloneEmpty: Story = {
+  args: {
+    share: 0,
+    isAlone: true,
   },
 };
