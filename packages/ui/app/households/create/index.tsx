@@ -48,7 +48,8 @@ export default function CreateHousehold() {
       invites: [''],
     },
     validators: {
-      onChange: CreateHouseHoldSchema as any,
+      onChange: CreateHouseHoldSchema,
+      onMount: CreateHouseHoldSchema,
     },
     onSubmit: ({ value }) => {
       const data = {

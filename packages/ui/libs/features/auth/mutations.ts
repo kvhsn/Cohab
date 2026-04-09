@@ -20,8 +20,9 @@ export const registerMutation = () =>
       const { phoneNumber, ...rest } = args;
       const result = await authClient.signUp.email({
         ...rest,
+        // @ts-expect-error
         phoneNumber,
-      } as any);
+      });
       if (result.error) throw result.error;
       return result;
     },
