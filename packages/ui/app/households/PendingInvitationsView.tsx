@@ -17,8 +17,8 @@ export default function PendingInvitationsView({ invitations }: PendingInvitatio
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     ...mutations.households.respondToInvitationMutation(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['households'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['households'] });
     },
     onError: (error: Error) => {
       Alert.alert('Erreur', error.message || 'Une erreur est survenue');

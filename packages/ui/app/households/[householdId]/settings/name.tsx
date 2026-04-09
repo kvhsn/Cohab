@@ -2,12 +2,12 @@ import CustomButton from '@/components/Button/Button';
 import Input from '@/components/Input/Input';
 import Screen from '@/components/Screen/Screen';
 import Typography from '@/components/Typography/Typography';
+import { updateHouseholdMutation } from '@/libs/features/households/mutations';
 import { formatErrors } from '@/libs/form';
 import queries from '@/libs/queries';
-import { updateHouseholdMutation } from '@/libs/features/households/mutations';
 import { UpdateHouseholdSchema } from '@cohab/shared/src/household';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { useMutation, useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Alert, View } from 'react-native';
@@ -32,8 +32,8 @@ export default function EditName() {
 
   const { mutate, isPending } = useMutation({
     ...updateHouseholdMutation(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(queries.me.getMeQuery());
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(queries.me.getMeQuery());
       router.back();
     },
     onError: (error: Error) => {

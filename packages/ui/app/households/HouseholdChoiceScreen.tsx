@@ -33,8 +33,8 @@ export default function HouseholdChoiceScreen() {
 
   const { mutate, isPending } = useMutation({
     ...joinHouseholdMutation(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['households'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['households'] });
       router.reload();
     },
     onError: (error: Error) => {
@@ -110,8 +110,8 @@ export default function HouseholdChoiceScreen() {
           )}
         </form.AppField>
 
-        <form.Subscribe selector={(state) => [state.canSubmit]}>
-          {([canSubmit]) => (
+        <form.Subscribe selector={(state) => ({ canSubmit: state.canSubmit })}>
+          {({ canSubmit }) => (
             <form.CustomButton
               title="Valider le code"
               variant="primary"

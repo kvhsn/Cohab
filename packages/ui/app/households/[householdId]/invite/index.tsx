@@ -1,5 +1,4 @@
 import Banner from '@/components/Banner/Banner';
-import { colors } from '@/libs/colors';
 import CustomButton from '@/components/Button/Button';
 import Card from '@/components/Card/Card';
 import Icon from '@/components/Icon/Icon';
@@ -7,6 +6,7 @@ import IconButton from '@/components/IconButton/IconButton';
 import OTPInput from '@/components/OTPInput/OTPInput';
 import Screen from '@/components/Screen/Screen';
 import Typography from '@/components/Typography/Typography';
+import { colors } from '@/libs/colors';
 import mutations from '@/libs/mutations';
 import queries from '@/libs/queries';
 import { InvitationValidity } from '@cohab/shared/src/household';
@@ -36,8 +36,8 @@ export default function InviteHousehold() {
   const { data: invitation } = useQuery(queries.households.getInviteCodeQuery(householdId));
   const { data: me } = useQuery(queries.me.getMeQuery());
 
-  const invalidateInvite = () =>
-    queryClient.invalidateQueries({ queryKey: ['households', householdId, 'invite'] });
+  const invalidateInvite = async () =>
+    await queryClient.invalidateQueries({ queryKey: ['households', householdId, 'invite'] });
 
   const { mutate: createCode, isPending: isCreating } = useMutation({
     ...mutations.households.createInviteCodeMutation(),

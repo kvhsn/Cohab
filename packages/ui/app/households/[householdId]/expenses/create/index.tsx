@@ -38,9 +38,11 @@ export default function CreateExpense() {
 
   const { mutate } = useMutation({
     ...mutations.expenses.createExpenseMutation(householdId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['households', householdId, 'expenses'] });
-      queryClient.invalidateQueries({ queryKey: ['households', householdId, 'balance'] });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['households', householdId, 'expenses'] }),
+        queryClient.invalidateQueries({ queryKey: ['households', householdId, 'balance'] }),
+      ]);
       router.back();
     },
     onError: (error) => {

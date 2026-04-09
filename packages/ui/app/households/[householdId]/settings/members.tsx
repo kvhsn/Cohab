@@ -14,7 +14,7 @@ export default function ManageMembers() {
   const { mutate } = useMutation({
     ...removeMemberMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries(queries.me.getMeQuery());
+      return queryClient.invalidateQueries(queries.me.getMeQuery());
     },
     onError: (error: Error) => {
       Alert.alert('Erreur', error.message || 'Impossible de retirer le membre');
