@@ -78,7 +78,7 @@ export default function Input({
           <TextInput
             {...props}
             secureTextEntry={isSecureTextEntry}
-            className={`${error ? 'text-red-500 dark:text-red-400' : 'text-gray-900 dark:text-gray-100'} text-body text-${size} flex-1 p-0`}
+            className={`${error ? 'text-red-500 dark:text-red-400' : 'text-gray-900 dark:text-gray-100'} text-body text-${size} flex-1 p-0 font-plus-jakarta`}
             placeholderTextColor={placeholderTextColor}
             ref={inputRef}
           />

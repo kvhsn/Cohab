@@ -52,6 +52,7 @@ export default new Hono<AppContext>()
   .get('/', async (c) => {
     const householdId = c.req.param('householdId');
     const prisma = c.get('prisma');
+    const { id: userId } = c.get('user');
 
     const expenses = await prisma.expense.findMany({
       where: { householdId },
@@ -62,6 +63,7 @@ export default new Hono<AppContext>()
         amount: true,
         category: true,
         note: true,
+        memberId: true,
         member: { select: { name: true } },
       },
     });
@@ -70,6 +72,7 @@ export default new Hono<AppContext>()
       {
         expenses: expenses.map((expense) => ({
           ...expense,
+          isMine: expense.memberId === userId,
           createdAt: expense.createdAt.toISOString(),
         })),
       } as GetExpenses,

@@ -22,16 +22,16 @@ export function SummaryCard({ share, className }: SummaryCardProps) {
       )}>
       <View className="w-full flex-row items-center justify-between">
         <View className="items-center py-4">
-          <Typography variant="bodySmall" className="mb-2 opacity-70">
+          <Typography variant="bodySmall" weight="medium" className="mb-2 opacity-70">
             Solde total
           </Typography>
           <Typography
             variant="h1"
-            className={`text-4xl ${isPositive ? 'text-primary' : 'text-rose-500'}`}>
+            className={cn('text-4xl', isPositive ? 'text-primary' : 'text-rose-500')}>
             {share > 0 ? '+' : ''}
             {share.toFixed(2)} €
           </Typography>
-          <Typography variant="bodySmall" className="mt-2 opacity-60">
+          <Typography variant="bodySmall" weight="medium" className="mt-2 opacity-60">
             {share === 0
               ? 'Vous êtes à l’équilibre !'
               : share > 0

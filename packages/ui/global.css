@@ -5,6 +5,11 @@
 @import 'nativewind/theme';
 
 @theme {
+  --font-plus-jakarta: "PlusJakartaSans_400Regular";
+  --font-plus-jakarta-medium: "PlusJakartaSans_500Medium";
+  --font-plus-jakarta-semibold: "PlusJakartaSans_600SemiBold";
+  --font-plus-jakarta-bold: "PlusJakartaSans_700Bold";
+
   --color-primary: #c084fc;
   --color-secondary: #60a5fa;
 
@@ -13,10 +18,10 @@
   --color-background-secondary: #f0f4fa;
   --color-background-tertiary: #fdf2ea;
 
-  /* Dark mode backgrounds */
-  --color-dark-surface: #0f172a;
-  --color-dark-surface-2: #1e293b;
-  --color-dark-surface-3: #334155;
+  /* Dark mode backgrounds - Refined for depth */
+  --color-dark-surface: #020617; /* slate-950 */
+  --color-dark-surface-2: #0f172a; /* slate-900 */
+  --color-dark-surface-3: #1e293b; /* slate-800 */
 
   /* Surfaces */
   --color-surface: #ffffff;
@@ -24,7 +29,7 @@
 
   /* Borders */
   --color-border: #f3f4f6;
-  --color-dark-border: #334155;
+  --color-dark-border: #1e293b;
 
   /* Feedback */
   --color-error: #ef4444;
@@ -32,9 +37,11 @@
   --color-info: #3b82f6;
   --color-success: #22c55e;
 
+  /* Typography Sizes */
   --text-h1: 2rem;
   --text-subtitle: 1.5rem;
   --text-body: 1rem;
   --text-bodySmall: 0.875rem;
   --text-caption: 0.75rem;
 }
+

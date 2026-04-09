@@ -17,7 +17,7 @@ export const colors = {
 
   // Page backgrounds (mirrors --color-background-primary, --color-dark-surface)
   bgLight: '#e3fdfd',
-  bgDark: '#0f172a',
+  bgDark: '#020617',
 
   // Navigation header text
   headerLight: '#0f172a', // slate-900

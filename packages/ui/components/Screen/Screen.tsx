@@ -33,6 +33,11 @@ export default function Screen({ children, className, title }: ScreenProps) {
           headerTransparent: true,
           title: title ?? '',
           headerTintColor,
+          headerTitleStyle: {
+            fontSize: 20,
+            color: headerTintColor,
+            fontWeight: 'bold',
+          },
         }}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

@@ -26,6 +26,7 @@ export const GetExpenseSchema = z.object({
   note: z.string().nullable().optional(),
   createdAt: z.string(),
   id: z.string(),
+  isMine: z.boolean(),
   member: z.object({
     name: z.string(),
   }),

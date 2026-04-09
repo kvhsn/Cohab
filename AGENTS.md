@@ -90,6 +90,7 @@ Every agent must utilize these tools for any technical documentation or implemen
 - Handle real-time synchronization for Chat and Notifications using Hono's middleware and WebSocket support.
 - Manage Prisma migrations and ensure relational integrity between Users and Households.
 - Implement API endpoints with Hono, using Zod for validation and `node:crypto` for secure password hashing (e.g., `scrypt`).
+- **Contextual Data**: Always return context-aware flags (e.g., `isMine: boolean`) in list endpoints to simplify frontend logic and avoid fragile name/ID comparisons on the client.
 
 ## 📱 3. Mobile Frontend Developer
 
@@ -97,6 +98,14 @@ Every agent must utilize these tools for any technical documentation or implemen
 **Directives:**
 
 - **Mandatory:** Apply `skill /react-native-best-practices:react-native-best-practices` to all components.
+- **Typography & Brand**:
+  - Font: Use **Plus Jakarta Sans** for all text via the `Typography` component.
+  - Weights: Use the `weight` prop (`regular`, `medium`, `semibold`, `bold`) instead of manual Tailwind font classes.
+  - Hierarchy: Strictly use the `Typography` variants (`h1`, `subtitle`, `body`, `bodySmall`, `caption`) to maintain visual consistency. Avoid inline `className` overrides for font weights or families.
+- **Design Standards**:
+  - **Dark Mode**: Use the refined **Slate palette** for surfaces (`slate-950` as base). Avoid pure black.
+  - **Surfaces**: Use the `Card` component for glassmorphism and consistent elevated surfaces.
+  - **Color Strategy**: Strictly avoid hardcoded colors like `text-black` or `text-white`. Use semantic Tailwind classes (e.g., `text-gray-900 dark:text-gray-50`) to ensure 100% Dark Mode compatibility.
 - **Component-Driven Development:** Build and test all UI components in isolation using Storybook. Run `pnpm run storybook:ios` (or `:android`) within the UI package to start the Storybook environment. Apply `skill /writing-react-native-storybook-stories:writing-react-native-storybook-stories` when creating or editing `.stories.tsx` files.
 - **Styling Standard:** Always use **NativeWind (Tailwind CSS)** via the `className` attribute for styling. **Strictly avoid using the `style` attribute** or `StyleSheet.create` unless absolutely necessary for dynamic values that cannot be expressed via Tailwind.
   - **Tailwind DX & Type Safety:**

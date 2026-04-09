@@ -33,15 +33,6 @@ export default function HouseholdDetails() {
           }}>
           <SummaryCard share={balance.shares[data?.id]} />
         </Link>
-        <View>
-          <Link
-            href={{
-              pathname: '/households/[householdId]/expenses',
-              params: { householdId },
-            }}>
-            <Typography variant="bodySmall">Show expenses</Typography>
-          </Link>
-        </View>
         <Link
           href={{
             pathname: '/households/[householdId]/refunds',

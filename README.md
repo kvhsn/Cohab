@@ -1,50 +1,67 @@
-# Welcome to your Expo app 👋
+# 🏠 Cohab
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Cohab is a modern roommate management platform designed to eliminate household friction. It manages shared tasks, balances expenses (Tricount-style), and coordinates groceries.
 
-## Get started
+## 🚀 Technology Stack
 
-1. Install dependencies
+- **Monorepo**: [Nx](https://nx.dev) + pnpm workspaces
+- **Frontend**: [Expo](https://expo.dev) (SDK 54) + React Native + [Expo Router](https://docs.expo.dev/router/introduction/)
+- **Styling**: [NativeWind v5](https://www.nativewind.dev/) (Tailwind CSS)
+- **Backend**: [Hono](https://hono.dev/) + Node.js
+- **Database**: PostgreSQL with [Prisma](https://www.prisma.io/)
+- **Shared Logic**: [Zod](https://zod.dev/) for cross-package validation and types
+
+## 🎨 Design Language
+
+Cohab uses a premium, clean design language focused on clarity and ease of use.
+
+- **Typography**: [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans) - handled via the `Typography` component with built-in `weight` support.
+- **Dark Mode**: Optimized with a deep Slate palette (`slate-950`) and glassmorphism surfaces.
+- **Consistency**: All UI elements leverage a central `Typography` component and the `Card` system for unified elevation. Avoid manual font-weight class overrides.
+
+## 📦 Project Structure
+
+```text
+cohab/
+├── packages/
+│   ├── ui/          # @cohab/ui - Mobile application (Expo)
+│   ├── api/         # @cohab/api - Backend server (Hono)
+│   └── shared/      # @cohab/shared - Universal schemas and types
+├── nx.json          # Monorepo configuration
+└── package.json     # Root orchestration
+```
+
+## 🛠️ Get Started
+
+1. **Install dependencies**
 
    ```bash
    pnpm install
    ```
 
-2. Start the app
+2. **Start the development servers**
 
    ```bash
-   pnpm expo start
+   # Start everything (API + UI)
+   pnpm start
+
+   # Start specific packages via Nx
+   nx run @cohab/api:dev
+   nx run @cohab/ui:start
    ```
 
-In the output, you'll find options to open the app in a
+3. **Storybook (UI Component Development)**
+   ```bash
+   cd packages/ui
+   pnpm run storybook:ios   # or :android
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📜 Development Guidelines
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Architecture**: Follow Vertical Feature Slicing in the UI package.
+- **Data Fetching**: Use TanStack Query (React Query) with centralized queries in `libs/queries.ts`.
+- **Validation**: Every API response must be validated at runtime using the shared Zod schemas.
 
-## Get a fresh project
+---
 
-When you're ready, run:
-
-```bash
-pnpm reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+_Created with ❤️ for better shared living._

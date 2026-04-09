@@ -21,7 +21,7 @@ export default function DebtItem({ member, amount, type }: DebtItemProps) {
   const badgeColorClass = isOweMe ? tw('bg-primary') : tw('bg-rose-500');
 
   return (
-    <Card className="mb-3 p-4 flex-row items-center justify-between bg-white/40 dark:bg-slate-800/40">
+    <Card className="mb-3 p-4 flex-row items-center justify-between bg-white/70 dark:bg-slate-900/40">
       <View className="flex-row items-center flex-1">
         <View
           className={cn(
@@ -31,19 +31,22 @@ export default function DebtItem({ member, amount, type }: DebtItemProps) {
           {member && <MemberAvatar isAdmin={false} name={member.name} />}
           <View
             className={cn(
-              'absolute bottom-0 -right-6 px-1.5 rounded-sm border border-white dark:border-slate-900',
+              'absolute bottom-0 -right-6 px-2 py-0.5 rounded-md border border-white dark:border-slate-900 shadow-sm',
               badgeColorClass,
             )}>
-            <Typography variant="caption" className="text-[9px] text-white">
+            <Typography variant="caption" className="text-[10px] text-white">
               {amount.toFixed(0)}€
             </Typography>
           </View>
         </View>
         <View>
-          <Typography variant="body" className="font-bold">
+          <Typography variant="body" weight="bold">
             {member?.name || 'Inconnu'}
           </Typography>
-          <Typography variant="bodySmall" className="text-gray-500 dark:text-gray-400">
+          <Typography
+            variant="bodySmall"
+            weight="medium"
+            className="text-gray-500 dark:text-gray-400">
             {isOweMe ? 'Dépenses communes' : 'Remboursement à faire'}
           </Typography>
         </View>
