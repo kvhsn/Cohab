@@ -11,6 +11,7 @@ interface OTPInputProps {
   className?: string;
   autoFocus?: boolean;
   disabled?: boolean;
+  onBlur?: () => void;
 }
 
 export default function OTPInput({
@@ -22,6 +23,7 @@ export default function OTPInput({
   className,
   autoFocus = false,
   disabled = false,
+  onBlur,
 }: OTPInputProps) {
   const [internalValue, setInternalValue] = useState(value || '');
   const inputValue = value !== undefined ? value : internalValue;
@@ -54,7 +56,6 @@ export default function OTPInput({
   return (
     <View className={`w-full ${className || ''}`}>
       <Pressable
-        disabled
         onPress={handlePress}
         className="flex-row items-center justify-between gap-1 w-full relative">
         {codeArray.map((char, index) => {
@@ -89,6 +90,7 @@ export default function OTPInput({
         })}
         {/* Hidden input to handle all typing logic natively, SMS autofill, and copy/paste reliably */}
         <TextInput
+          editable={!disabled}
           ref={inputRef}
           value={inputValue}
           onChangeText={handleChangeText}
@@ -97,7 +99,10 @@ export default function OTPInput({
           textContentType="oneTimeCode"
           autoFocus={autoFocus}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onBlur={() => {
+            setIsFocused(false);
+            onBlur?.();
+          }}
           caretHidden
           className="absolute inset-0 w-full h-full opacity-0 text-transparent"
         />

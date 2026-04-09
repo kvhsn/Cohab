@@ -49,7 +49,6 @@ export default function HouseholdChoiceScreen() {
     },
     validators: {
       onChange: JoinHouseHoldSchema,
-      onMount: JoinHouseHoldSchema,
     },
     onSubmit: ({ value }) => {
       mutate(value);
@@ -100,7 +99,12 @@ export default function HouseholdChoiceScreen() {
               length={6}
               value={field.state.value}
               onChange={field.handleChange}
-              error={formatErrors(field.state.meta.errors)}
+              onBlur={field.handleBlur}
+              error={
+                field.state.meta.isTouched || field.state.value.length >= 6
+                  ? formatErrors(field.state.meta.errors)
+                  : undefined
+              }
               className="mb-6"
             />
           )}
