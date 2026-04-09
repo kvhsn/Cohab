@@ -1,9 +1,13 @@
 import { authClient } from '@/libs/auth';
 import { mutationOptions } from '@tanstack/react-query';
+export const keys = {
+  login: () => ['auth', 'login'] as const,
+  register: () => ['auth', 'register'] as const,
+};
 
 export const loginMutation = () =>
   mutationOptions({
-    mutationKey: ['auth', 'login'],
+    mutationKey: keys.login(),
     mutationFn: async (args: Parameters<typeof authClient.signIn.email>[0]) => {
       const result = await authClient.signIn.email(args);
       if (result.error) throw result.error;
@@ -13,7 +17,7 @@ export const loginMutation = () =>
 
 export const registerMutation = () =>
   mutationOptions({
-    mutationKey: ['auth', 'register'],
+    mutationKey: keys.register(),
     mutationFn: async (
       args: Parameters<typeof authClient.signUp.email>[0] & { phoneNumber: string },
     ) => {

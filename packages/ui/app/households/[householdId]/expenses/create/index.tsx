@@ -8,6 +8,7 @@ import Typography from '@/components/Typography/Typography';
 import { CATEGORY_ICONS } from '@/libs/features/expenses/constants';
 import mutations from '@/libs/mutations';
 import queries from '@/libs/queries';
+import { queryKeys } from '@/libs/keys';
 import {
   CreateExpenseSchema,
   EXPENSE_CATEGORY_LABELS,
@@ -40,8 +41,8 @@ export default function CreateExpense() {
     ...mutations.expenses.createExpenseMutation(householdId),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['households', householdId, 'expenses'] }),
-        queryClient.invalidateQueries({ queryKey: ['households', householdId, 'balance'] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.expenses.all(householdId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.households.balance(householdId) }),
       ]);
       router.back();
     },

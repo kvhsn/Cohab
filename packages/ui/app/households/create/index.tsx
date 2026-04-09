@@ -8,6 +8,7 @@ import Typography from '@/components/Typography/Typography';
 import { formatErrors } from '@/libs/form';
 import mutations from '@/libs/mutations';
 import { CreateHouseHoldSchema } from '@cohab/shared/src/household';
+import { queryKeys } from '@/libs/keys';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
@@ -32,8 +33,8 @@ export default function CreateHousehold() {
     onSuccess: async () => {
       // invalidate user data because now part of household
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['me'] }),
-        queryClient.invalidateQueries({ queryKey: ['households'] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.me.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.households.all }),
       ]);
       router.replace('/');
     },

@@ -13,6 +13,8 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { Alert, Image, View } from 'react-native';
 import { joinHouseholdMutation } from '../../libs/features/households/mutations';
+import queries from '@/libs/queries';
+import { queryKeys } from '@/libs/keys';
 
 export default function HouseholdChoiceScreen() {
   const router = useRouter();
@@ -34,7 +36,7 @@ export default function HouseholdChoiceScreen() {
   const { mutate, isPending } = useMutation({
     ...joinHouseholdMutation(),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['households'] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.households.all });
       router.reload();
     },
     onError: (error: Error) => {

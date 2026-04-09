@@ -10,6 +10,7 @@ import { colors } from '@/libs/colors';
 import mutations from '@/libs/mutations';
 import queries from '@/libs/queries';
 import { InvitationValidity } from '@cohab/shared/src/household';
+import { queryKeys } from '@/libs/keys';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as Clipboard from 'expo-clipboard';
 import { useLocalSearchParams } from 'expo-router';
@@ -37,7 +38,7 @@ export default function InviteHousehold() {
   const { data: me } = useQuery(queries.me.getMeQuery());
 
   const invalidateInvite = async () =>
-    await queryClient.invalidateQueries({ queryKey: ['households', householdId, 'invite'] });
+    await queryClient.invalidateQueries({ queryKey: queryKeys.households.invite(householdId) });
 
   const { mutate: createCode, isPending: isCreating } = useMutation({
     ...mutations.households.createInviteCodeMutation(),

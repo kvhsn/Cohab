@@ -6,7 +6,9 @@ import Typography from '@/components/Typography/Typography';
 import mutations from '@/libs/mutations';
 import { PendingInvite, RespondToInvitation } from '@cohab/shared/src/household';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import queries from '@/libs/queries';
 import React from 'react';
+import { queryKeys } from '@/libs/keys';
 import { Alert, Image, View } from 'react-native';
 
 interface PendingInvitationsViewProps {
@@ -18,7 +20,7 @@ export default function PendingInvitationsView({ invitations }: PendingInvitatio
   const { mutate, isPending } = useMutation({
     ...mutations.households.respondToInvitationMutation(),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['households'] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.households.all });
     },
     onError: (error: Error) => {
       Alert.alert('Erreur', error.message || 'Une erreur est survenue');

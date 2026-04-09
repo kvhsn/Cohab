@@ -15,6 +15,8 @@ export default function Households() {
     queries.households.getPendingInvitationsQuery(),
   );
 
+  console.log({ me, pendingInvites });
+
   if (isMePending || isInvitesPending) {
     return (
       <Screen>
