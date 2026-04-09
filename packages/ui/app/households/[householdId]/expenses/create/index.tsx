@@ -234,8 +234,12 @@ export default function CreateExpense() {
         </View>
 
         <View className="mx-5 mb-6 mt-2">
-          <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
-            {([canSubmit, isSubmitting]) => (
+          <form.Subscribe
+            selector={(state) => ({
+              canSubmit: state.canSubmit,
+              isSubmitting: state.isSubmitting,
+            })}>
+            {({ canSubmit, isSubmitting }) => (
               <CustomButton
                 title={isSubmitting ? 'Enregistrement...' : 'Enregistrer la dépense'}
                 variant="primary"
