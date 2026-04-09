@@ -8,7 +8,8 @@
     "scheme": "cohab",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.cohab"
     },
     "android": {
       "adaptiveIcon": {
@@ -38,13 +39,7 @@
           "faceIDPermission": "Allow Cohab to access your Face ID biometric data."
         }
       ],
-      [
-        "expo-build-properties",
-        {
-          "buildReactNativeFromSource": true,
-          "useHermesV1": true
-        }
-      ]
+      ["expo-build-properties", {}]
     ],
     "experiments": {
       "typedRoutes": true,
