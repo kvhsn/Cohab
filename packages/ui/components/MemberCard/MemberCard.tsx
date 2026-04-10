@@ -22,7 +22,7 @@ export default function MemberCard({ member, isMemberAdmin, onRemove }: MemberCa
         </Typography>
         <Typography variant="bodySmall">{member.email}</Typography>
       </View>
-      {!isMemberAdmin && onRemove && (
+      {isMemberAdmin && onRemove && (
         <IconButton
           variant="danger"
           as="Ionicons"

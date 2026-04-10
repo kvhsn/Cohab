@@ -74,7 +74,8 @@ export const updateHouseholdMutation = () =>
 export const removeMemberMutation = () =>
   mutationOptions({
     mutationKey: keys.removeMember(),
-    mutationFn: (memberId: string) => removeMember(memberId),
+    mutationFn: ({ householdId, memberId }: { householdId: string; memberId: string }) =>
+      removeMember(householdId, memberId),
   });
 
 export const leaveHouseholdMutation = () =>

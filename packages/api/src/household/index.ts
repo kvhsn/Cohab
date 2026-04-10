@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { withAuth } from '../libs/auth';
 import withPrisma from '../libs/prisma';
 import { validate } from '../libs/validation';
+import { withHouseholdAdmin } from '../middleware/household';
 import { AppContext } from '../types/Contexts';
 import expenses from './expenses';
 import { adminInvite, pending } from './invitations';
@@ -102,20 +103,11 @@ export default new Hono<AppContext>()
   })
 
   // ── Remove member (admin only) ─────────────────────────────────────────
-  .delete('/members/:memberId', async (c) => {
+  .delete('/:householdId/members/:memberId', withHouseholdAdmin, async (c) => {
+    const householdId = c.req.param('householdId');
     const memberId = c.req.param('memberId');
     const { id: userId } = c.get('user');
     const prisma = c.get('prisma');
-
-    const adminUser = await prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: { administeredHouseHold: { select: { id: true } } },
-    });
-
-    const householdId = adminUser.administeredHouseHold?.id;
-    if (!householdId) {
-      throw new HTTPException(403, { message: 'You are not the admin of any household' });
-    }
 
     if (userId === memberId) {
       throw new HTTPException(400, {

@@ -24,9 +24,16 @@ export default function ManageMembers() {
   const handleRemove = (member: GetHouseholdMember) => {
     Alert.alert('Retirer', `Veux-tu vraiment retirer ${member.name} de la colocation ?`, [
       { text: 'Annuler', style: 'cancel' },
-      { text: 'Retirer', style: 'destructive', onPress: () => mutate(member.id) },
+      {
+        text: 'Retirer',
+        style: 'destructive',
+        onPress: () =>
+          data.household && mutate({ householdId: data.household.id, memberId: member.id }),
+      },
     ]);
   };
+
+  const isCurrentUserAdmin = data.household?.adminId === data.id;
 
   return (
     <Screen title="Gérer les membres">
@@ -36,7 +43,7 @@ export default function ManageMembers() {
             key={item.id}
             member={item}
             isMemberAdmin={data.household?.adminId === item.id}
-            onRemove={handleRemove}
+            onRemove={isCurrentUserAdmin ? handleRemove : undefined}
           />
         ))}
       </View>

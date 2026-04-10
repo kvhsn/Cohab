@@ -171,9 +171,12 @@ export const updateHousehold = async (data: UpdateHousehold): Promise<GetHouseho
   return GetHouseholdDetailsSchema.parse(body);
 };
 
-export const removeMember = async (memberId: string): Promise<{ status: string }> => {
+export const removeMember = async (
+  householdId: string,
+  memberId: string,
+): Promise<{ status: string }> => {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_URL}/api/households/members/${memberId}`, {
+  const response = await fetch(`${API_URL}/api/households/${householdId}/members/${memberId}`, {
     method: 'DELETE',
     headers,
   });
