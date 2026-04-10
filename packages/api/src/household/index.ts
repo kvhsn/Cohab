@@ -206,10 +206,7 @@ export default new Hono<AppContext>()
       data: { houseHoldId: invitation.householdId },
     });
 
-    return c.json(
-      { status: 'ok', message: `Successfully joined household ${invitation.householdId}` },
-      200,
-    );
+    return c.json({ status: 'ok', householdId: invitation.householdId }, 200);
   })
 
   // ── Sub-routers ─────────────────────────────────────────────────────────

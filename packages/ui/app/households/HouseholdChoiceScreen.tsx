@@ -6,6 +6,7 @@ import OTPInput from '@/components/OTPInput/OTPInput';
 import Screen from '@/components/Screen/Screen';
 import Typography from '@/components/Typography/Typography';
 import { formatErrors } from '@/libs/form';
+import { queryKeys } from '@/libs/keys';
 import { JoinHouseHoldSchema } from '@cohab/shared/src/household';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,8 +14,6 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { Alert, Image, View } from 'react-native';
 import { joinHouseholdMutation } from '../../libs/features/households/mutations';
-import queries from '@/libs/queries';
-import { queryKeys } from '@/libs/keys';
 
 export default function HouseholdChoiceScreen() {
   const router = useRouter();
@@ -35,9 +34,9 @@ export default function HouseholdChoiceScreen() {
 
   const { mutate, isPending } = useMutation({
     ...joinHouseholdMutation(),
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.households.all });
-      router.reload();
+      router.replace(`/households/${data.householdId}`);
     },
     onError: (error: Error) => {
       console.error(error);

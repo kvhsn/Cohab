@@ -11,6 +11,8 @@ import {
   InvitationCode,
   InvitationCodeSchema,
   JoinHouseHold,
+  JoinHouseHoldResponse,
+  JoinHouseHoldResponseSchema,
   RespondToInvitation,
   UpdateHousehold,
   UpdateInviteValidity,
@@ -135,7 +137,7 @@ export const revokeInviteCode = async (householdId: string): Promise<{ status: s
   return response.json();
 };
 
-export const joinHousehold = async (data: JoinHouseHold): Promise<{ status: string }> => {
+export const joinHousehold = async (data: JoinHouseHold): Promise<JoinHouseHoldResponse> => {
   const headers = await getAuthHeaders();
   const response = await fetch(`${API_URL}/api/households/join`, {
     method: 'POST',
@@ -148,7 +150,8 @@ export const joinHousehold = async (data: JoinHouseHold): Promise<{ status: stri
     throw new Error(data.message || 'Join household failed');
   }
 
-  return response.json();
+  const body = await response.json();
+  return JoinHouseHoldResponseSchema.parse(body);
 };
 
 export const updateHousehold = async (data: UpdateHousehold): Promise<GetHouseholdDetails> => {
