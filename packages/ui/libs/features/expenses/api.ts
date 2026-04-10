@@ -1,6 +1,12 @@
 import { API_URL } from '@/constants/Config';
 import { getAuthHeaders } from '@/libs/secureStorage';
-import { CreateExpense, GetExpenses, GetExpensesSchema } from '@cohab/shared/src/expense';
+import {
+  CreateExpense,
+  GetExpense,
+  GetExpenseSchema,
+  GetExpenses,
+  GetExpensesSchema,
+} from '@cohab/shared/src/expense';
 
 export const getExpenses = async (householdId: string): Promise<GetExpenses> => {
   const headers = await getAuthHeaders();
@@ -34,4 +40,30 @@ export const createExpense = async (householdId: string, form: CreateExpense) =>
   }
 
   return response.json();
+};
+
+export const getExpense = async (householdId: string, expenseId: string): Promise<GetExpense> => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/${householdId}/expenses/${expenseId}`, {
+    method: 'GET',
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch expense');
+  }
+  const body = await response.json();
+  return GetExpenseSchema.parse(body);
+};
+
+export const deleteExpense = async (householdId: string, expenseId: string) => {
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${API_URL}/api/households/${householdId}/expenses/${expenseId}`, {
+    method: 'DELETE',
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete expense');
+  }
 };

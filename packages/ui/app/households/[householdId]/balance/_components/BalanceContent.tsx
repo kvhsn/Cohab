@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { formatAmount } from '@/libs/format';
 import queries from '@/libs/queries';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
 import DebtSection from './DebtSection';
@@ -117,6 +117,12 @@ export default function BalanceContent({ householdId }: BalanceContentProps) {
                 memberName={expense.member.name}
                 createdAt={expense.createdAt}
                 isMine={expense.isMine}
+                onPress={() =>
+                  router.push({
+                    pathname: '/households/[householdId]/expenses/[expenseId]',
+                    params: { householdId, expenseId: expense.id },
+                  })
+                }
               />
               {index < expenses.length - 1 && (
                 <View className="h-px bg-gray-100/50 dark:bg-white/5" />

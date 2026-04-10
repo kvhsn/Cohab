@@ -1,7 +1,8 @@
-import { CreateExpenseSchema, GetExpenses } from '@cohab/shared/src/expense';
+import { CreateExpenseSchema, GetExpense, GetExpenses } from '@cohab/shared/src/expense';
 import { Hono } from 'hono';
 import { validate } from '../../libs/validation';
 import { withHouseholdMember } from '../../middleware/household';
+import { withExpenseOwner } from '../../middleware/ownership';
 import { AppContext } from '../../types/Contexts';
 import { createBalance } from './helpers';
 
@@ -79,7 +80,36 @@ export default new Hono<AppContext>()
       200,
     );
   })
-  .delete('/:expenseId', async (c) => {
+  .get('/:expenseId', async (c) => {
+    const expenseId = c.req.param('expenseId');
+    const householdId = c.req.param('householdId');
+    const { id: userId } = c.get('user');
+    const prisma = c.get('prisma');
+
+    const expense = await prisma.expense.findFirstOrThrow({
+      where: { id: expenseId, householdId },
+      select: {
+        id: true,
+        name: true,
+        amount: true,
+        category: true,
+        note: true,
+        createdAt: true,
+        memberId: true,
+        member: { select: { name: true } },
+      },
+    });
+
+    return c.json(
+      {
+        ...expense,
+        isMine: expense.memberId === userId,
+        createdAt: expense.createdAt.toISOString(),
+      } as GetExpense,
+      200,
+    );
+  })
+  .delete('/:expenseId', withExpenseOwner, async (c) => {
     const expenseId = c.req.param('expenseId');
     const prisma = c.get('prisma');
 

@@ -4,7 +4,7 @@ import Typography from '@/components/Typography/Typography';
 import { CATEGORY_ICONS } from '@/libs/features/expenses/constants';
 import { formatAmount, formatDate } from '@/libs/format';
 import { EXPENSE_CATEGORY_LABELS, type ExpenseCategory } from '@cohab/shared/src/expense';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface ExpenseItemProps {
   /** Expense display name */
@@ -19,6 +19,8 @@ interface ExpenseItemProps {
   createdAt: string;
   /** Whether this expense was paid by the current user */
   isMine?: boolean;
+  /** Callback when item is pressed */
+  onPress?: () => void;
 }
 
 export default function ExpenseItem({
@@ -28,12 +30,15 @@ export default function ExpenseItem({
   memberName,
   createdAt,
   isMine = false,
+  onPress,
 }: ExpenseItemProps) {
   const categoryIcon = CATEGORY_ICONS[category];
   const categoryLabel = EXPENSE_CATEGORY_LABELS[category];
 
+  const Wrapper = onPress ? Pressable : View;
+
   return (
-    <View className="flex-row items-center gap-4 py-3">
+    <Wrapper onPress={onPress} className="flex-row items-center gap-4 py-3 active:opacity-70">
       {/* Category icon */}
       <View
         className={`size-12 items-center justify-center rounded-2xl bg-primary/10 dark:bg-primary/20`}>
@@ -63,6 +68,6 @@ export default function ExpenseItem({
           {formatDate(createdAt)}
         </Typography>
       </View>
-    </View>
+    </Wrapper>
   );
 }
