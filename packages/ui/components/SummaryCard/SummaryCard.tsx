@@ -2,18 +2,54 @@ import Card from '@/components/Card/Card';
 import Icon from '@/components/Icon/Icon';
 import Typography from '@/components/Typography/Typography';
 import { cn } from '@/libs/tailwind';
-import React from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface SummaryCardProps {
   share: number;
   className?: string;
   isAlone?: boolean;
   title?: string;
+  expandable?: boolean;
+  isExpanded?: boolean;
+  onToggleExpand?: () => void;
+  children?: React.ReactNode;
 }
 
-export function SummaryCard({ share, className, isAlone, title }: SummaryCardProps) {
+export function SummaryCard({
+  share,
+  className,
+  isAlone,
+  title,
+  expandable = false,
+  isExpanded = false,
+  onToggleExpand,
+  children,
+}: SummaryCardProps) {
   const isPositive = share >= 0;
+  const [measuredHeight, setMeasuredHeight] = useState(0);
+
+  const heightValue = useSharedValue(0);
+
+  useEffect(() => {
+    heightValue.value = withTiming(isExpanded ? measuredHeight : 0, { duration: 300 });
+  }, [isExpanded, measuredHeight, heightValue]);
+
+  const animatedContentStyle = useAnimatedStyle(() => ({
+    height: heightValue.value,
+    opacity: withTiming(isExpanded ? 1 : 0, { duration: 200 }),
+  }));
+
+  const handleLayout = useCallback(
+    (e: { nativeEvent: { layout: { height: number } } }) => {
+      const h = e.nativeEvent.layout.height;
+      if (h > 0 && h !== measuredHeight) {
+        setMeasuredHeight(h);
+      }
+    },
+    [measuredHeight],
+  );
 
   const getTitle = () => {
     if (title) return title;
@@ -23,12 +59,12 @@ export function SummaryCard({ share, className, isAlone, title }: SummaryCardPro
   const getSubtitle = () => {
     if (isAlone) {
       return share === 0
-        ? 'Commencez à suivre vos frais !'
-        : 'C’est un bon début ! Invitez vos colocs.';
+        ? 'Commencez a suivre vos frais !'
+        : "C'est un bon debut ! Invitez vos colocs.";
     }
 
-    if (share === 0) return 'Vous êtes à l’équilibre !';
-    return share > 0 ? 'On vous doit de l’argent !' : 'Vous avez des dettes à régler.';
+    if (share === 0) return "Vous etes a l'equilibre !";
+    return share > 0 ? "On vous doit de l'argent !" : 'Vous avez des dettes a regler.';
   };
 
   return (
@@ -47,7 +83,7 @@ export function SummaryCard({ share, className, isAlone, title }: SummaryCardPro
             variant="h1"
             className={cn('text-4xl', isPositive ? 'text-primary' : 'text-rose-500')}>
             {share > 0 ? '+' : ''}
-            {share.toFixed(2)} €
+            {share.toFixed(2)} {'\u20AC'}
           </Typography>
           <Typography variant="bodySmall" weight="medium" className="mt-2 opacity-60">
             {getSubtitle()}
@@ -61,6 +97,32 @@ export function SummaryCard({ share, className, isAlone, title }: SummaryCardPro
           <Icon as="Ionicons" name="wallet" size="lg" className="text-white" />
         </View>
       </View>
+
+      {expandable && (
+        <>
+          <Pressable onPress={onToggleExpand} className="w-full items-center py-1">
+            <View
+              className={cn(
+                'transition-transform duration-300',
+                isExpanded ? 'rotate-180' : 'rotate-0',
+              )}>
+              <Icon
+                as="Ionicons"
+                name="chevron-down"
+                size="md"
+                className={isPositive ? 'text-primary' : 'text-rose-500'}
+              />
+            </View>
+          </Pressable>
+
+          <Animated.View style={animatedContentStyle} className="w-full overflow-hidden">
+            <View className="absolute opacity-0" onLayout={handleLayout} pointerEvents="none">
+              {children}
+            </View>
+            {children}
+          </Animated.View>
+        </>
+      )}
     </Card>
   );
 }

@@ -4,7 +4,6 @@ import Divider from '@/components/Divider/Divider';
 import EmptyState from '@/components/EmptyState/EmptyState';
 import ExpenseItem from '@/components/ExpenseItem/ExpenseItem';
 import Icon from '@/components/Icon/Icon';
-import { SummaryCard } from '@/components/SummaryCard/SummaryCard';
 import Typography from '@/components/Typography/Typography';
 import { useAuth } from '@/hooks/useAuth';
 import { formatAmount } from '@/libs/format';
@@ -13,7 +12,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
-import DebtSection from './DebtSection';
+import BalanceSummaryCard, { type DebtSummaryItem } from './BalanceSummaryCard';
 
 interface BalanceContentProps {
   householdId: string;
@@ -47,9 +46,6 @@ export default function BalanceContent({ householdId }: BalanceContentProps) {
       member: me.household?.members?.find((m) => m.id === id),
     }));
 
-  const totalOwedToMe = peopleWhoOwe.reduce((acc, p) => acc + p.amount, 0);
-  const totalIOwe = peopleIOwe.reduce((acc, p) => acc + p.amount, 0);
-
   const displayShare = isAlone
     ? balance.total
     : currentUserId
@@ -58,26 +54,39 @@ export default function BalanceContent({ householdId }: BalanceContentProps) {
 
   const expenses = expensesData.expenses;
   const expenseTotal = expenses.reduce((sum, e) => sum + e.amount, 0);
-  const hasDebts = peopleWhoOwe.length > 0 || peopleIOwe.length > 0;
+
+  const debtItems: DebtSummaryItem[] = [
+    ...peopleWhoOwe.map((p) => {
+      const lastExpense = expenses.find((e) => e.member.name === p.member?.name);
+      return {
+        memberId: p.id,
+        memberName: p.member?.name ?? 'Inconnu',
+        amount: p.amount,
+        type: 'owe-me' as const,
+        lastExpenseLabel: lastExpense ? `Dernier : ${lastExpense.name}` : undefined,
+      };
+    }),
+    ...peopleIOwe.map((p) => {
+      const lastExpense = expenses.find((e) => e.member.name === p.member?.name);
+      return {
+        memberId: p.id,
+        memberName: p.member?.name ?? 'Inconnu',
+        amount: p.amount,
+        type: 'i-owe' as const,
+        lastExpenseLabel: lastExpense ? `Dernier : ${lastExpense.name}` : undefined,
+      };
+    }),
+  ];
 
   return (
     <View className="gap-2">
-      {/* ── Balance overview ── */}
-      <SummaryCard share={displayShare} isAlone={isAlone} className="mt-2" />
-
-      {/* ── Debts ── */}
-      {hasDebts && (
-        <>
-          <Divider title="Équilibre" />
-          <DebtSection
-            title="On me doit"
-            total={totalOwedToMe}
-            items={peopleWhoOwe}
-            type="owe-me"
-          />
-          <DebtSection title="Je dois" total={totalIOwe} items={peopleIOwe} type="i-owe" />
-        </>
-      )}
+      {/* ── Balance overview with expandable debts ── */}
+      <BalanceSummaryCard
+        share={displayShare}
+        isAlone={isAlone}
+        debts={debtItems}
+        className="mt-2"
+      />
 
       {/* ── Expenses ── */}
       <Divider title="Dépenses" />
